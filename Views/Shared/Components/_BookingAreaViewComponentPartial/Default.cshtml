@@ -1,0 +1,1431 @@
+﻿@await Component.InvokeAsync("_BookingTagsComponentPartial")
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
+
+    :root {
+        --sky: #0057FF;
+        --sky-dark: #0040CC;
+        --sky-light: #E8F0FF;
+        --gold: #F5A623;
+        --surface: #FFFFFF;
+        --surface-2: #F7F9FC;
+        --border: #E4E9F2;
+        --text: #0D1B3E;
+        --text-muted: #6B7A99;
+        --radius: 16px;
+        --radius-sm: 10px;
+        --shadow: 0 8px 40px rgba(0,87,255,0.10);
+        --shadow-card: 0 2px 12px rgba(13,27,62,0.07);
+    }
+
+    .bk-widget {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background: linear-gradient(135deg, #0D1B3E 0%, #1a2f6e 100%);
+        border-radius: 28px;
+        padding: 10px;
+        box-shadow: 0 30px 80px rgba(0,20,80,0.25);
+    }
+
+    /* TABS */
+    .bk-tabs {
+        display: flex;
+        gap: 4px;
+        padding: 6px;
+        background: rgba(255,255,255,0.07);
+        border-radius: 18px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+    }
+
+    .bk-tab-btn {
+        flex: 1;
+        min-width: 130px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 18px;
+        border: none;
+        background: transparent;
+        border-radius: 13px;
+        color: rgba(255,255,255,0.60);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all .25s ease;
+        white-space: nowrap;
+    }
+
+        .bk-tab-btn svg {
+            opacity: .7;
+            flex-shrink: 0;
+        }
+
+        .bk-tab-btn:hover {
+            background: rgba(255,255,255,0.10);
+            color: #fff;
+        }
+
+        .bk-tab-btn.active {
+            background: #fff;
+            color: var(--sky);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+
+            .bk-tab-btn.active svg {
+                opacity: 1;
+            }
+
+    /* PANEL */
+    .bk-panel {
+        background: var(--surface);
+        border-radius: 20px;
+        padding: 32px;
+    }
+
+    .bk-pane {
+        display: none;
+    }
+
+        .bk-pane.active {
+            display: block;
+        }
+
+    /* TRIP TYPE TOGGLE */
+    .trip-type-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 24px;
+    }
+
+    .trip-type-btn {
+        padding: 8px 18px;
+        border: 1.5px solid var(--border);
+        border-radius: 50px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-muted);
+        background: var(--surface-2);
+        cursor: pointer;
+        transition: all .2s;
+    }
+
+        .trip-type-btn:hover {
+            border-color: var(--sky);
+            color: var(--sky);
+            background: var(--sky-light);
+        }
+
+        .trip-type-btn.active {
+            background: var(--sky);
+            border-color: var(--sky);
+            color: #fff;
+        }
+
+    /* AIRPORT FIELDS */
+    .route-row {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 0;
+        background: var(--surface-2);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        margin-bottom: 16px;
+        transition: border-color .2s;
+    }
+
+        .route-row:focus-within {
+            border-color: var(--sky);
+        }
+
+    .airport-field {
+        position: relative;
+        flex: 1;
+        padding: 14px 18px;
+        cursor: pointer;
+    }
+
+        .airport-field:first-child {
+            border-right: 1.5px solid var(--border);
+        }
+
+    .airport-field-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+    }
+
+    .airport-field-input {
+        width: 100%;
+        border: none;
+        background: transparent;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text);
+        outline: none;
+    }
+
+        .airport-field-input::placeholder {
+            font-weight: 500;
+            color: #BCC5D6;
+        }
+
+    .airport-field-sub {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 2px;
+    }
+
+    .swap-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        background: var(--surface-2);
+        border: none;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+        transition: background .2s;
+    }
+
+        .swap-btn:hover {
+            background: var(--sky-light);
+        }
+
+        .swap-btn svg {
+            color: var(--sky);
+        }
+
+    /* DATES */
+    .dates-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .date-field {
+        background: var(--surface-2);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        cursor: pointer;
+        transition: border-color .2s, opacity .2s;
+    }
+
+        .date-field:focus-within {
+            border-color: var(--sky);
+        }
+
+        .date-field.disabled {
+            opacity: .4;
+            pointer-events: none;
+        }
+
+    .date-field-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 4px;
+    }
+
+    .date-field-input {
+        width: 100%;
+        border: none;
+        background: transparent;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text);
+        outline: none;
+        cursor: pointer;
+    }
+
+        .date-field-input::placeholder {
+            color: #BCC5D6;
+            font-weight: 500;
+        }
+
+    /* BOTTOM ROW */
+    .bottom-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    /* PASSENGER DROPDOWN */
+    .pax-trigger {
+        background: var(--surface-2);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        cursor: pointer;
+        transition: border-color .2s;
+        position: relative;
+        user-select: none;
+    }
+
+        .pax-trigger:hover, .pax-trigger.open {
+            border-color: var(--sky);
+        }
+
+    .pax-trigger-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .pax-trigger-value {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+        .pax-trigger-value svg {
+            color: var(--text-muted);
+            transition: transform .2s;
+        }
+
+    .pax-trigger.open .pax-trigger-value svg {
+        transform: rotate(180deg);
+    }
+
+    .pax-dropdown {
+        display: none;
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        z-index: 100;
+        padding: 20px;
+        min-width: 300px;
+    }
+
+    .pax-trigger.open .pax-dropdown {
+        display: block;
+    }
+
+    .pax-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border);
+    }
+
+        .pax-row:last-of-type {
+            border-bottom: none;
+        }
+
+    .pax-info-title {
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--text);
+    }
+
+    .pax-info-sub {
+        font-size: 12px;
+        color: var(--text-muted);
+    }
+
+    .pax-counter {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .pax-counter-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1.5px solid var(--border);
+        background: var(--surface-2);
+        font-size: 18px;
+        line-height: 1;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text);
+        font-weight: 600;
+        transition: all .2s;
+    }
+
+        .pax-counter-btn:hover {
+            border-color: var(--sky);
+            color: var(--sky);
+            background: var(--sky-light);
+        }
+
+    .pax-counter-val {
+        font-weight: 700;
+        font-size: 16px;
+        width: 20px;
+        text-align: center;
+    }
+
+    .cabin-section {
+        margin-top: 14px;
+    }
+
+    .cabin-section-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: var(--text-muted);
+        margin-bottom: 10px;
+    }
+
+    .cabin-options {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .cabin-btn {
+        padding: 7px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        background: var(--surface-2);
+        color: var(--text-muted);
+        transition: all .2s;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+        .cabin-btn.active {
+            background: var(--sky);
+            border-color: var(--sky);
+            color: #fff;
+        }
+
+    .pax-done-btn {
+        width: 100%;
+        margin-top: 14px;
+        padding: 10px;
+        background: var(--sky);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background .2s;
+    }
+
+        .pax-done-btn:hover {
+            background: var(--sky-dark);
+        }
+
+    /* PROMO */
+    .promo-field {
+        background: var(--surface-2);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        cursor: pointer;
+        transition: border-color .2s;
+    }
+
+    .promo-field-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .promo-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .promo-toggle-link {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--sky);
+        cursor: pointer;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .promo-input-wrap {
+        display: none;
+        margin-top: 8px;
+    }
+
+        .promo-input-wrap.open {
+            display: block;
+        }
+
+    .promo-input {
+        width: 100%;
+        border: none;
+        background: transparent;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        outline: none;
+        letter-spacing: .12em;
+    }
+
+        .promo-input::placeholder {
+            letter-spacing: 0;
+            font-weight: 400;
+            color: #BCC5D6;
+        }
+
+    /* EXTRAS */
+    .extras-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .extra-check {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 13px;
+        color: var(--text-muted);
+        font-weight: 500;
+        cursor: pointer;
+        user-select: none;
+    }
+
+        .extra-check input[type=checkbox] {
+            accent-color: var(--sky);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+    /* SEARCH BTN */
+    .search-btn {
+        width: 100%;
+        padding: 18px;
+        background: linear-gradient(135deg, var(--sky) 0%, #3B82F6 100%);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 17px;
+        font-weight: 800;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        letter-spacing: .01em;
+        box-shadow: 0 8px 24px rgba(0,87,255,0.30);
+        transition: all .25s;
+    }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 32px rgba(0,87,255,0.38);
+        }
+
+        .search-btn:active {
+            transform: translateY(0);
+        }
+
+    /* SECTION TITLE */
+    .bk-section-title {
+        font-family: 'Syne', sans-serif;
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--text);
+        margin-bottom: 6px;
+    }
+
+    .bk-section-sub {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 24px;
+    }
+
+    /* QUERY METHOD SELECT */
+    .query-method-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+    .query-method-btn {
+        flex: 1;
+        min-width: 140px;
+        padding: 12px 16px;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-muted);
+        background: var(--surface-2);
+        cursor: pointer;
+        transition: all .2s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .query-method-btn:hover {
+            border-color: var(--sky);
+            color: var(--sky);
+            background: var(--sky-light);
+        }
+
+        .query-method-btn.active {
+            border-color: var(--sky);
+            background: var(--sky-light);
+            color: var(--sky);
+            font-weight: 700;
+        }
+
+        .query-method-btn svg {
+            flex-shrink: 0;
+        }
+
+    .query-fields {
+        display: none;
+    }
+
+        .query-fields.active {
+            display: block;
+        }
+
+    .field-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .input-field-wrap {
+        background: var(--surface-2);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 18px;
+        transition: border-color .2s;
+    }
+
+        .input-field-wrap:focus-within {
+            border-color: var(--sky);
+        }
+
+    .input-field-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .input-field {
+        width: 100%;
+        border: none;
+        background: transparent;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text);
+        outline: none;
+    }
+
+        .input-field::placeholder {
+            color: #BCC5D6;
+            font-weight: 400;
+        }
+
+    .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    /* HELP LINKS */
+    .help-links {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .help-link {
+        font-size: 12px;
+        color: var(--text-muted);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        transition: color .2s;
+    }
+
+        .help-link:hover {
+            color: var(--sky);
+        }
+
+    /* INFO CARDS */
+    .info-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .info-card {
+        background: var(--sky-light);
+        border-radius: var(--radius-sm);
+        padding: 14px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .info-card-icon {
+        width: 36px;
+        height: 36px;
+        background: var(--sky);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: #fff;
+    }
+
+    .info-card-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .info-card-sub {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 2px;
+    }
+
+    /* NOTICE */
+    .bk-notice {
+        background: #FFF9EC;
+        border: 1.5px solid #F5A623;
+        border-radius: var(--radius-sm);
+        padding: 12px 16px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 20px;
+        font-size: 13px;
+        color: #7A5000;
+    }
+
+        .bk-notice svg {
+            color: var(--gold);
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+    /* FLIGHT STATUS SEARCH METHOD */
+    .fs-method-row {
+        display: flex;
+        gap: 0;
+        background: var(--surface-2);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .fs-method-btn {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        background: transparent;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all .2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+    }
+
+        .fs-method-btn:not(:last-child) {
+            border-right: 1.5px solid var(--border);
+        }
+
+        .fs-method-btn.active {
+            background: var(--sky);
+            color: #fff;
+        }
+
+    /* STATUS CARDS */
+    .status-cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .status-card {
+        background: var(--surface-2);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .status-card-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #22C55E;
+        flex-shrink: 0;
+        box-shadow: 0 0 0 3px rgba(34,197,94,0.20);
+    }
+
+        .status-card-dot.yellow {
+            background: #F5A623;
+            box-shadow: 0 0 0 3px rgba(245,166,35,0.20);
+        }
+
+    .status-card-title {
+        font-size: 12px;
+        color: var(--text-muted);
+    }
+
+    .status-card-value {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    @@media (max-width: 768px) {
+        .bk-panel {
+            padding: 20px 16px;
+        }
+
+        .bk-tab-btn {
+            font-size: 12px;
+            padding: 10px 12px;
+        }
+
+        .dates-row, .bottom-row, .two-col, .info-cards {
+            grid-template-columns: 1fr;
+        }
+
+        .status-cards {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .route-row {
+            grid-template-columns: 1fr;
+        }
+
+        .swap-btn {
+            width: 100%;
+            height: 36px;
+            border-top: 1.5px solid var(--border);
+            border-bottom: 1.5px solid var(--border);
+        }
+
+        .airport-field:first-child {
+            border-right: none;
+            border-bottom: 1.5px solid var(--border);
+        }
+
+        .query-method-btn {
+            min-width: 100%;
+        }
+    }
+</style>
+
+<div class="booking-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="bk-widget">
+
+                    <!-- TABS -->
+                    <div class="bk-tabs" id="bkTabs">
+                        <button class="bk-tab-btn active" data-tab="search">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /></svg>
+                            Uçuş Axtar
+                        </button>
+                        <button class="bk-tab-btn" data-tab="trips">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg>
+                            Səyahətlərim
+                        </button>
+                        <button class="bk-tab-btn" data-tab="checkin">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>
+                            Online Check-in
+                        </button>
+                        <button class="bk-tab-btn" data-tab="status">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+                            Uçuş Statusu
+                        </button>
+                    </div>
+
+                    <!-- PANEL -->
+                    <div class="bk-panel">
+
+                        <!-- ===================== UÇUŞ ARA ===================== -->
+                        <div class="bk-pane active" id="pane-search">
+
+                            <!-- Trip Type -->
+                            <div class="trip-type-row" id="tripTypeRow">
+                                <button class="trip-type-btn active" onclick="setTripType(this,'roundtrip')">Gediş - Dönüş</button>
+                                <button class="trip-type-btn" onclick="setTripType(this,'oneway')">Bir İstiqamətli</button>
+                                <button class="trip-type-btn" onclick="setTripType(this,'multi')">Çoxmərhələli Uçuş</button>
+                            </div>
+
+                            <!-- Route -->
+                            <div class="route-row">
+                                <div class="airport-field">
+                                    <div class="airport-field-label">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="3" /></svg>
+                                        Haradan
+                                    </div>
+                                    <input class="airport-field-input" type="text" placeholder="İstanbul, Türkiyə" id="fromAirport" autocomplete="off" />
+                                    <div class="airport-field-sub" id="fromSub">IST — Bütün Havalimanları</div>
+                                </div>
+                                <button class="swap-btn" onclick="swapAirports()" title="Yerlərini Dəyiş">
+                                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4" /></svg>
+                                </button>
+                                <div class="airport-field">
+                                    <div class="airport-field-label">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                                        Haraya
+                                    </div>
+                                    <input class="airport-field-input" type="text" placeholder="Londra, Birləşmiş Krallıq" id="toAirport" autocomplete="off" />
+                                    <div class="airport-field-sub" id="toSub">LHR — Heathrow Havalimanı</div>
+                                </div>
+                            </div>
+
+                            <!-- Dates -->
+                            <div class="dates-row">
+                                <div class="date-field">
+                                    <div class="date-field-label">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                                        Gediş Tarixi
+                                    </div>
+                                    <input class="date-field-input" type="date" id="depDate" />
+                                </div>
+                                <div class="date-field" id="retDateField">
+                                    <div class="date-field-label">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                                        Dönüş Tarixi
+                                    </div>
+                                    <input class="date-field-input" type="date" id="retDate" />
+                                </div>
+                            </div>
+
+                            <!-- Bottom row: Pax + Promo -->
+                            <div class="bottom-row">
+                                <div class="pax-trigger" id="paxTrigger" onclick="togglePax()" style="position:relative">
+                                    <div class="pax-trigger-label">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                                        Sərnişin / Kabin Sinifi
+                                    </div>
+                                    <div class="pax-trigger-value">
+                                        <span id="paxSummary">1 Yetkin — Ekonom</span>
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9" /></svg>
+                                    </div>
+                                    <div class="pax-dropdown" id="paxDropdown" onclick="event.stopPropagation()">
+                                        <div class="pax-row">
+                                            <div>
+                                                <div class="pax-info-title">Yetkin</div>
+                                                <div class="pax-info-sub">12 yaş və üzəri</div>
+                                            </div>
+                                            <div class="pax-counter">
+                                                <button class="pax-counter-btn" onclick="changePax('adult',-1)">−</button>
+                                                <span class="pax-counter-val" id="adultCount">1</span>
+                                                <button class="pax-counter-btn" onclick="changePax('adult',1)">+</button>
+                                            </div>
+                                        </div>
+                                        <div class="pax-row">
+                                            <div>
+                                                <div class="pax-info-title">Uşaq</div>
+                                                <div class="pax-info-sub">2–11 yaş</div>
+                                            </div>
+                                            <div class="pax-counter">
+                                                <button class="pax-counter-btn" onclick="changePax('child',-1)">−</button>
+                                                <span class="pax-counter-val" id="childCount">0</span>
+                                                <button class="pax-counter-btn" onclick="changePax('child',1)">+</button>
+                                            </div>
+                                        </div>
+                                        <div class="pax-row">
+                                            <div>
+                                                <div class="pax-info-title">Körpə</div>
+                                                <div class="pax-info-sub">0–2 yaş</div>
+                                            </div>
+                                            <div class="pax-counter">
+                                                <button class="pax-counter-btn" onclick="changePax('infant',-1)">−</button>
+                                                <span class="pax-counter-val" id="infantCount">0</span>
+                                                <button class="pax-counter-btn" onclick="changePax('infant',1)">+</button>
+                                            </div>
+                                        </div>
+                                        <div class="cabin-section">
+                                            <div class="cabin-section-label">Kabin Sinifi</div>
+                                            <div class="cabin-options" id="cabinOptions">
+                                                <button class="cabin-btn active" onclick="selectCabin(this,'Ekonomi')">Ekonom</button>
+                                                <button class="cabin-btn" onclick="selectCabin(this,'Premium Ekonomi')">Premium Ekonom</button>
+                                                <button class="cabin-btn" onclick="selectCabin(this,'Business')">Business</button>
+                                            </div>
+                                        </div>
+                                        <button class="pax-done-btn" onclick="closePax()">Tamam</button>
+                                    </div>
+                                </div>
+
+                                <div class="promo-field">
+                                    <div class="promo-field-label">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" /><line x1="7" y1="7" x2="7.01" y2="7" /></svg>
+                                        Promosiya
+                                    </div>
+                                    <div class="promo-toggle">
+                                        <a class="promo-toggle-link" onclick="togglePromo(this)">
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                                            Promosiya Kodu İstifadə Et
+                                        </a>
+                                    </div>
+                                    <div class="promo-input-wrap" id="promoInputWrap">
+                                        <input class="promo-input" type="text" placeholder="Kod yazın (mes: YAZA25)" id="promoCode" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Extras -->
+                            <div class="extras-row">
+                                <label class="extra-check">
+                                    <input type="checkbox" id="directOnly" /> Sadəcə Direkt Uçuşlar
+                                </label>
+                                <label class="extra-check">
+                                    <input type="checkbox" id="flexDates" /> Çevik tarixlər
+                                </label>
+                                <label class="extra-check">
+                                    <input type="checkbox" id="priceAlert" /> Qiymət Təqvimi Göstər
+                                </label>
+                            </div>
+
+                            <!-- CTA -->
+                            <button class="search-btn">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                                Uçuşların siyahısı
+                            </button>
+                        </div>
+
+
+                        <!-- ===================== SEYAHATLERİM ===================== -->
+                        <div class="bk-pane" id="pane-trips">
+                            <div class="bk-section-title">Səyahətlərim</div>
+                            <div class="bk-section-sub">Rezervasiya məlumatlarınızdan istifadə edərək cari və ya keçmiş səfərlərinizə daxil olun.</div>
+
+                            <div class="query-method-row" id="tripMethodRow">
+                                <button class="query-method-btn active" onclick="setQueryMethod('trips','pnr',this)">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M7 8h10M7 12h6" /></svg>
+                                    PNR ilə Sorğu
+                                </button>
+                                <button class="query-method-btn" onclick="setQueryMethod('trips','ticket',this)">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z" /></svg>
+                                    Bilet No ilə Sorğu
+                                </button>
+                                <button class="query-method-btn" onclick="setQueryMethod('trips','email',this)">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                                    E-poçt ilə Sorğu
+                                </button>
+                            </div>
+
+                            <div class="query-fields active" id="trips-pnr">
+                                <div class="field-stack">
+                                    <div class="two-col">
+                                        <div class="input-field-wrap">
+                                            <div class="input-field-label">Rezervasiya Kodu (PNR)</div>
+                                            <input class="input-field" type="text" placeholder="6 xanalı kod, mes: ABC123" style="text-transform:uppercase;" />
+                                        </div>
+                                        <div class="input-field-wrap">
+                                            <div class="input-field-label">Soyad</div>
+                                            <input class="input-field" type="text" placeholder="Bilet üzərindəki soyad" />
+                                        </div>
+                                    </div>
+                                    <button class="search-btn" style="margin-top:4px">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4" /></svg>
+                                        Səyahətimi Görüntülə
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="query-fields" id="trips-ticket">
+                                <div class="field-stack">
+                                    <div class="two-col">
+                                        <div class="input-field-wrap">
+                                            <div class="input-field-label">Bilet Nömrəsi</div>
+                                            <input class="input-field" type="text" placeholder="13 xanalı bilet nömrəsi" />
+                                        </div>
+                                        <div class="input-field-wrap">
+                                            <div class="input-field-label">Soyad</div>
+                                            <input class="input-field" type="text" placeholder="Bilet üzərindəki soyad" />
+                                        </div>
+                                    </div>
+                                    <button class="search-btn" style="margin-top:4px">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4" /></svg>
+                                        Rezervasiyamı Tap
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="query-fields" id="trips-email">
+                                <div class="field-stack">
+                                    <div class="input-field-wrap">
+                                        <div class="input-field-label">E-poçt Ünvanı</div>
+                                        <input class="input-field" type="email" placeholder="Rezervasiyanın edildiyi e-poçt ünvanı" />
+                                    </div>
+                                    <button class="search-btn" style="margin-top:4px">
+                                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4" /></svg>
+                                        Rezervasiyamı Tap
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="help-links">
+                                <a href="#" class="help-link">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+                                    PNR kodumu bilmirəm
+                                </a>
+                                <a href="#" class="help-link">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+                                    Rezervasiya dəyişikliyi
+                                </a>
+                                <a href="#" class="help-link">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6M14 11v6" /></svg>
+                                    İadə / Ləğv əməliyyatları
+                                </a>
+                            </div>
+                        </div>
+
+
+                        <!-- ===================== CHECK-IN ===================== -->
+                        <div class="bk-pane" id="pane-checkin">
+                            <div class="bk-section-title">Online Check-in</div>
+                            <div class="bk-section-sub">Uçuş vaxtınızdan ən tez 24 saat, ən gec isə 1 saat əvvəl onlayn check-in edə bilərsiniz.</div>
+
+                            <div class="info-cards">
+                                <div class="info-card">
+                                    <div class="info-card-icon">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" /><path d="M8 21h8M12 17v4" /></svg>
+                                    </div>
+                                    <div>
+                                        <div class="info-card-title">Oturacaq Seçimi</div>
+                                        <div class="info-card-sub">İstədiyiniz oturacağı seçin</div>
+                                    </div>
+                                </div>
+                                <div class="info-card">
+                                    <div class="info-card-icon">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8" /><polyline points="3.29 7 12 12 20.71 7" /><line x1="12" y1="22" x2="12" y2="12" /></svg>
+                                    </div>
+                                    <div>
+                                        <div class="info-card-title">Baqaj Məlumatı</div>
+                                        <div class="info-card-sub">İcazə verilən baqaj miqdarı</div>
+                                    </div>
+                                </div>
+                                <div class="info-card">
+                                    <div class="info-card-icon">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" /><line x1="12" y1="18" x2="12.01" y2="18" /></svg>
+                                    </div>
+                                    <div>
+                                        <div class="info-card-title">Mobil Minik Kartı</div>
+                                        <div class="info-card-sub">Telefonunuza yükləyin, kağızsız uçun</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bk-notice">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+                                Check-in əməliyyatı uçuş vaxtından <strong>24 saat əvvəl</strong> başlayır. Oturacaq seçimini və mobil minik kartı əməliyyatlarını tamamlayın.
+                            </div>
+
+                            <div class="query-method-row" id="ciMethodRow">
+                                <button class="query-method-btn active" onclick="setQueryMethod('ci','pnr',this)">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M7 8h10M7 12h6" /></svg>
+                                    PNR + Soyad
+                                </button>
+                                <button class="query-method-btn" onclick="setQueryMethod('ci','ticket',this)">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z" /></svg>
+                                    Bilet No + Soyad
+                                </button>
+                            </div>
+
+                            <div class="query-fields active" id="ci-pnr">
+                                <div class="two-col" style="margin-bottom:16px">
+                                    <div class="input-field-wrap">
+                                        <div class="input-field-label">Rezervasyon Kodu (PNR)</div>
+                                        <input class="input-field" type="text" placeholder="ABC123" style="text-transform:uppercase" />
+                                    </div>
+                                    <div class="input-field-wrap">
+                                        <div class="input-field-label">Soyad</div>
+                                        <input class="input-field" type="text" placeholder="Pasport / Şəxsiyyət üzərindəki soyad" />
+                                    </div>
+                                </div>
+                                <button class="search-btn">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                                    Check-in Əməliyyatını Başlat
+                                </button>
+                            </div>
+
+                            <div class="query-fields" id="ci-ticket">
+                                <div class="two-col" style="margin-bottom:16px">
+                                    <div class="input-field-wrap">
+                                        <div class="input-field-label">Bilet Nömrəsi</div>
+                                        <input class="input-field" type="text" placeholder="13 haneli numara" />
+                                    </div>
+                                    <div class="input-field-wrap">
+                                        <div class="input-field-label">Soyad</div>
+                                        <input class="input-field" type="text" placeholder="Pasport / Şəxsiyyət üzərindəki soyad" />
+                                    </div>
+                                </div>
+                                <button class="search-btn">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                                    Check-in Əməliyyatını Başlat
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <!-- ===================== UÇUŞ DURUMU ===================== -->
+                        <div class="bk-pane" id="pane-status">
+                            <div class="bk-section-title">Uçuş Statusu</div>
+                            <div class="bk-section-sub">Uçuş nömrəsi və ya marşrut üzrə uçuşu izləyin.</div>
+
+                            <div class="fs-method-row">
+                                <button class="fs-method-btn active" onclick="setFsMethod('fno',this)">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 21 4s-2 0-3.5 1.5L14 9 5.8 7.2l-1.3 1.3 6.9 3.6-2.4 2.4-2.6-.5-1.2 1.2 3.5 1.5 1.5 3.5 1.2-1.2-.5-2.6 2.4-2.4 3.6 6.9 1.3-1.3z" /></svg>
+                                    Uçuş Nömrəsi
+                                </button>
+                                <button class="fs-method-btn" onclick="setFsMethod('route',this)">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
+                                    Marşrut üzrə Axtarış
+                                </button>
+                            </div>
+
+                            <div class="query-fields active" id="fs-fno">
+                                <div class="two-col" style="margin-bottom:16px">
+                                    <div class="input-field-wrap">
+                                        <div class="input-field-label">Uçuş Nömrəsi</div>
+                                        <input class="input-field" type="text" placeholder="Mes: TK1234" style="text-transform:uppercase" />
+                                    </div>
+                                    <div class="input-field-wrap">
+                                        <div class="input-field-label">Tarix</div>
+                                        <input class="input-field" type="date" />
+                                    </div>
+                                </div>
+                                <button class="search-btn" style="margin-bottom:0">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                                    Uçuşu Sorğula
+                                </button>
+                            </div>
+
+                            <div class="query-fields" id="fs-route">
+                                <div class="field-stack" style="margin-bottom:16px">
+                                    <div class="two-col">
+                                        <div class="input-field-wrap">
+                                            <div class="input-field-label">Haradan</div>
+                                            <input class="input-field" type="text" placeholder="İstanbul" />
+                                        </div>
+                                        <div class="input-field-wrap">
+                                            <div class="input-field-label">Haraya</div>
+                                            <input class="input-field" type="text" placeholder="Londra" />
+                                        </div>
+                                    </div>
+                                    <div class="input-field-wrap">
+                                        <div class="input-field-label">Tarix</div>
+                                        <input class="input-field" type="date" />
+                                    </div>
+                                </div>
+                                <button class="search-btn" style="margin-bottom:0">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+                                    Uçuşu Sorğula
+                                </button>
+                            </div>
+
+                            <div class="status-cards">
+                                <div class="status-card">
+                                    <div class="status-card-dot"></div>
+                                    <div>
+                                        <div class="status-card-title">Status</div>
+                                        <div class="status-card-value">Vaxtında</div>
+                                    </div>
+                                </div>
+                                <div class="status-card">
+                                    <div class="status-card-dot yellow"></div>
+                                    <div>
+                                        <div class="status-card-title">Qapı</div>
+                                        <div class="status-card-value">—</div>
+                                    </div>
+                                </div>
+                                <div class="status-card">
+                                    <div class="status-card-dot"></div>
+                                    <div>
+                                        <div class="status-card-title">Təxmini Qalxış</div>
+                                        <div class="status-card-value">—</div>
+                                    </div>
+                                </div>
+                                <div class="status-card">
+                                    <div class="status-card-dot"></div>
+                                    <div>
+                                        <div class="status-card-title">Təxmini Eniş</div>
+                                        <div class="status-card-value">—</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div><!-- /bk-panel -->
+                </div><!-- /bk-widget -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+      // TAB SWITCHING
+      document.querySelectorAll('.bk-tab-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.bk-tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.bk-pane').forEach(p => p.classList.remove('active'));
+          this.classList.add('active');
+          document.getElementById('pane-' + this.dataset.tab).classList.add('active');
+        });
+      });
+
+      // TRIP TYPE
+      window.setTripType = function (btn, type) {
+        document.querySelectorAll('.trip-type-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        var retField = document.getElementById('retDateField');
+        if (type === 'oneway') retField.classList.add('disabled');
+        else retField.classList.remove('disabled');
+      };
+
+      // SWAP
+      window.swapAirports = function () {
+        var from = document.getElementById('fromAirport');
+        var to = document.getElementById('toAirport');
+        var tmp = from.value; from.value = to.value; to.value = tmp;
+      };
+
+      // PAX
+      var paxData = { adult: 1, child: 0, infant: 0, cabin: 'Ekonomi' };
+      window.togglePax = function () {
+        document.getElementById('paxTrigger').classList.toggle('open');
+      };
+      window.closePax = function () {
+        document.getElementById('paxTrigger').classList.remove('open');
+      };
+      window.changePax = function (type, delta) {
+        paxData[type] = Math.max(0, paxData[type] + delta);
+        if (type === 'adult') paxData[type] = Math.max(1, paxData[type]);
+        document.getElementById(type + 'Count').textContent = paxData[type];
+        updatePaxSummary();
+      };
+      window.selectCabin = function (btn, cabin) {
+        document.querySelectorAll('.cabin-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        paxData.cabin = cabin;
+        updatePaxSummary();
+      };
+      function updatePaxSummary() {
+        var total = paxData.adult + paxData.child + paxData.infant;
+        var label = total + ' Yolcu — ' + paxData.cabin;
+        document.getElementById('paxSummary').textContent = label;
+      }
+      document.addEventListener('click', function (e) {
+        var trigger = document.getElementById('paxTrigger');
+        if (trigger && !trigger.contains(e.target)) trigger.classList.remove('open');
+      });
+
+      // PROMO
+      window.togglePromo = function (link) {
+        var wrap = document.getElementById('promoInputWrap');
+        wrap.classList.toggle('open');
+        if (wrap.classList.contains('open')) {
+          wrap.querySelector('input').focus();
+          link.innerHTML = '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg> Kodu Kaldır';
+        } else {
+          link.innerHTML = '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Promosyon Kodu Kullan';
+        }
+      };
+
+      // QUERY METHOD (trips / checkin)
+      window.setQueryMethod = function (prefix, method, btn) {
+        var row = btn.closest('.query-method-row');
+        row.querySelectorAll('.query-method-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('[id^="' + prefix + '-"]').forEach(el => el.classList.remove('active'));
+        var target = document.getElementById(prefix + '-' + method);
+        if (target) target.classList.add('active');
+      };
+
+      // FLIGHT STATUS METHOD
+      window.setFsMethod = function (method, btn) {
+        document.querySelectorAll('.fs-method-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('[id^="fs-"]').forEach(el => el.classList.remove('active'));
+        document.getElementById('fs-' + method).classList.add('active');
+      };
+    })();
+</script>
