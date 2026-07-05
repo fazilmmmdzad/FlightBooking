@@ -12,64 +12,14 @@
     <!-- main-area -->
     <main>
 
-        <!-- slider-area -->
-        <section class="slider-area">
-            <div class="slider-active">
-                <div class="single-slider slider-bg" data-background="assets/img/slider/slider_bg01.jpg">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-xl-8 col-lg-10">
-                                <div class="slider-content">
-                                    <h2 class="title" data-animation="fadeInUp" data-delay=".2s">A Lifetime of Discounts? It's Genius.</h2>
-                                    <p data-animation="fadeInUp" data-delay=".4s">Get rewarded for your travels – unlock instant savings of 10% or more with a free Geairinfo.com account</p>
-                                    <a href="contact.html" class="btn" data-animation="fadeInUp" data-delay=".6s">Sign in / Register</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="single-slider slider-bg" data-background="assets/img/slider/slider_bg02.jpg">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-xl-8 col-lg-10">
-                                <div class="slider-content">
-                                    <h2 class="title" data-animation="fadeInUp" data-delay=".2s">A Lifetime of Discounts? It's Genius.</h2>
-                                    <p data-animation="fadeInUp" data-delay=".4s">Get rewarded for your travels – unlock instant savings of 10% or more with a free Geairinfo.com account</p>
-                                    <a href="contact.html" class="btn" data-animation="fadeInUp" data-delay=".6s">Sign in / Register</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="single-slider slider-bg" data-background="assets/img/slider/slider_bg03.jpg">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-xl-8 col-lg-10">
-                                <div class="slider-content">
-                                    <h2 class="title" data-animation="fadeInUp" data-delay=".2s">A Lifetime of Discounts? It's Genius.</h2>
-                                    <p data-animation="fadeInUp" data-delay=".4s">Get rewarded for your travels – unlock instant savings of 10% or more with a free Geairinfo.com account</p>
-                                    <a href="contact.html" class="btn" data-animation="fadeInUp" data-delay=".6s">Sign in / Register</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- slider-area-end -->
+        @await Component.InvokeAsync("_DefaultSliderComponentPartial")
+
         <!-- booking-area -->
         <div class="booking-area">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="booking-tag">
-                            <ul>
-                                <li><a href="booking-list.html"><i class="flaticon-flight"></i>Flights</a></li>
-                                <li><a href="booking-list.html"><i class="flaticon-car-1"></i>Car Rentals</a></li>
-                                <li><a href="booking-list.html"><i class="flaticon-eiffel-tower"></i>Attractions</a></li>
-                                <li><a href="booking-list.html"><i class="flaticon-taxi"></i>Airport Taxis</a></li>
-                            </ul>
-                        </div>
+                        @await Component.InvokeAsync("_BookingTagsComponentPartial")
                         <div class="booking-wrap">
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item" role="presentation">
