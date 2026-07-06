@@ -1,0 +1,267 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+    @await Component.InvokeAsync("_AdminHeadComponentPartial")
+<body>
+
+    @await Component.InvokeAsync("_AdminSidebarComponentPartial")
+
+    @await Component.InvokeAsync("_AdminTopbarComponentPartial")
+
+    @RenderBody()
+
+    <div class="toast-container-custom" id="toastContainer"></div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+
+        let flights = [
+          { id:1,  no:'AZ102', dep:'Bakı', arr:'Paris',     depT:'10:30', arrT:'13:00', model:'Airbus A320',  gate:'G12', status:'Boarding'  },
+          { id:2,  no:'AZ215', dep:'Bakı', arr:'Roma',      depT:'11:15', arrT:'13:30', model:'Boeing 737',   gate:'G5',  status:'Planlaşdırılıb' },
+          { id:3,  no:'AZ330', dep:'Bakı', arr:'Londra',    depT:'12:40', arrT:'15:10', model:'Airbus A321',  gate:'G8',  status:'Gecikir' },
+          { id:4,  no:'AZ450', dep:'Bakı', arr:'Berlin',    depT:'14:20', arrT:'16:50', model:'Boeing 737',   gate:'G2',  status:'Ləğv edildi.'     },
+          { id:5,  no:'AZ561', dep:'Bakı', arr:'Amsterdam', depT:'07:00', arrT:'10:20', model:'Boeing 777',   gate:'G15', status:'Planlaşdırılıb' },
+          { id:6,  no:'AZ672', dep:'Bakı', arr:'Madrid',    depT:'09:45', arrT:'13:15', model:'Airbus A320',  gate:'G3',  status:'Boarding'  },
+          { id:7,  no:'AZ789', dep:'Bakı', arr:'Frankfurt', depT:'15:30', arrT:'18:00', model:'Boeing 787',   gate:'G11', status:'Planlaşdırılıb' },
+          { id:8,  no:'AZ810', dep:'Paris',    arr:'Bakı',  depT:'14:00', arrT:'18:30', model:'Airbus A321',  gate:'G7',  status:'Gecikir' },
+          { id:9,  no:'AZ923', dep:'Londra',   arr:'Bakı',  depT:'08:20', arrT:'14:50', model:'Boeing 737',   gate:'G9',  status:'Planlaşdırılıb' },
+          { id:10, no:'AZ035', dep:'Berlin',   arr:'Bakı',  depT:'16:10', arrT:'20:45', model:'Airbus A320',  gate:'G6',  status:'Ləğv edildi.'     },
+        ];
+
+        let nextId = 11;
+        let currentPage = 1;
+        const perPage = 6;
+
+
+        function statusBadge(s) {
+          const map = {
+            'Boarding':  { cls:'status-boarding',  icon:'bi-check2-circle' },
+            'Planlandı': { cls:'status-scheduled', icon:'bi-calendar-check' },
+            'Gecikmeli': { cls:'status-delayed',   icon:'bi-exclamation-triangle' },
+            'İptal':     { cls:'status-cancelled', icon:'bi-x-circle' },
+          };
+          const m = map[s] || { cls:'status-scheduled', icon:'bi-circle' };
+          return `<span class="status-badge ${m.cls}"><span class="dot"></span>${s}</span>`;
+        }
+
+
+        function getFiltered() {
+          const q = (document.getElementById('searchInput').value || '').toLowerCase();
+          const sf = document.getElementById('statusFilter').value;
+          const cf = document.getElementById('cityFilter').value;
+
+          return flights.filter(f => {
+            const matchQ  = !q  || [f.no,f.dep,f.arr,f.status,f.model,f.gate].some(v => v.toLowerCase().includes(q));
+            const matchS  = !sf || f.status === sf;
+            const matchC  = !cf || f.dep === cf || f.arr === cf;
+            return matchQ && matchS && matchC;
+          });
+        }
+
+        function renderTable() {
+          const filtered = getFiltered();
+          const total = filtered.length;
+          const totalPages = Math.max(1, Math.ceil(total / perPage));
+          if (currentPage > totalPages) currentPage = totalPages;
+
+          const slice = filtered.slice((currentPage - 1) * perPage, currentPage * perPage);
+
+          const tbody = document.getElementById('tableBody');
+          if (slice.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--gray-300);font-size:14px;"><i class="bi bi-search" style="font-size:24px;display:block;margin-bottom:8px;"></i>Nəticə tapılmadı.</td></tr>`;
+          } else {
+            tbody.innerHTML = slice.map(f => `
+              <tr data-id="${f.id}">
+                <td><div class="flight-no"><span class="flight-no-dot"></span>${f.no}</div></td>
+                <td>
+                  <div class="route-cell">
+                    <span style="font-weight:600;">${f.dep}</span>
+                    <i class="bi bi-arrow-right route-arrow"></i>
+                    <span style="font-weight:600;">${f.arr}</span>
+                  </div>
+                </td>
+                <td><span class="time-cell">${f.depT}</span></td>
+                <td><span class="time-cell">${f.arrT}</span></td>
+                <td><span class="model-badge"><i class="bi bi-airplane"></i>${f.model}</span></td>
+                <td><span class="gate-cell">${f.gate}</span></td>
+                <td>${statusBadge(f.status)}</td>
+                <td>
+                  <div class="actions-cell">
+                    <button class="act-btn act-view" onclick="viewFlight(${f.id})"><i class="bi bi-eye-fill"></i><span class="btn-label">Bax</span></button>
+                    <button class="act-btn act-edit" onclick="editFlight(${f.id})"><i class="bi bi-pencil-fill"></i><span class="btn-label">Redaktə Et</span></button>
+                    <button class="act-btn act-del"  onclick="deleteFlight(${f.id})"><i class="bi bi-trash-fill"></i><span class="btn-label">Sil</span></button>
+                  </div>
+                </td>
+              </tr>
+            `).join('');
+          }
+
+
+          document.getElementById('rowCount').textContent = `${total} uçuş tapıldı`;
+          const from = total === 0 ? 0 : (currentPage - 1) * perPage + 1;
+          const to   = Math.min(currentPage * perPage, total);
+          document.getElementById('footerInfo').textContent = `${from}–${to} / ${total} uçuş`;
+
+          renderPagination(totalPages);
+        }
+
+        function filterTable() {
+          currentPage = 1;
+          renderTable();
+        }
+
+
+        function renderPagination(totalPages) {
+          const ul = document.getElementById('paginationList');
+          let html = '';
+
+          html += `<li class="${currentPage===1?'disabled':''}"><span onclick="${currentPage>1?'goPage(currentPage-1)':''}" style="cursor:${currentPage===1?'default':'pointer'}"><i class="bi bi-chevron-left" style="font-size:11px;"></i></span></li>`;
+
+          for (let p = 1; p <= totalPages; p++) {
+            html += `<li class="${p===currentPage?'active':''}"><a onclick="goPage(${p})">${p}</a></li>`;
+          }
+
+          html += `<li class="${currentPage===totalPages?'disabled':''}"><span onclick="${currentPage<totalPages?'goPage(currentPage+1)':''}" style="cursor:${currentPage===totalPages?'default':'pointer'}"><i class="bi bi-chevron-right" style="font-size:11px;"></i></span></li>`;
+
+          ul.innerHTML = html;
+        }
+
+        function goPage(p) {
+          currentPage = p;
+          renderTable();
+        }
+
+
+        let sidebarOpen = true;
+
+        function toggleSidebar() {
+          sidebarOpen = !sidebarOpen;
+          const sb  = document.getElementById('sidebar');
+          const tb  = document.getElementById('topbar');
+          const mc  = document.getElementById('main-content');
+          const ico = document.getElementById('toggle-icon');
+          const lbl = document.getElementById('toggle-label');
+
+          if (sidebarOpen) {
+            sb.classList.remove('collapsed');
+            tb.classList.remove('collapsed');
+            mc.classList.remove('collapsed');
+            ico.classList.replace('bi-arrow-bar-right','bi-arrow-bar-left');
+            lbl.textContent = 'Kiçilt';
+          } else {
+            sb.classList.add('collapsed');
+            tb.classList.add('collapsed');
+            mc.classList.add('collapsed');
+            ico.classList.replace('bi-arrow-bar-left','bi-arrow-bar-right');
+            lbl.textContent = '';
+          }
+        }
+
+
+        function toggleSub(el, subId) {
+          const sub  = document.getElementById(subId);
+          const chev = el.querySelector('.chevron');
+          sub.classList.toggle('open');
+          if (chev) chev.classList.toggle('open');
+        }
+
+
+        function setActive(el) {
+          document.querySelectorAll('.nav-link-item').forEach(n => n.classList.remove('active'));
+          el.classList.add('active');
+        }
+
+        function toggleDD(id) {
+          const dd = document.getElementById(id);
+          const isOpen = dd.classList.contains('show');
+          document.querySelectorAll('.dropdown-menu-custom').forEach(d => d.classList.remove('show'));
+          if (!isOpen) dd.classList.add('show');
+        }
+
+        document.addEventListener('click', e => {
+          if (!e.target.closest('.dd-wrapper')) {
+            document.querySelectorAll('.dropdown-menu-custom').forEach(d => d.classList.remove('show'));
+          }
+        });
+
+        function openModal() {
+          document.getElementById('flightModal').classList.add('open');
+        }
+
+        function closeModal() {
+          document.getElementById('flightModal').classList.remove('open');
+        }
+
+        function saveFlight() {
+          const no      = document.getElementById('newFlightNo').value.trim();
+          const model   = document.getElementById('newModel').value;
+          const dep     = document.getElementById('newDep').value.trim();
+          const arr     = document.getElementById('newArr').value.trim();
+          const depT    = document.getElementById('newDepTime').value;
+          const arrT    = document.getElementById('newArrTime').value;
+          const gate    = document.getElementById('newGate').value.trim();
+          const status  = document.getElementById('newStatus').value;
+
+          if (!no || !dep || !arr || !gate) {
+            showToast('Zəhmət olmasa bütün məcburi sahələri doldurun.', 'warning');
+            return;
+          }
+
+          flights.push({ id: nextId++, no, dep, arr, depT, arrT, model, gate, status });
+          closeModal();
+          renderTable();
+          showToast(`${no} uçuşu uğurla əlavə edildi!`, 'success');
+
+
+          ['newFlightNo','newDep','newArr','newGate'].forEach(id => document.getElementById(id).value = '');
+        }
+
+
+        document.getElementById('flightModal').addEventListener('click', function(e) {
+          if (e.target === this) closeModal();
+        });
+
+
+        function viewFlight(id) {
+          const f = flights.find(x => x.id === id);
+          if (!f) return;
+          showToast(`${f.no}: ${f.dep} → ${f.arr} | ${f.depT} – ${f.arrT} | ${f.status}`, 'info');
+        }
+
+        function editFlight(id) {
+          const f = flights.find(x => x.id === id);
+          if (!f) return;
+          showToast(`${f.no} redaktə rejimi (demo)`, 'warning');
+        }
+
+        function deleteFlight(id) {
+          const f = flights.find(x => x.id === id);
+          if (!f) return;
+          if (confirm(`"${f.no}" uçuşunu silmək istədiyinizə əminsiniz?`)) {
+            flights = flights.filter(x => x.id !== id);
+            renderTable();
+            showToast(`${f.no} uçuşu silindi.`, 'danger');
+          }
+        }
+
+        function showToast(msg, type = 'info') {
+          const icons = { success:'bi-check-circle-fill', danger:'bi-x-circle-fill', warning:'bi-exclamation-triangle-fill', info:'bi-info-circle-fill' };
+          const container = document.getElementById('toastContainer');
+          const t = document.createElement('div');
+          t.className = 'toast-item';
+          t.innerHTML = `<i class="bi ${icons[type]} toast-icon ${type}"></i><span>${msg}</span>`;
+          container.appendChild(t);
+          setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(20px)'; t.style.transition='.3s'; setTimeout(()=>t.remove(),320); }, 3200);
+        }
+
+
+        renderTable();
+    </script>
+
+</body>
+</html>

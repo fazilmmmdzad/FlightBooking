@@ -1,0 +1,59 @@
+﻿<header class="topbar" id="topbar">
+
+
+    <div class="topbar-search">
+        <i class="bi bi-search search-icon"></i>
+        <input type="text" placeholder="Uçuş, sərnişin, rezervasiya axtar..." />
+    </div>
+
+    <div class="topbar-spacer"></div>
+    <div class="dd-wrapper">
+        <button class="tb-icon-btn" onclick="toggleDD('notif-dd')">
+            <i class="bi bi-bell-fill"></i>
+            <span class="tb-badge count">4</span>
+        </button>
+        <div class="dropdown-menu-custom" id="notif-dd">
+            <div style="padding:8px 12px 6px;font-size:11px;font-weight:700;color:var(--gray-500);letter-spacing:.6px;text-transform:uppercase;">Bildirişlər</div>
+            <a href="#" onclick="return false;"><i class="bi bi-exclamation-triangle-fill" style="color:#F59E0B;"></i>AZ330 gecikir – 45 dəq</a>
+            <a href="#" onclick="return false;"><i class="bi bi-x-circle-fill" style="color:#EF4444;"></i>AZ450 ləğv edildi</a>
+            <a href="#" onclick="return false;"><i class="bi bi-person-check-fill" style="color:#10B981;"></i>38 yeni rezervasiya</a>
+            <a href="#" onclick="return false;"><i class="bi bi-airplane-fill" style="color:var(--accent);"></i>AZ102 boarding başladı</a>
+            <div class="divider"></div>
+            <a href="#" onclick="return false;" style="justify-content:center;color:var(--accent);font-weight:600;">Hamısına Bax</a>
+        </div>
+    </div>
+
+
+    <div class="dd-wrapper">
+        <button class="tb-icon-btn" onclick="toggleDD('msg-dd')">
+            <i class="bi bi-chat-fill"></i>
+            <span class="tb-badge"></span>
+        </button>
+        <div class="dropdown-menu-custom" id="msg-dd">
+            <div style="padding:8px 12px 6px;font-size:11px;font-weight:700;color:var(--gray-500);letter-spacing:.6px;text-transform:uppercase;">Mesajlar</div>
+            <a href="#" onclick="return false;"><i class="bi bi-person-fill" style="color:var(--accent);"></i>Əməliyyat komandasından mesaj</a>
+            <a href="#" onclick="return false;"><i class="bi bi-headset" style="color:#10B981;"></i>Dəstək müraciəti #1024</a>
+            <div class="divider"></div>
+            <a href="#" onclick="return false;" style="justify-content:center;color:var(--accent);font-weight:600;">Bütün Mesajlar</a>
+        </div>
+    </div>
+
+    <div class="dd-wrapper">
+        <button class="user-pill" onclick="toggleDD('user-dd')">
+            <div class="user-avatar">FM</div>
+            <div class="user-info">
+                <span class="user-name">Fazil Məmmədzadə</span>
+                <span class="user-role">Super Admin</span>
+            </div>
+            <i class="bi bi-chevron-down" style="font-size:11px;color:var(--gray-500);margin-left:4px;"></i>
+        </button>
+        <div class="dropdown-menu-custom" id="user-dd">
+            <a href="#" onclick="return false;"><i class="bi bi-person-fill"></i>Profilim</a>
+            <a href="#" onclick="return false;"><i class="bi bi-shield-lock-fill"></i>Təhlükəsizlik</a>
+            <a href="#" onclick="return false;"><i class="bi bi-gear-fill"></i>Parametrlər</a>
+            <div class="divider"></div>
+            <a href="#" onclick="return false;" class="danger"><i class="bi bi-box-arrow-right"></i>Çıxış Et</a>
+        </div>
+    </div>
+
+</header>

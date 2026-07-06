@@ -1,0 +1,124 @@
+﻿```html
+<aside class="sidebar" id="sidebar">
+
+    <!-- Brand -->
+    <a href="#" class="sidebar-brand" onclick="return false;">
+        <div class="brand-icon"><i class="bi bi-airplane-fill"></i></div>
+        <div class="brand-text">
+            <span class="brand-name">SkyAdmin</span>
+            <span class="brand-sub">Hava Yolu İdarəetməsi</span>
+        </div>
+    </a>
+
+    <!-- Nav -->
+    <nav class="sidebar-nav">
+
+        <!-- Main -->
+        <div class="nav-label">ƏSAS MENYU</div>
+
+        <div class="nav-item-wrap">
+            <a class="nav-link-item" href="#" onclick="setActive(this);return false;">
+                <i class="bi bi-grid-1x2-fill icon"></i>
+                <span class="label">İdarə Paneli</span>
+                <span class="nav-badge">5</span>
+            </a>
+        </div>
+
+        <!-- Flights -->
+        <div class="nav-item-wrap">
+            <div class="nav-link-item active" id="flights-toggle" onclick="toggleSub(this,'flights-sub')">
+                <i class="bi bi-airplane icon"></i>
+                <span class="label">Uçuşlar</span>
+                <i class="bi bi-chevron-down chevron open ms-auto" id="flights-chev"></i>
+            </div>
+            <div class="sub-menu open" id="flights-sub">
+                <a class="sub-menu-link active" href="#" onclick="return false;"><i class="bi bi-dot"></i>Uçuşların İdarəsi</a>
+                <a class="sub-menu-link" href="#" onclick="return false;"><i class="bi bi-dot"></i>Cədvəllər</a>
+                <a class="sub-menu-link" href="#" onclick="return false;"><i class="bi bi-dot"></i>Uçuş Statusları</a>
+            </div>
+        </div>
+
+        <div class="nav-item-wrap">
+            <a class="nav-link-item" href="#" onclick="setActive(this);return false;">
+                <i class="bi bi-geo-alt-fill icon"></i>
+                <span class="label">İstiqamətlər</span>
+            </a>
+        </div>
+
+        <div class="nav-item-wrap">
+            <a class="nav-link-item" href="#" onclick="setActive(this);return false;">
+                <i class="bi bi-boxes icon"></i>
+                <span class="label">Təyyarə Parkı</span>
+                <span class="nav-badge">12</span>
+            </a>
+        </div>
+
+        <!-- Operations -->
+        <div class="nav-label">ƏMƏLİYYATLAR</div>
+
+        <div class="nav-item-wrap">
+            <a class="nav-link-item" href="#" onclick="setActive(this);return false;">
+                <i class="bi bi-people-fill icon"></i>
+                <span class="label">Sərnişinlər</span>
+            </a>
+        </div>
+
+        <div class="nav-item-wrap">
+            <a class="nav-link-item" href="#" onclick="setActive(this);return false;">
+                <i class="bi bi-ticket-detailed-fill icon"></i>
+                <span class="label">Rezervasiyalar</span>
+                <span class="nav-badge">38</span>
+            </a>
+        </div>
+
+        <div class="nav-item-wrap">
+            <div class="nav-link-item" onclick="toggleSub(this,'checkin-sub')">
+                <i class="bi bi-check2-square icon"></i>
+                <span class="label">Check-In İdarəetməsi</span>
+                <i class="bi bi-chevron-down chevron ms-auto"></i>
+            </div>
+            <div class="sub-menu" id="checkin-sub">
+                <a class="sub-menu-link" href="#" onclick="return false;"><i class="bi bi-dot"></i>Onlayn Check-In</a>
+                <a class="sub-menu-link" href="#" onclick="return false;"><i class="bi bi-dot"></i>Köşk İdarəetməsi</a>
+            </div>
+        </div>
+
+        <!-- Analytics -->
+        <div class="nav-label">ANALİTİKA</div>
+
+        <div class="nav-item-wrap">
+            <a class="nav-link-item" href="#" onclick="setActive(this);return false;">
+                <i class="bi bi-tag-fill icon"></i>
+                <span class="label">Kampaniyalar və Endirimlər</span>
+            </a>
+        </div>
+
+        <div class="nav-item-wrap">
+            <a class="nav-link-item" href="#" onclick="setActive(this);return false;">
+                <i class="bi bi-bar-chart-fill icon"></i>
+                <span class="label">Hesabatlar</span>
+            </a>
+        </div>
+
+        <!-- System -->
+        <div class="nav-label">SİSTEM</div>
+
+        <div class="nav-item-wrap">
+            <a class="nav-link-item" href="#" onclick="setActive(this);return false;">
+                <i class="bi bi-gear-fill icon"></i>
+                <span class="label">Parametrlər</span>
+            </a>
+        </div>
+
+    </nav>
+
+    <!-- Sidebar footer -->
+    <div class="sidebar-footer">
+        <button class="sidebar-toggle-btn" onclick="toggleSidebar()">
+            <i class="bi bi-arrow-bar-left" id="toggle-icon" style="font-size:16px;"></i>
+            <span id="toggle-label" style="transition:opacity .22s">Kiçilt</span>
+        </button>
+    </div>
+
+</aside>
+```
