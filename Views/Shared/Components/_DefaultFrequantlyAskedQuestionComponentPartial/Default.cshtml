@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
 
 <style>
-    /* ── Variables ── */
+ 
     :root {
         --navy: #0d1b3e;
         --navy-mid: #1b2f5e;
@@ -21,7 +21,7 @@
         --radius-md: 14px;
     }
 
-    /* ── Section shell ── */
+   
     .faq-section {
         background: var(--bg);
         padding: 96px 0 104px;
@@ -30,7 +30,6 @@
         overflow: hidden;
     }
 
-        /* Decorative circles */
         .faq-section::before {
             content: '';
             position: absolute;
@@ -55,8 +54,7 @@
             pointer-events: none;
         }
 
-    /* ── Left column ── */
-    .faq-left {
+   
         position: sticky;
         top: 80px;
         padding-right: 32px;
@@ -100,7 +98,7 @@
         margin: 0 0 36px;
     }
 
-    /* Illustration card */
+
     .faq-illus {
         background: linear-gradient(140deg, var(--navy) 0%, var(--navy-mid) 100%);
         border-radius: var(--radius-lg);
@@ -176,7 +174,7 @@
                 transform: translateX(3px);
             }
 
-    /* ── Accordion ── */
+   
     .faq-list {
         display: flex;
         flex-direction: column;
@@ -197,7 +195,7 @@
             box-shadow: 0 8px 28px rgba(13,27,62,.11);
         }
 
-    /* Question button */
+   
     .faq-question {
         width: 100%;
         background: none;
@@ -219,8 +217,7 @@
         background: rgba(13,27,62,.025);
     }
 
-    /* Number badge */
-    .faq-num {
+   .faq-num {
         flex-shrink: 0;
         width: 30px;
         height: 30px;
@@ -249,7 +246,6 @@
         line-height: 1.4;
     }
 
-    /* Chevron icon */
     .faq-chevron {
         flex-shrink: 0;
         width: 32px;
@@ -279,7 +275,6 @@
             color: var(--amber);
         }
 
-    /* Answer panel */
     .faq-answer {
         max-height: 0;
         overflow: hidden;
@@ -287,7 +282,7 @@
     }
 
     .faq-answer-inner {
-        padding: 0 22px 22px 66px; /* align under question text */
+        padding: 0 22px 22px 66px; 
         font-size: 14px;
         color: var(--text-body);
         line-height: 1.72;
@@ -299,7 +294,7 @@
         max-height: 200px;
     }
 
-    /* ── Stagger animation ── */
+   
     .faq-item {
         opacity: 0;
         transform: translateY(16px);
@@ -340,7 +335,7 @@
 
     }
 
-    /* ── Responsive ── */
+
     @@media (max-width: 991px) {
         .faq-left
 
@@ -474,13 +469,13 @@
         btn.addEventListener('click', () => {
           const isOpen = item.classList.contains('open');
 
-          // Close all
+
           items.forEach(i => {
             i.classList.remove('open');
             i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
           });
 
-          // Open clicked (if it was closed)
+
           if (!isOpen) {
             item.classList.add('open');
             btn.setAttribute('aria-expanded', 'true');

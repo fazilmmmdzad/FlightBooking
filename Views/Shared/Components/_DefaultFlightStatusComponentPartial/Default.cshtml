@@ -1,14 +1,8 @@
-﻿<!-- ============================================================
-     FLIGHT STATUS SECTION — Replaces .brand-area.brand-bg
-     Drop-in replacement: same outer class names preserved
-     ============================================================ -->
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
+﻿<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;400;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
 
 <style>
-    /* ── CSS Variables ── */
     :root {
         --burgundy-deep: #1a0508;
         --burgundy-mid: #3b0a12;
@@ -23,7 +17,6 @@
         --border-subtle: rgba(240,230,211,.08);
         --glass: rgba(255,255,255,.03);
         --glass-hover: rgba(255,255,255,.065);
-        /* Status colours */
         --s-green: #22c55e;
         --s-blue: #38bdf8;
         --s-orange: #f97316;
@@ -33,7 +26,6 @@
         --s-gray: #94a3b8;
     }
 
-    /* ── Section shell ── */
     .brand-area.brand-bg {
         background: linear-gradient(160deg, #1a0508 0%, #2d0910 40%, #1f060d 100%);
         padding: 64px 0 72px;
@@ -42,7 +34,6 @@
         font-family: 'Barlow', sans-serif;
     }
 
-        /* Decorative scanline overlay */
         .brand-area.brand-bg::before {
             content: '';
             position: absolute;
@@ -52,7 +43,6 @@
             z-index: 0;
         }
 
-        /* Ambient glow orbs */
         .brand-area.brand-bg::after {
             content: '';
             position: absolute;
@@ -83,7 +73,6 @@
         z-index: 1;
     }
 
-    /* ── Header area ── */
     .fsd-header {
         display: flex;
         align-items: flex-end;
@@ -152,21 +141,17 @@
     }
 
     @@keyframes pulse-dot {
-        0%, 100%
+        0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+        }
 
-    {
-        opacity: 1;
-        transform: scale(1);
+        50% {
+            opacity: .5;
+            transform: scale(.7);
+        }
     }
 
-    50% {
-        opacity: .5;
-        transform: scale(.7);
-    }
-
-    }
-
-    /* ── Tabs ── */
     .fsd-tabs {
         display: flex;
         gap: 4px;
@@ -211,7 +196,6 @@
             box-shadow: 0 2px 16px rgba(139,26,42,.5);
         }
 
-    /* ── Stats bar ── */
     .fsd-stats {
         display: flex;
         gap: 24px;
@@ -235,7 +219,6 @@
         flex-shrink: 0;
     }
 
-    /* ── Table wrapper ── */
     .fsd-table-wrap {
         overflow-x: auto;
         border-radius: 12px;
@@ -243,7 +226,6 @@
         background: rgba(0,0,0,.25);
     }
 
-    /* ── Column header row ── */
     .fsd-col-headers {
         display: grid;
         grid-template-columns: 180px 110px 1fr 1fr 100px 90px 80px 160px;
@@ -262,7 +244,6 @@
         white-space: nowrap;
     }
 
-    /* ── Flight row ── */
     .fsd-flight-row {
         display: grid;
         grid-template-columns: 180px 110px 1fr 1fr 100px 90px 80px 160px;
@@ -299,7 +280,6 @@
                 background: var(--accent-amber);
             }
 
-    /* Cells */
     .fsd-cell {
         padding-right: 12px;
         display: flex;
@@ -307,7 +287,6 @@
         min-width: 0;
     }
 
-    /* Airline cell */
     .fsd-airline {
         display: flex;
         align-items: center;
@@ -337,7 +316,7 @@
         text-overflow: ellipsis;
     }
 
-    /* Flight number */
+
     .fsd-fnum {
         font-family: 'Share Tech Mono', monospace;
         font-size: 13px;
@@ -345,7 +324,6 @@
         letter-spacing: .05em;
     }
 
-    /* Route */
     .fsd-route {
         display: flex;
         align-items: center;
@@ -372,7 +350,7 @@
         color: var(--text-dim);
     }
 
-    /* Time */
+
     .fsd-time {
         font-family: 'Share Tech Mono', monospace;
         font-size: 15px;
@@ -380,7 +358,7 @@
         letter-spacing: .05em;
     }
 
-    /* Gate / Terminal */
+
     .fsd-gate, .fsd-terminal {
         font-family: 'Barlow Condensed', sans-serif;
         font-size: 15px;
@@ -399,7 +377,7 @@
         color: var(--accent-amber);
     }
 
-    /* Status badge */
+
     .fsd-status {
         display: inline-flex;
         align-items: center;
@@ -460,7 +438,7 @@
         color: var(--s-gray);
     }
 
-    /* ── Tab panes ── */
+
     .fsd-pane {
         display: none;
     }
@@ -469,7 +447,7 @@
             display: block;
         }
 
-    /* ── Ticker strip ── */
+
     .fsd-ticker-wrap {
         margin-top: 20px;
         overflow: hidden;
@@ -515,92 +493,80 @@
         }
 
     @@keyframes ticker-scroll {
-        0%
+        0% {
+            transform: translateX(0);
+        }
 
-    {
-        transform: translateX(0);
+        100% {
+            transform: translateX(-50%);
+        }
     }
 
-    100% {
-        transform: translateX(-50%);
-    }
 
-    }
-
-    /* ── Responsive ── */
     @@media (max-width: 991px) {
-        .fsd-col-headers
-
-    {
-        display: none;
-    }
-
-    .fsd-flight-row {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto;
-        gap: 10px 16px;
-        padding: 16px;
-    }
-
-        .fsd-flight-row > .fsd-cell:nth-child(1) {
-            grid-column: 1 / 2;
-        }
-
-        .fsd-flight-row > .fsd-cell:nth-child(2) {
-            grid-column: 2 / 3;
-            justify-content: flex-end;
-        }
-
-        .fsd-flight-row > .fsd-cell:nth-child(3) {
-            grid-column: 1 / 3;
-        }
-
-        .fsd-flight-row > .fsd-cell:nth-child(4) {
-            display: none;
-        }
-        /* hide destination on mobile */
-        .fsd-flight-row > .fsd-cell:nth-child(5) {
-            grid-column: 1 / 2;
-        }
-
-        .fsd-flight-row > .fsd-cell:nth-child(6) {
-            grid-column: 2 / 3;
-            justify-content: flex-end;
-        }
-
-        .fsd-flight-row > .fsd-cell:nth-child(7) {
+        .fsd-col-headers {
             display: none;
         }
 
-        .fsd-flight-row > .fsd-cell:nth-child(8) {
-            grid-column: 1 / 3;
+        .fsd-flight-row {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto;
+            gap: 10px 16px;
+            padding: 16px;
         }
 
+            .fsd-flight-row > .fsd-cell:nth-child(1) {
+                grid-column: 1 / 2;
+            }
+
+            .fsd-flight-row > .fsd-cell:nth-child(2) {
+                grid-column: 2 / 3;
+                justify-content: flex-end;
+            }
+
+            .fsd-flight-row > .fsd-cell:nth-child(3) {
+                grid-column: 1 / 3;
+            }
+
+            .fsd-flight-row > .fsd-cell:nth-child(4) {
+                display: none;
+            }
+
+            .fsd-flight-row > .fsd-cell:nth-child(5) {
+                grid-column: 1 / 2;
+            }
+
+            .fsd-flight-row > .fsd-cell:nth-child(6) {
+                grid-column: 2 / 3;
+                justify-content: flex-end;
+            }
+
+            .fsd-flight-row > .fsd-cell:nth-child(7) {
+                display: none;
+            }
+
+            .fsd-flight-row > .fsd-cell:nth-child(8) {
+                grid-column: 1 / 3;
+            }
     }
 
     @@media (max-width: 575px) {
-        .fsd-title
+        .fsd-title {
+            font-size: 26px;
+        }
 
-    {
-        font-size: 26px;
-    }
-
-    .fsd-tab-btn {
-        padding: 8px 18px;
-        font-size: 13px;
-    }
-
+        .fsd-tab-btn {
+            padding: 8px 18px;
+            font-size: 13px;
+        }
     }
 </style>
 
-<!-- ════════════════════════════════════════════════════
-     SECTION START — replaces .brand-area.brand-bg block
-     ════════════════════════════════════════════════════ -->
 <div class="brand-area brand-bg">
     <div class="fsd-glow-left"></div>
     <div class="container fsd-container">
 
-        <!-- Header -->
+
         <div class="fsd-header">
             <div class="fsd-title-block">
                 <div class="fsd-eyebrow">Real-time information</div>
@@ -612,7 +578,7 @@
             </div>
         </div>
 
-        <!-- Tabs -->
+
         <div class="fsd-tabs" role="tablist">
             <button class="fsd-tab-btn active" data-tab="departures" role="tab" aria-selected="true">
                 <i class="bi bi-airplane-fill" style="transform:rotate(45deg)"></i>
@@ -624,15 +590,14 @@
             </button>
         </div>
 
-        <!-- Stats bar -->
+
         <div class="fsd-stats" id="fsd-stats-bar">
-            <!-- filled by JS -->
         </div>
 
-        <!-- ── DEPARTURES PANE ── -->
+
         <div class="fsd-pane active" id="pane-departures">
             <div class="fsd-table-wrap">
-                <!-- Column headers -->
+
                 <div class="fsd-col-headers">
                     <div class="fsd-col-label">Airline</div>
                     <div class="fsd-col-label">Flight</div>
@@ -643,12 +608,12 @@
                     <div class="fsd-col-label">Terminal</div>
                     <div class="fsd-col-label">Status</div>
                 </div>
-                <!-- Rows generated by JS -->
+
                 <div id="departures-list"></div>
             </div>
         </div>
 
-        <!-- ── ARRIVALS PANE ── -->
+
         <div class="fsd-pane" id="pane-arrivals">
             <div class="fsd-table-wrap">
                 <div class="fsd-col-headers">
@@ -665,25 +630,21 @@
             </div>
         </div>
 
-        <!-- Ticker -->
+
         <div class="fsd-ticker-wrap">
             <div class="fsd-ticker-label"><i class="bi bi-broadcast me-1"></i>Updates</div>
             <div class="fsd-ticker-track">
                 <div class="fsd-ticker-inner" id="fsd-ticker">
-                    <!-- filled by JS -->
                 </div>
             </div>
         </div>
 
-    </div><!-- /.container -->
-</div><!-- /.brand-area -->
-<!-- ════════════════ SECTION END ════════════════ -->
+    </div>
+</div>
 
 
 <script>
-    /* ────────────────────────────────────────────────
-       FLIGHT STATUS DATA & RENDERER
-       ──────────────────────────────────────────────── */
+
     const AIRLINES = [
       { name:'Turkish Airlines', code:'TK', color:'#C70000', bg:'rgba(199,0,0,.15)' },
       { name:'Lufthansa',        code:'LH', color:'#05164d', bg:'rgba(5,22,77,.2)'  },
@@ -727,8 +688,8 @@
       { label:'Cancelled',      cls:'s-red',    icon:'bi-x-circle-fill'           },
     ];
 
-    const DEP_STATUSES  = [0,1,2,3,4,5,6,8,9,2]; // indices into STATUSES for departures
-    const ARR_STATUSES  = [7,7,8,9,6,2,7,8,3,7]; // indices for arrivals
+    const DEP_STATUSES  = [0,1,2,3,4,5,6,8,9,2];
+    const ARR_STATUSES  = [7,7,8,9,6,2,7,8,3,7];
 
     function pad(n){ return String(n).padStart(2,'0'); }
 
@@ -832,12 +793,12 @@
         ...deps.filter(f=>f.status.label==='Delayed').map(f=>`<span class="fsd-ticker-item">⚠️ <span>${f.fnum}</span> to ${f.to.iata} — Delayed</span>`),
         ...arrs.filter(f=>f.status.label==='Delayed').map(f=>`<span class="fsd-ticker-item">⚠️ <span>${f.fnum}</span> from ${f.from.iata} — Delayed</span>`),
       ];
-      // duplicate for seamless loop
+
       const all = [...items, ...items];
       return all.join('');
     }
 
-    /* ── Boot ── */
+
     document.addEventListener('DOMContentLoaded', () => {
       const deps = buildFlights(false);
       const arrs = buildFlights(true);
@@ -847,7 +808,7 @@
       document.getElementById('fsd-stats-bar').innerHTML   = buildStats(deps);
       document.getElementById('fsd-ticker').innerHTML      = buildTicker(deps, arrs);
 
-      /* Tab switching */
+
       document.querySelectorAll('.fsd-tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           document.querySelectorAll('.fsd-tab-btn').forEach(b => {
@@ -862,7 +823,7 @@
           const target = btn.dataset.tab;
           document.getElementById('pane-' + target).classList.add('active');
 
-          /* Update stats for the active tab */
+
           const flights = target === 'departures' ? deps : arrs;
           document.getElementById('fsd-stats-bar').innerHTML = buildStats(flights);
         });

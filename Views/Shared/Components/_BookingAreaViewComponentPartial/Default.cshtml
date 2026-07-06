@@ -27,7 +27,6 @@
         box-shadow: 0 30px 80px rgba(0,20,80,0.25);
     }
 
-    /* TABS */
     .bk-tabs {
         display: flex;
         gap: 4px;
@@ -78,7 +77,6 @@
                 opacity: 1;
             }
 
-    /* PANEL */
     .bk-panel {
         background: var(--surface);
         border-radius: 20px;
@@ -93,7 +91,6 @@
             display: block;
         }
 
-    /* TRIP TYPE TOGGLE */
     .trip-type-row {
         display: flex;
         gap: 8px;
@@ -125,7 +122,6 @@
             color: #fff;
         }
 
-    /* AIRPORT FIELDS */
     .route-row {
         display: grid;
         grid-template-columns: 1fr auto 1fr;
@@ -205,7 +201,6 @@
             color: var(--sky);
         }
 
-    /* DATES */
     .dates-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -260,7 +255,6 @@
             font-weight: 500;
         }
 
-    /* BOTTOM ROW */
     .bottom-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -268,7 +262,6 @@
         margin-bottom: 24px;
     }
 
-    /* PASSENGER DROPDOWN */
     .pax-trigger {
         background: var(--surface-2);
         border: 1.5px solid var(--border);
@@ -449,7 +442,6 @@
             background: var(--sky-dark);
         }
 
-    /* PROMO */
     .promo-field {
         background: var(--surface-2);
         border: 1.5px solid var(--border);
@@ -515,7 +507,7 @@
             color: #BCC5D6;
         }
 
-    /* EXTRAS */
+
     .extras-row {
         display: flex;
         align-items: center;
@@ -542,7 +534,7 @@
             cursor: pointer;
         }
 
-    /* SEARCH BTN */
+
     .search-btn {
         width: 100%;
         padding: 18px;
@@ -572,7 +564,7 @@
             transform: translateY(0);
         }
 
-    /* SECTION TITLE */
+
     .bk-section-title {
         font-family: 'Syne', sans-serif;
         font-size: 22px;
@@ -587,7 +579,7 @@
         margin-bottom: 24px;
     }
 
-    /* QUERY METHOD SELECT */
+
     .query-method-row {
         display: flex;
         gap: 8px;
@@ -690,7 +682,6 @@
         gap: 12px;
     }
 
-    /* HELP LINKS */
     .help-links {
         margin-top: 20px;
         padding-top: 20px;
@@ -714,7 +705,6 @@
             color: var(--sky);
         }
 
-    /* INFO CARDS */
     .info-cards {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -755,7 +745,7 @@
         margin-top: 2px;
     }
 
-    /* NOTICE */
+
     .bk-notice {
         background: #FFF9EC;
         border: 1.5px solid #F5A623;
@@ -775,7 +765,7 @@
             margin-top: 1px;
         }
 
-    /* FLIGHT STATUS SEARCH METHOD */
+
     .fs-method-row {
         display: flex;
         gap: 0;
@@ -812,7 +802,6 @@
             color: #fff;
         }
 
-    /* STATUS CARDS */
     .status-cards {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -900,8 +889,6 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="bk-widget">
-
-                    <!-- TABS -->
                     <div class="bk-tabs" id="bkTabs">
                         <button class="bk-tab-btn active" data-tab="search">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /></svg>
@@ -921,20 +908,16 @@
                         </button>
                     </div>
 
-                    <!-- PANEL -->
                     <div class="bk-panel">
 
-                        <!-- ===================== UÇUŞ ARA ===================== -->
                         <div class="bk-pane active" id="pane-search">
 
-                            <!-- Trip Type -->
                             <div class="trip-type-row" id="tripTypeRow">
                                 <button class="trip-type-btn active" onclick="setTripType(this,'roundtrip')">Gediş - Dönüş</button>
                                 <button class="trip-type-btn" onclick="setTripType(this,'oneway')">Bir İstiqamətli</button>
                                 <button class="trip-type-btn" onclick="setTripType(this,'multi')">Çoxmərhələli Uçuş</button>
                             </div>
 
-                            <!-- Route -->
                             <div class="route-row">
                                 <div class="airport-field">
                                     <div class="airport-field-label">
@@ -957,7 +940,6 @@
                                 </div>
                             </div>
 
-                            <!-- Dates -->
                             <div class="dates-row">
                                 <div class="date-field">
                                     <div class="date-field-label">
@@ -975,7 +957,6 @@
                                 </div>
                             </div>
 
-                            <!-- Bottom row: Pax + Promo -->
                             <div class="bottom-row">
                                 <div class="pax-trigger" id="paxTrigger" onclick="togglePax()" style="position:relative">
                                     <div class="pax-trigger-label">
@@ -1049,7 +1030,7 @@
                                 </div>
                             </div>
 
-                            <!-- Extras -->
+
                             <div class="extras-row">
                                 <label class="extra-check">
                                     <input type="checkbox" id="directOnly" /> Sadəcə Direkt Uçuşlar
@@ -1062,7 +1043,7 @@
                                 </label>
                             </div>
 
-                            <!-- CTA -->
+
                             <button class="search-btn">
                                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
                                 Uçuşların siyahısı
@@ -1070,7 +1051,6 @@
                         </div>
 
 
-                        <!-- ===================== SEYAHATLERİM ===================== -->
                         <div class="bk-pane" id="pane-trips">
                             <div class="bk-section-title">Səyahətlərim</div>
                             <div class="bk-section-sub">Rezervasiya məlumatlarınızdan istifadə edərək cari və ya keçmiş səfərlərinizə daxil olun.</div>
@@ -1156,9 +1136,6 @@
                                 </a>
                             </div>
                         </div>
-
-
-                        <!-- ===================== CHECK-IN ===================== -->
                         <div class="bk-pane" id="pane-checkin">
                             <div class="bk-section-title">Online Check-in</div>
                             <div class="bk-section-sub">Uçuş vaxtınızdan ən tez 24 saat, ən gec isə 1 saat əvvəl onlayn check-in edə bilərsiniz.</div>
@@ -1244,8 +1221,6 @@
                             </div>
                         </div>
 
-
-                        <!-- ===================== UÇUŞ DURUMU ===================== -->
                         <div class="bk-pane" id="pane-status">
                             <div class="bk-section-title">Uçuş Statusu</div>
                             <div class="bk-section-sub">Uçuş nömrəsi və ya marşrut üzrə uçuşu izləyin.</div>
@@ -1333,8 +1308,8 @@
                             </div>
                         </div>
 
-                    </div><!-- /bk-panel -->
-                </div><!-- /bk-widget -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1342,7 +1317,6 @@
 
 <script>
     (function () {
-      // TAB SWITCHING
       document.querySelectorAll('.bk-tab-btn').forEach(btn => {
         btn.addEventListener('click', function () {
           document.querySelectorAll('.bk-tab-btn').forEach(b => b.classList.remove('active'));
@@ -1352,7 +1326,6 @@
         });
       });
 
-      // TRIP TYPE
       window.setTripType = function (btn, type) {
         document.querySelectorAll('.trip-type-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -1361,14 +1334,12 @@
         else retField.classList.remove('disabled');
       };
 
-      // SWAP
       window.swapAirports = function () {
         var from = document.getElementById('fromAirport');
         var to = document.getElementById('toAirport');
         var tmp = from.value; from.value = to.value; to.value = tmp;
       };
 
-      // PAX
       var paxData = { adult: 1, child: 0, infant: 0, cabin: 'Ekonomi' };
       window.togglePax = function () {
         document.getElementById('paxTrigger').classList.toggle('open');
@@ -1398,7 +1369,6 @@
         if (trigger && !trigger.contains(e.target)) trigger.classList.remove('open');
       });
 
-      // PROMO
       window.togglePromo = function (link) {
         var wrap = document.getElementById('promoInputWrap');
         wrap.classList.toggle('open');
@@ -1410,7 +1380,6 @@
         }
       };
 
-      // QUERY METHOD (trips / checkin)
       window.setQueryMethod = function (prefix, method, btn) {
         var row = btn.closest('.query-method-row');
         row.querySelectorAll('.query-method-btn').forEach(b => b.classList.remove('active'));
@@ -1420,7 +1389,6 @@
         if (target) target.classList.add('active');
       };
 
-      // FLIGHT STATUS METHOD
       window.setFsMethod = function (method, btn) {
         document.querySelectorAll('.fs-method-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
