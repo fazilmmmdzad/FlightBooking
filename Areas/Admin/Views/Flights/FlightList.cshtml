@@ -1,5 +1,22 @@
-﻿@{
+﻿@model List<FlightBooking.Dtos.FlightDtos.ResultFlightDto>
+
+@{
     Layout = "~/Areas/Admin/Views/Layout/AdminLayout.cshtml";
+    ViewData["Title"] = "Flights Management";
+
+    int totalFlights = Model?.Count() ?? 0;
+    int completedFlights = Model?.Count(f => f.Status == "Completed") ?? 0;
+    int delayedFlights = Model?.Count(f => f.Status == "Delayed") ?? 0;
+    int cancelledFlights = Model?.Count(f => f.Status == "Cancelled") ?? 0;
+
+    var statusMap = new Dictionary<string, (string Label, string Css, string Icon)>
+    {
+        ["Scheduled"] = ("Planlaşdırılıb", "status-scheduled", "bi-calendar-check"),
+        ["Boarding"] = ("Boarding", "status-boarding", "bi-check2-circle"),
+        ["Delayed"] = ("Gecikir", "status-delayed", "bi-exclamation-triangle"),
+        ["Cancelled"] = ("Ləğv Edildi", "status-cancelled", "bi-x-circle"),
+        ["Completed"] = ("Tamamlandı", "status-completed", "bi-check-circle"),
+    };
 }
 
 <main class="main-content" id="main-content">
@@ -13,7 +30,9 @@
                 <span style="color:var(--accent);">Flights Management</span>
             </div>
             <h1 class="page-title">Flights Management</h1>
-            <p class="page-desc">Sistemdə qeydiyyatda olan uçuşları görüntüləyə, redaktə edə və ya yeni uçuş əlavə edə bilərsiniz.</p>
+            <p class="page-desc">
+                Sistemdə qeydiyyatdan keçmiş uçuşlara baxa, onları redaktə edə və ya yeni uçuşlar əlavə edə bilərsiniz.
+            </p>
         </div>
         <button class="btn-add" onclick="openModal()">
             <i class="bi bi-plus-lg"></i>
@@ -25,33 +44,36 @@
         <div class="stat-card">
             <div class="stat-icon blue"><i class="bi bi-airplane-fill"></i></div>
             <div class="stat-body">
-                <div class="stat-value">248</div>
+                <div class="stat-value">@totalFlights</div>
                 <div class="stat-label">Ümumi Uçuş</div>
-                <div class="stat-change up"><i class="bi bi-arrow-up-short"></i>+12 bu həftə</div>
             </div>
         </div>
         <div class="stat-card">
             <div class="stat-icon green"><i class="bi bi-check-circle-fill"></i></div>
             <div class="stat-body">
-                <div class="stat-value">192</div>
+                <div class="stat-value">@completedFlights</div>
                 <div class="stat-label">Tamamlanan</div>
-                <div class="stat-change up"><i class="bi bi-arrow-up-short"></i>%77 nisbət</div>
+                @if (totalFlights > 0)
+                {
+                    <div class="stat-change up">
+                        <i class="bi bi-arrow-up-short"></i>
+                        %@Math.Round((double)completedFlights / totalFlights * 100, 0) faiz
+                    </div>
+                }
             </div>
         </div>
         <div class="stat-card">
             <div class="stat-icon orange"><i class="bi bi-clock-fill"></i></div>
             <div class="stat-body">
-                <div class="stat-value">31</div>
-                <div class="stat-label">Gecikir</div>
-                <div class="stat-change down"><i class="bi bi-arrow-up-short"></i>+3 dünən</div>
+                <div class="stat-value">@delayedFlights</div>
+                <div class="stat-label">Gecikmiş</div>
             </div>
         </div>
         <div class="stat-card">
             <div class="stat-icon red"><i class="bi bi-x-circle-fill"></i></div>
             <div class="stat-body">
-                <div class="stat-value">14</div>
+                <div class="stat-value">@cancelledFlights</div>
                 <div class="stat-label">Ləğv Edilən</div>
-                <div class="stat-change up"><i class="bi bi-arrow-down-short"></i>-2 keçən ay</div>
             </div>
         </div>
     </div>
@@ -59,60 +81,522 @@
     <div class="table-card">
 
         <div class="table-card-header">
+
+            {{-- Axtarış --}}
             <div class="tbl-search">
                 <i class="bi bi-search si"></i>
-                <input type="text" id="searchInput" placeholder="Uçuş nömrəsi, şəhər və ya status axtar..." oninput="filterTable()" />
+                <input type="text"
+                       id="searchInput"
+                       placeholder="Uçuş nömrəsi, hava limanı, hava yolu axtar…"
+                       oninput="filterTable()" />
             </div>
 
+            {{-- Status filtri --}}
             <select class="filter-select" id="statusFilter" onchange="filterTable()">
                 <option value="">Bütün Statuslar</option>
+                <option value="Scheduled">Planlaşdırılıb</option>
                 <option value="Boarding">Boarding</option>
-                <option value="Planlaşdırılıb">Planlaşdırılıb</option>
-                <option value="Gecikir">Gecikir</option>
-                <option value="Ləğv edildi">Ləğv edildi</option>
+                <option value="Delayed">Gecikmiş</option>
+                <option value="Cancelled">Ləğv Edilib</option>
+                <option value="Completed">Tamamlandı</option>
             </select>
 
-            <select class="filter-select" id="cityFilter" onchange="filterTable()">
-                <option value="">Bütün Şəhərlər</option>
-                <option value="İstanbul">Bakı</option>
-                <option value="Paris">Paris</option>
-                <option value="Roma">Roma</option>
-                <option value="Londra">Londra</option>
-                <option value="Berlin">Berlin</option>
-                <option value="Amsterdam">Amsterdam</option>
-                <option value="Madrid">Madrid</option>
-                <option value="Frankfurt">Frankfurt</option>
+            {{-- Hava yolu filtri (modeldən dinamik) --}}
+            <select class="filter-select" id="airlineFilter" onchange="filterTable()">
+                <option value="">Bütün Hava Yolları</option>
+                @if (Model != null)
+                {
+                    foreach (var code in Model.Select(f => f.AirlineCode).Distinct().OrderBy(c => c))
+                    {
+                        <option value="@code">@code</option>
+                    }
+                }
             </select>
 
-            <span class="tbl-count" id="rowCount">10 uçuş göstərilir</span>
+            <span class="tbl-count" id="rowCount">@totalFlights uçuş göstərilir</span>
         </div>
 
         <div style="overflow-x:auto;">
             <table class="flights-table" id="flightsTable">
                 <thead>
                     <tr>
-                        <th>UÇUŞ NO</th>
-                        <th>MARŞRUT</th>
-                        <th>QALXIŞ</th>
-                        <th>ENİŞ</th>
-                        <th>TƏYYARƏ MODELİ</th>
-                        <th>QAPI</th>
+                        <th>UÇUŞ NÖMRƏSİ</th>
+                        <th>HAVA YOLU</th>
+                        <th>YOLA DÜŞMƏ</th>
+                        <th>GƏLİŞ</th>
+                        <th>YOLA DÜŞMƏ SAATI</th>
+                        <th>GƏLİŞ SAATI</th>
+                        <th>MÜDDƏT</th>
+                        <th>TUTUM</th>
+                        <th>QİYMƏT</th>
                         <th>STATUS</th>
                         <th>ƏMƏLİYYATLAR</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
+                    @if (Model == null || !Model.Any())
+                    {
+                        <tr>
+                            <td colspan="11" class="empty-row">
+                                <i class="bi bi-airplane" style="font-size:28px;display:block;margin-bottom:8px;opacity:.4;"></i>
+                                Qeydiyyatdan keçmiş uçuş tapılmadı.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var flight in Model)
+                        {
+                            var (label, css, icon) = statusMap.TryGetValue(flight.Status, out var sv)
+                            ? sv
+                            : (flight.Status, "status-scheduled", "bi-circle");
+
+                            int occupancy = flight.TotalSeats > 0
+                            ? (int)Math.Round((double)(flight.TotalSeats - flight.AvailableSeats) / flight.TotalSeats * 100)
+                            : 0;
+
+                            int durHour = flight.DurationMinutes / 60;
+                            int durMin = flight.DurationMinutes % 60;
+                            string durStr = durHour > 0 ? $"{durHour}s {durMin}dəq" : $"{durMin}dəq";
+
+                            <tr data-flight-no="@flight.FlightNumber.ToLower()"
+                                data-dep-airport="@flight.DepartureAirportCode.ToLower() @flight.DepartureAirportName.ToLower()"
+                                data-arr-airport="@flight.ArrivalAirportCode.ToLower() @flight.ArrivalAirportName.ToLower()"
+                                data-airline="@flight.AirlineCode"
+                                data-status="@flight.Status">
+
+                                <td>
+                                    <div class="flight-no">
+                                        <span class="flight-no-dot"></span>
+                                        @flight.FlightNumber
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="airline-chip">@flight.AirlineCode</span>
+                                </td>
+
+                                <td>
+                                    <div class="airport-cell">
+                                        <span class="airport-code">@flight.DepartureAirportCode</span>
+                                        <span class="airport-name">@flight.DepartureAirportName</span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="airport-cell">
+                                        <span class="airport-code">@flight.ArrivalAirportCode</span>
+                                        <span class="airport-name">@flight.ArrivalAirportName</span>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="time-cell">@flight.DepartureTime.ToString("HH:mm")</span>
+                                    <span class="date-sub">@flight.DepartureTime.ToString("dd MMM", new System.Globalization.CultureInfo("az-Latn-AZ"))</span>
+                                </td>
+
+                                <td>
+                                    <span class="time-cell">@flight.ArrivalTime.ToString("HH:mm")</span>
+                                    <span class="date-sub">@flight.ArrivalTime.ToString("dd MMM", new System.Globalization.CultureInfo("az-Latn-AZ"))</span>
+                                </td>
+
+                                <td>
+                                    <span class="duration-cell">
+                                        <i class="bi bi-clock"></i> @durStr
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="capacity-cell">
+                                        <div class="capacity-text">
+                                            <span class="cap-available">@flight.AvailableSeats</span>
+                                            <span class="cap-sep">/</span>
+                                            <span class="cap-total">@flight.TotalSeats</span>
+                                        </div>
+                                        <div class="cap-bar">
+                                            <div class="cap-fill @(occupancy >= 90 ? "cap-critical" : occupancy >= 70 ? "cap-warning" : "cap-ok")"
+                                                 style="width:@occupancy%;"
+                                                 title="Doluluq: %@occupancy"></div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="price-cell">
+                                        @flight.BasePrice.ToString("N0") <small>@flight.Currency</small>
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="status-badge @css">
+                                        <span class="dot"></span>@label
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="actions-cell">
+                                        <a asp-area="Admin"
+                                           asp-controller="Flights"
+                                           asp-action="Detail"
+                                           asp-route-id="@flight.FlightId"
+                                           class="act-btn act-view"
+                                           title="Bax">
+                                            <i class="bi bi-eye-fill"></i>
+                                            <span class="btn-label">Bax</span>
+                                        </a>
+                                        <a asp-area="Admin"
+                                           asp-controller="Flights"
+                                           asp-action="Edit"
+                                           asp-route-id="@flight.FlightId"
+                                           class="act-btn act-edit"
+                                           title="Redaktə et">
+                                            <i class="bi bi-pencil-fill"></i>
+                                            <span class="btn-label">Redaktə et</span>
+                                        </a>
+                                        <button class="act-btn act-del"
+                                                title="Sil"
+                                                onclick="confirmDelete('@flight.FlightId', '@flight.FlightNumber')">
+                                            <i class="bi bi-trash-fill"></i>
+                                            <span class="btn-label">Sil</span>
+                                        </button>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        }
+                    }
                 </tbody>
             </table>
         </div>
 
-
         <div class="table-card-footer">
-            <span class="footer-info" id="footerInfo">1–10 / 10 uçuş</span>
-            <ul class="pagination-list" id="paginationList">
-            </ul>
+            <span class="footer-info" id="footerInfo"></span>
+            <ul class="pagination-list" id="paginationList"></ul>
         </div>
 
     </div>
 
 </main>
+
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-box" style="max-width:420px;">
+        <div class="modal-head">
+            <span class="modal-title" style="color:#DC2626;">
+                <i class="bi bi-exclamation-triangle-fill" style="margin-right:8px;"></i>
+                Uçuşu Sil
+            </span>
+            <button class="modal-close" onclick="closeDeleteModal()"><i class="bi bi-x-lg"></i></button>
+        </div>
+        <div class="modal-body">
+            <p style="font-size:14px;color:var(--gray-700);line-height:1.6;">
+                <strong id="deleteFlightNo"></strong> nömrəli uçuşu silmək istədiyinizə əminsiniz?
+                Bu əməliyyat geri qaytarıla bilməz.
+            </p>
+        </div>
+        <div class="modal-foot">
+            <button class="btn-cancel" onclick="closeDeleteModal()">İmtina et</button>
+            <form id="deleteForm" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn-save" style="background:#DC2626;">
+                    <i class="bi bi-trash-fill" style="margin-right:6px;"></i>Bəli, Sil
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container-custom" id="toastContainer"></div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <script>
+        document.addEventListener('DOMContentLoaded', () =>
+            showToast('@TempData["SuccessMessage"]', 'success'));
+    </script>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <script>
+        document.addEventListener('DOMContentLoaded', () =>
+            showToast('@TempData["ErrorMessage"]', 'danger'));
+    </script>
+}
+
+@section Styles {
+    <style>
+
+        .airline-chip {
+            display: inline-block;
+            padding: 3px 10px;
+            background: var(--navy);
+            color: #fff;
+            border-radius: 6px;
+            font-family: 'Syne', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .5px;
+        }
+
+        .airport-cell {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+        }
+
+        .airport-code {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--navy);
+        }
+
+        .airport-name {
+            font-size: 11px;
+            color: var(--gray-300);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 140px;
+        }
+        .date-sub {
+            display: block;
+            font-size: 11px;
+            color: var(--gray-300);
+            margin-top: 1px;
+        }
+
+        .duration-cell {
+            font-size: 12.5px;
+            color: var(--gray-500);
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .capacity-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 80px;
+        }
+
+        .capacity-text {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .cap-available {
+            color: #10B981;
+        }
+
+        .cap-sep {
+            color: var(--gray-300);
+            margin: 0 1px;
+        }
+
+        .cap-total {
+            color: var(--gray-500);
+        }
+
+        .cap-bar {
+            height: 5px;
+            background: var(--gray-100);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .cap-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width .5s ease;
+        }
+
+        .cap-ok {
+            background: #10B981;
+        }
+
+        .cap-warning {
+            background: #F59E0B;
+        }
+
+        .cap-critical {
+            background: #EF4444;
+        }
+
+        .price-cell {
+            font-family: 'Syne', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--navy);
+            white-space: nowrap;
+        }
+
+            .price-cell small {
+                font-family: 'DM Sans', sans-serif;
+                font-size: 10px;
+                font-weight: 600;
+                color: var(--gray-300);
+                margin-left: 2px;
+            }
+
+        .status-completed {
+            background: rgba(107,114,153,.1);
+            color: var(--gray-500);
+        }
+
+            .status-completed .dot {
+                background: var(--gray-300);
+            }
+
+        .empty-row {
+            text-align: center;
+            padding: 48px 20px !important;
+            color: var(--gray-300);
+            font-size: 14px;
+        }
+
+    </style>
+}
+
+@section Scripts {
+    <script>
+        const PER_PAGE = 8;
+        let currentPage = 1;
+
+        function allRows() {
+            return Array.from(document.querySelectorAll('#tableBody tr[data-flight-no]'));
+        }
+
+        function filterTable() {
+            currentPage = 1;
+            applyFiltersAndRender();
+        }
+
+        function applyFiltersAndRender() {
+            const q       = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+            const status  = document.getElementById('statusFilter').value;
+            const airline = document.getElementById('airlineFilter').value;
+
+            const rows = allRows();
+
+                const flightNo   = row.dataset.flightNo   || '';
+                const depAirport = row.dataset.depAirport || '';
+                const arrAirport = row.dataset.arrAirport || '';
+                const rowAirline = row.dataset.airline    || '';
+                const rowStatus  = row.dataset.status     || '';
+
+                const matchQ       = !q      || [flightNo, depAirport, arrAirport, rowAirline].some(v => v.includes(q));
+                const matchStatus  = !status  || rowStatus  === status;
+                const matchAirline = !airline || rowAirline === airline;
+
+                row.style.display = 'none';
+                return matchQ && matchStatus && matchAirline;
+            });
+
+            const total      = visible.length;
+            const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+            if (currentPage > totalPages) currentPage = totalPages;
+
+            const from  = total === 0 ? 0 : (currentPage - 1) * PER_PAGE + 1;
+            const to    = Math.min(currentPage * PER_PAGE, total);
+            const slice = visible.slice(from - 1, to);
+
+            slice.forEach(row => row.style.display = '');
+
+           
+            document.getElementById('rowCount').textContent   = `${total} uçuş tapıldı`;
+            document.getElementById('footerInfo').textContent = `${from}–${to} / ${total} uçuş`;
+
+            renderPagination(totalPages);
+        }
+
+     
+        function renderPagination(totalPages) {
+            const ul = document.getElementById('paginationList');
+            let html = '';
+
+       
+            html += `<li class="${currentPage === 1 ? 'disabled' : ''}">
+                <span onclick="${currentPage > 1 ? 'goPage(currentPage-1)' : ''}"
+                      style="cursor:${currentPage === 1 ? 'default' : 'pointer'}">
+                    <i class="bi bi-chevron-left" style="font-size:11px;"></i>
+                </span>
+            </li>`;
+      
+            const pages = buildPageRange(currentPage, totalPages);
+            pages.forEach(p => {
+                if (p === '...') {
+                    html += `<li><span style="cursor:default;border:none;color:var(--gray-300);">…</span></li>`;
+                } else {
+                    html += `<li class="${p === currentPage ? 'active' : ''}">
+                        <a onclick="goPage(${p})">${p}</a>
+                    </li>`;
+                }
+            });
+      
+            html += `<li class="${currentPage === totalPages ? 'disabled' : ''}">
+                <span onclick="${currentPage < totalPages ? 'goPage(currentPage+1)' : ''}"
+                      style="cursor:${currentPage === totalPages ? 'default' : 'pointer'}">
+                    <i class="bi bi-chevron-right" style="font-size:11px;"></i>
+                </span>
+            </li>`;
+
+            ul.innerHTML = html;
+        }
+
+        function buildPageRange(current, total) {
+            if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+            const pages = [];
+            pages.push(1);
+            if (current > 3)           pages.push('...');
+            for (let p = Math.max(2, current - 1); p <= Math.min(total - 1, current + 1); p++) pages.push(p);
+            if (current < total - 2)   pages.push('...');
+            pages.push(total);
+            return pages;
+        }
+
+        function goPage(p) {
+            currentPage = p;
+            applyFiltersAndRender();
+        }
+
+        function confirmDelete(flightId, flightNo) {
+            document.getElementById('deleteFlightNo').textContent = flightNo;
+            document.getElementById('deleteForm').action =
+                `/Admin/Flights/Delete/${flightId}`;        
+            document.getElementById('deleteModal').classList.add('open');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('open');
+        }
+
+       
+        document.getElementById('deleteModal').addEventListener('click', function (e) {
+            if (e.target === this) closeDeleteModal();
+        });
+
+
+        function showToast(msg, type = 'info') {
+            const icons = {
+                success: 'bi-check-circle-fill',
+                danger:  'bi-x-circle-fill',
+                warning: 'bi-exclamation-triangle-fill',
+                info:    'bi-info-circle-fill',
+            };
+            const container = document.getElementById('toastContainer');
+            const t = document.createElement('div');
+            t.className = 'toast-item';
+            t.innerHTML = `<i class="bi ${icons[type] ?? icons.info} toast-icon ${type}"></i><span>${msg}</span>`;
+            container.appendChild(t);
+            setTimeout(() => {
+                t.style.cssText += 'opacity:0;transform:translateY(20px);transition:.3s;';
+                setTimeout(() => t.remove(), 320);
+            }, 3200);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => applyFiltersAndRender());
+    </script>
+}
