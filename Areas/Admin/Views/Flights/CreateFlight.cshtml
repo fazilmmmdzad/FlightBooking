@@ -1,5 +1,1248 @@
-﻿@{
+﻿@model FlightBooking.Dtos.FlightDtos.CreateFlightDto
+
+@{
     Layout = "~/Areas/Admin/Views/Layout/AdminLayout.cshtml";
+    ViewData["Title"] = "Yeni Uçuş Əlavə Et";
 }
 
-<h3>Test</h3>
+@section Styles {
+    <style>
+
+        .create-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .create-col-main {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .create-col-side {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: sticky;
+            top: calc(var(--topbar-h) + 24px);
+        }
+
+        .section-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-100);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--gray-100);
+            background: var(--gray-50);
+        }
+
+        .sh-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+
+            .sh-icon.blue {
+                background: rgba(30,111,217,.12);
+                color: var(--accent);
+            }
+
+            .sh-icon.green {
+                background: rgba(16,185,129,.12);
+                color: #10B981;
+            }
+
+            .sh-icon.orange {
+                background: rgba(245,158,11,.12);
+                color: #F59E0B;
+            }
+
+            .sh-icon.purple {
+                background: rgba(139,92,246,.12);
+                color: #7C3AED;
+            }
+
+            .sh-icon.teal {
+                background: rgba(20,184,166,.12);
+                color: #0D9488;
+            }
+
+        .sh-text {
+        }
+
+        .sh-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .sh-desc {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-top: 1px;
+        }
+
+        .section-body {
+            padding: 22px 24px;
+        }
+
+        .fg-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .fg-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 18px;
+        }
+
+        .fg-1 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+        }
+
+        .mb-18 {
+            margin-bottom: 18px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .f-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-700);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .f-req {
+            color: #EF4444;
+        }
+
+        .f-wrap {
+            position: relative;
+        }
+
+        .f-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-300);
+            font-size: 14px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .f-suffix {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent);
+            pointer-events: none;
+            background: var(--sky);
+            padding: 2px 7px;
+            border-radius: 5px;
+            white-space: nowrap;
+        }
+
+        .f-input,
+        .f-select {
+            width: 100%;
+            height: 42px;
+            padding: 0 14px 0 38px;
+            border: 1.5px solid var(--gray-100);
+            border-radius: 9px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13.5px;
+            color: var(--gray-700);
+            background: var(--gray-50);
+            outline: none;
+            transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+            appearance: none;
+        }
+
+            .f-input:focus,
+            .f-select:focus {
+                border-color: var(--accent);
+                box-shadow: 0 0 0 3px rgba(30,111,217,.1);
+                background: var(--white);
+            }
+
+            .f-input.no-icon {
+                padding-left: 14px;
+            }
+
+            .f-input.has-suffix {
+                padding-right: 90px;
+            }
+
+            .f-input.code {
+                font-family: 'Syne', sans-serif;
+                font-weight: 700;
+                font-size: 15px;
+                text-transform: uppercase;
+                letter-spacing: .5px;
+            }
+
+        .f-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7A99' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-color: var(--gray-50);
+            padding-right: 36px;
+            cursor: pointer;
+        }
+
+            .f-select:focus {
+                background-color: var(--white);
+            }
+
+        .f-hint {
+            font-size: 11.5px;
+            color: var(--gray-300);
+        }
+
+        .f-error {
+            font-size: 12px;
+            color: #DC2626;
+            min-height: 16px;
+        }
+
+        input[type="datetime-local"] {
+            cursor: pointer;
+        }
+
+        .currency-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .cc-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 12px 8px;
+            border: 1.5px solid var(--gray-100);
+            border-radius: 10px;
+            cursor: pointer;
+            background: var(--gray-50);
+            transition: all var(--transition);
+            position: relative;
+        }
+
+            .cc-label input {
+                position: absolute;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            .cc-label:hover {
+                border-color: var(--accent);
+                background: var(--sky);
+            }
+
+            .cc-label.selected {
+                border-color: var(--accent);
+                background: rgba(30,111,217,.07);
+                box-shadow: 0 0 0 3px rgba(30,111,217,.1);
+            }
+
+        .cc-sym {
+            font-family: 'Syne', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--navy);
+            transition: color var(--transition);
+        }
+
+        .cc-code {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--gray-500);
+        }
+
+        .cc-label.selected .cc-sym {
+            color: var(--accent);
+        }
+
+        .cc-label.selected .cc-code {
+            color: var(--accent);
+        }
+
+        .cap-widget {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-100);
+            border-radius: 9px;
+            padding: 14px 16px;
+            margin-top: 2px;
+        }
+
+        .cap-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .cap-label {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--gray-500);
+        }
+
+        .cap-pct {
+            font-family: 'Syne', sans-serif;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--navy);
+        }
+
+        .cap-track {
+            height: 7px;
+            background: var(--gray-100);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .cap-fill {
+            height: 100%;
+            border-radius: 5px;
+            width: 0%;
+            background: var(--accent);
+            transition: width .45s ease, background .3s ease;
+        }
+
+        .cap-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--gray-500);
+        }
+
+        .route-card {
+            background: var(--navy);
+            border-radius: var(--radius);
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+            .route-card::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: repeating-linear-gradient( -45deg, rgba(255,255,255,.015) 0, rgba(255,255,255,.015) 1px, transparent 1px, transparent 9px );
+                pointer-events: none;
+            }
+
+        .rc-label {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.3);
+            margin-bottom: 14px;
+        }
+
+        .rc-flight-no {
+            font-family: 'Syne', sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: -.4px;
+            margin-bottom: 4px;
+            min-height: 32px;
+        }
+
+        .rc-airline {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255,255,255,.4);
+            margin-bottom: 16px;
+            min-height: 14px;
+        }
+
+        .rc-route {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .rc-airport {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rc-code {
+            font-family: 'Syne', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--white);
+            line-height: 1;
+        }
+
+        .rc-city {
+            font-size: 10px;
+            color: rgba(255,255,255,.35);
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 90px;
+        }
+
+        .rc-arrow {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .rc-line {
+            width: 100%;
+            height: 1px;
+            background: rgba(255,255,255,.15);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .rc-plane-icon {
+            font-size: 14px;
+            color: var(--accent-lit);
+            background: var(--navy);
+            padding: 0 6px;
+            position: relative;
+            z-index: 1;
+            animation: rcfly 2.5s ease-in-out infinite;
+        }
+
+        @@keyframes rcfly {
+            0%, 100% {
+                transform: translateX(-4px);
+            }
+
+            50% {
+                transform: translateX(4px);
+            }
+        }
+
+        .rc-dur {
+            font-size: 10px;
+            color: rgba(255,255,255,.3);
+        }
+
+        .rc-divider {
+            height: 1px;
+            background: rgba(255,255,255,.07);
+            margin: 14px 0;
+        }
+
+        .rc-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .rc-meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .rc-meta-key {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .8px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,.3);
+        }
+
+        .rc-meta-val {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255,255,255,.75);
+        }
+
+        .rc-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            background: rgba(30,111,217,.25);
+            color: #93C5FD;
+            margin-top: 14px;
+            width: fit-content;
+            transition: all .25s;
+        }
+
+            .rc-status .dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: currentColor;
+            }
+
+        .val-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 18px;
+            background: rgba(239,68,68,.06);
+            border: 1px solid rgba(239,68,68,.18);
+            border-radius: var(--radius);
+            color: #DC2626;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+            .val-card > i {
+                font-size: 16px;
+                flex-shrink: 0;
+                margin-top: 1px;
+            }
+
+            .val-card ul {
+                margin: 4px 0 0;
+                padding-left: 16px;
+            }
+
+        .form-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 18px 24px;
+            background: var(--gray-50);
+            border-top: 1px solid var(--gray-100);
+            border-radius: 0 0 var(--radius) var(--radius);
+        }
+
+        .btn-cancel-form {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 20px;
+            border: 1.5px solid var(--gray-100);
+            border-radius: 9px;
+            background: var(--white);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-decoration: none;
+            transition: all var(--transition);
+        }
+
+            .btn-cancel-form:hover {
+                background: var(--gray-50);
+                border-color: var(--gray-300);
+                color: var(--gray-700);
+            }
+
+        .btn-save-form {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 28px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+        }
+
+            .btn-save-form:hover {
+                background: var(--accent-lit);
+                box-shadow: 0 6px 22px rgba(30,111,217,.38);
+                transform: translateY(-1px);
+            }
+
+            .btn-save-form:active {
+                transform: translateY(0);
+            }
+
+            .btn-save-form:disabled {
+                opacity: .6;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+        .spinner {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border: 2px solid rgba(255,255,255,.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin .65s linear infinite;
+        }
+
+        @@keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @@media (max-width: 1100px) {
+            .create-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .create-col-side {
+                position: static;
+            }
+
+            .fg-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @@media (max-width: 640px) {
+            .fg-2, .fg-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .currency-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+}
+
+<main class="main-content" id="main-content">
+
+    <div class="page-header">
+        <div class="page-title-group">
+            <div class="page-breadcrumb">
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>İdarə Paneli</span>
+                <i class="bi bi-chevron-right sep"></i>
+                <a asp-area="Admin" asp-controller="Flights" asp-action="Index"
+                   style="color:var(--gray-500);text-decoration:none;">Uçuşların İdarəsi</a>
+                <i class="bi bi-chevron-right sep"></i>
+                <span style="color:var(--accent);">Yeni Uçuş Əlavə Et</span>
+            </div>
+            <h1 class="page-title">Yeni Uçuş Əlavə Et</h1>
+            <p class="page-desc">Sistemə yeni uçuş qeydi yaratmaq üçün formu tam doldurun.</p>
+        </div>
+    </div>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="val-card">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <div>
+                <strong>Formu göndərməzdən əvvəl bu səhvləri düzəldin:</strong>
+                <asp-validation-summary asp-validation-summary="All" />
+            </div>
+        </div>
+    }
+
+    <form method="post" id="flightForm" novalidate>
+        @Html.AntiForgeryToken()
+
+        <div class="create-grid">
+
+            <div class="create-col-main">
+
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="sh-icon blue"><i class="bi bi-airplane-fill"></i></div>
+                        <div class="sh-text">
+                            <div class="sh-title">Uçuş İdentifikatoru</div>
+                            <div class="sh-desc">Uçuş nömrəsi, aviaşirkət kodu və vəziyyət məlumatları</div>
+                        </div>
+                    </div>
+                    <div class="section-body">
+
+                        <div class="fg-3 mb-18">
+
+                            <div class="field">
+                                <label asp-for="FlightNumber" class="f-label">
+                                    Uçuş Nömrəsi <span class="f-req">*</span>
+                                </label>
+                                <div class="f-wrap">
+                                    <i class="bi bi-hash f-icon"></i>
+                                    <input asp-for="FlightNumber"
+                                           class="f-input"
+                                           placeholder="TK102"
+                                           maxlength="10"
+                                           autocomplete="off"
+                                           oninput="this.value=this.value.toUpperCase();syncPreview()" />
+                                </div>
+                                <span asp-validation-for="FlightNumber" class="f-error"></span>
+                                <span class="f-hint">2 hərf + rəqəm — məs. TK102</span>
+                            </div>
+
+                            <div class="field">
+                                <label asp-for="AirlineCode" class="f-label">
+                                    Aviaşirkət <span class="f-req">*</span>
+                                </label>
+                                <div class="f-wrap">
+                                    <i class="bi bi-building f-icon"></i>
+                                    <select asp-for="AirlineCode" class="f-select" onchange="syncPreview()">
+                                        <option value="">Seçin…</option>
+                                        <option value="TK">TK – Turkish Airlines</option>
+                                        <option value="PC">PC – Pegasus</option>
+                                        <option value="XQ">XQ – SunExpress</option>
+                                        <option value="LH">LH – Lufthansa</option>
+                                        <option value="BA">BA – British Airways</option>
+                                        <option value="AF">AF – Air France</option>
+                                        <option value="KL">KL – KLM</option>
+                                        <option value="EK">EK – Emirates</option>
+                                    </select>
+                                </div>
+                                <span asp-validation-for="AirlineCode" class="f-error"></span>
+                            </div>
+
+                            <div class="field">
+                                <label asp-for="Status" class="f-label">
+                                    Vəziyyət <span class="f-req">*</span>
+                                </label>
+                                <div class="f-wrap">
+                                    <i class="bi bi-circle-fill f-icon" id="statusDot" style="font-size:8px;color:var(--accent);"></i>
+                                    <select asp-for="Status" class="f-select" id="statusSel" onchange="syncStatus()">
+                                        <option value="">Seçin…</option>
+                                        <option value="Scheduled">Scheduled – Planlaşdırılıb</option>
+                                        <option value="Boarding">Boarding – Minik</option>
+                                        <option value="Delayed">Delayed – Gecikmə</option>
+                                        <option value="Cancelled">Cancelled – Ləğv</option>
+                                        <option value="Completed">Completed – Tamamlanıb</option>
+                                    </select>
+                                </div>
+                                <span asp-validation-for="Status" class="f-error"></span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="sh-icon green"><i class="bi bi-box-arrow-up-right"></i></div>
+                        <div class="sh-text">
+                            <div class="sh-title">Çıxış Məlumatları</div>
+                            <div class="sh-desc">Çıxış aeroportu kodu, adı və tarix/saat</div>
+                        </div>
+                    </div>
+                    <div class="section-body">
+
+                        <div class="fg-2 mb-18">
+
+                            <div class="field">
+                                <label asp-for="DepartureAirportCode" class="f-label">
+                                    Aeroport Kodu <span class="f-req">*</span>
+                                </label>
+                                <div class="f-wrap">
+                                    <i class="bi bi-geo-alt-fill f-icon" style="color:#10B981;"></i>
+                                    <input asp-for="DepartureAirportCode"
+                                           class="f-input code"
+                                           placeholder="IST"
+                                           maxlength="3"
+                                           oninput="this.value=this.value.toUpperCase();syncPreview()" />
+                                </div>
+                                <span asp-validation-for="DepartureAirportCode" class="f-error"></span>
+                                <span class="f-hint">IATA kodu — 3 böyük hərf</span>
+                            </div>
+
+                            <div class="field">
+                                <label asp-for="DepartureAirportName" class="f-label">
+                                    Aeroport Adı <span class="f-req">*</span>
+                                </label>
+                                <div class="f-wrap">
+                                    <i class="bi bi-building-fill f-icon"></i>
+                                    <input asp-for="DepartureAirportName"
+                                           class="f-input"
+                                           placeholder="İstanbul Hava Limanı"
+                                           oninput="syncPreview()" />
+                                </div>
+                                <span asp-validation-for="DepartureAirportName" class="f-error"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="fg-1">
+                            <div class="field">
+                                <label asp-for="DepartureTime" class="f-label">
+                                    Çıxış Tarixi və Saatı <span class="f-req">*</span>
+                                </label>
+                                <div class="f-wrap">
+                                    <i class="bi bi-calendar3 f-icon"></i>
+                                    <input asp-for="DepartureTime"
+                                           type="datetime-local"
+                                           class="f-input"
+                                           onchange="calcDuration();syncPreview()" />
+                                </div>
+                                <span asp-validation-for="DepartureTime" class="f-error"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="sh-icon orange"><i class="bi bi-box-arrow-in-down-right"></i></div>
+                        <div class="sh-text">
+                            <div class="sh-title">Gəliş Məlumatları</div>
+                            <div class="sh-desc">Gəliş aeroportu kodu, adı və tarix/saat</div>
+                        </div>
+                    </div>
+                    <div class="section-body">
+
+                        <div class="fg-2 mb-18">
+
+                            <div class="field">
+                                <label asp-for="ArrivalAirportCode" class="f-label">
+                                    Aeroport Kodu <span class="f-req">*</span>
+                                </label>
+                                <div class="f-wrap">
+                                    <i class="bi bi-geo-alt-fill f-icon" style="color:#F59E0B;"></i>
+                                    <input asp-for="ArrivalAirportCode"
+                                           class="f-input code"
+                                           placeholder="LHR"
+                                           maxlength="3"
+                                           oninput="this.value=this.value.toUpperCase();syncPreview()" />
+                                </div>
+                                <span asp-validation-for="ArrivalAirportCode" class="f-error"></span>
+                                <span class="f-hint">IATA kodu — 3 böyük hərf</span>
+                            </div>
+
+                            <div class="field">
+                                <label asp-for="ArrivalAirportName" class="f-label">
+                                    Aeroport Adı <span class="f-req">*</span>
+                                </label>
+                                <div class="f-wrap">
+                                    <i class="bi bi-building-fill f-icon"></i>
+                                    <input asp-for="ArrivalAirportName"
+                                           class="f-input"
+                                           placeholder="London Heathrow"
+                                           oninput="syncPreview()" />
+                                </div>
+                                <span asp-validation-for="ArrivalAirportName" class="f-error"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="fg-2">
+
+                            <div class="field">
+                                <label asp-for="ArrivalTime" class="f-label">
+                                    Gəliş Tarixi və Saatı <span class="f-req">*</span>
+                                </label>
+                                <div class="f-wrap">
+                                    <i class="bi bi-calendar3 f-icon"></i>
+                                    <input asp-for="ArrivalTime"
+                                           type="datetime-local"
+                                           class="f-input"
+                                           onchange="calcDuration();syncPreview()" />
+                                </div>
+                                <span asp-validation-for="ArrivalTime" class="f-error"></span>
+                            </div>
+
+                            <div class="field">
+                                <label asp-for="DurationMinutes" class="f-label">
+                                    Uçuş Müddəti (Dəqiqə) <span class="f-req">*</span>
+                                </label>
+                                <div class="f-wrap">
+                                    <i class="bi bi-clock-fill f-icon"></i>
+                                    <input asp-for="DurationMinutes"
+                                           type="number"
+                                           class="f-input has-suffix"
+                                           placeholder="180"
+                                           min="1" max="2880"
+                                           id="durInput"
+                                           oninput="syncDurSuffix()" />
+                                    <span class="f-suffix" id="durSuffix">—</span>
+                                </div>
+                                <span asp-validation-for="DurationMinutes" class="f-error"></span>
+                                <span class="f-hint">Tarixlər daxil ediləndə avtomatik hesablanır</span>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="sh-icon purple"><i class="bi bi-people-fill"></i></div>
+                        <div class="sh-text">
+                            <div class="sh-title">Oturacaq Tutumu</div>
+                            <div class="sh-desc">Ümumi və boş oturacaq sayı</div>
+                        </div>
+                    </div>
+                    <div class="section-body">
+
+                        <div class="fg-2 mb-18">
+
+                            <div class="field">
+                                <label asp-for="TotalSeats" class="f-label">
+                                    Ümumi Oturacaq <span class="f-req">*</span>
+                                </label>
+                                <div class="f-wrap">
+                                    <i class="bi bi-person-fill f-icon"></i>
+                                    <input asp-for="TotalSeats"
+                                           type="number"
+                                           class="f-input"
+                                           placeholder="180"
+                                           min="1" max="900"
+                                           oninput="syncCapacity()" />
+                                </div>
+                                <span asp-validation-for="TotalSeats" class="f-error"></span>
+                            </div>
+
+                            <div class="field">
+                                <label asp-for="AvailableSeats" class="f-label">
+                                    Boş Oturacaq <span class="f-req">*</span>
+                                </label>
+                                <div class="f-wrap">
+                                    <i class="bi bi-person-check-fill f-icon"></i>
+                                    <input asp-for="AvailableSeats"
+                                           type="number"
+                                           class="f-input"
+                                           placeholder="142"
+                                           min="0"
+                                           oninput="syncCapacity()" />
+                                </div>
+                                <span asp-validation-for="AvailableSeats" class="f-error"></span>
+                            </div>
+
+                        </div>
+
+                        <div class="cap-widget">
+                            <div class="cap-header">
+                                <span class="cap-label">Doldurulma Dərəcəsi</span>
+                                <span class="cap-pct" id="capPct">—</span>
+                            </div>
+                            <div class="cap-track">
+                                <div class="cap-fill" id="capFill"></div>
+                            </div>
+                            <div class="cap-footer">
+                                <span id="capOcc">— dolu oturacaq</span>
+                                <span id="capFree">— boş oturacaq</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="sh-icon teal"><i class="bi bi-tag-fill"></i></div>
+                        <div class="sh-text">
+                            <div class="sh-title">Qiymətləndirmə</div>
+                            <div class="sh-desc">Əsas qiymət və valyuta</div>
+                        </div>
+                    </div>
+                    <div class="section-body">
+
+                        <div class="fg-2 mb-18">
+
+                            <div class="field">
+                                <label asp-for="BasePrice" class="f-label">
+                                    Əsas Qiymət <span class="f-req">*</span>
+                                </label>
+                                <div class="f-wrap">
+                                    <i class="bi bi-currency-exchange f-icon"></i>
+                                    <input asp-for="BasePrice"
+                                           type="number"
+                                           class="f-input has-suffix"
+                                           placeholder="0.00"
+                                           min="0" step="0.01"
+                                           oninput="syncPrice()" />
+                                    <span class="f-suffix" id="priceSuffix">—</span>
+                                </div>
+                                <span asp-validation-for="BasePrice" class="f-error"></span>
+                            </div>
+
+                            <div class="field">
+                                <label class="f-label">Valyuta <span class="f-req">*</span></label>
+                                <div class="currency-row" id="currencyRow">
+
+                                    <label class="cc-label" id="cc-TRY">
+                                        <input type="radio" asp-for="Currency" value="TRY" onchange="pickCurrency(this,'₺')" />
+                                        <span class="cc-sym">₺</span>
+                                        <span class="cc-code">TRY</span>
+                                    </label>
+
+                                    <label class="cc-label" id="cc-EUR">
+                                        <input type="radio" asp-for="Currency" value="EUR" onchange="pickCurrency(this,'€')" />
+                                        <span class="cc-sym">€</span>
+                                        <span class="cc-code">EUR</span>
+                                    </label>
+
+                                    <label class="cc-label" id="cc-USD">
+                                        <input type="radio" asp-for="Currency" value="USD" onchange="pickCurrency(this,'$')" />
+                                        <span class="cc-sym">$</span>
+                                        <span class="cc-code">USD</span>
+                                    </label>
+
+                                    <label class="cc-label" id="cc-GBP">
+                                        <input type="radio" asp-for="Currency" value="GBP" onchange="pickCurrency(this,'£')" />
+                                        <span class="cc-sym">£</span>
+                                        <span class="cc-code">GBP</span>
+                                    </label>
+
+                                </div>
+                                <span asp-validation-for="Currency" class="f-error"></span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+                        <a asp-area="Admin" asp-controller="Flights" asp-action="Index"
+                           class="btn-cancel-form">
+                            <i class="bi bi-arrow-left"></i> Siyahıya Qayıt
+                        </a>
+                        <button type="submit" class="btn-save-form" id="saveBtn">
+                            <span id="saveBtnIdle"><i class="bi bi-check-circle-fill"></i> Uçuşu Saxla</span>
+                            <span id="saveBtnLoad" style="display:none;"><span class="spinner"></span> Saxlanılır…</span>
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="create-col-side">
+
+                <div class="route-card">
+                    <div class="rc-label">CANLI ÖNİZLƏMƏ</div>
+
+                    <div class="rc-flight-no" id="rc-no">——</div>
+                    <div class="rc-airline" id="rc-airline">Aviaşirkət seçin</div>
+
+                    <div class="rc-route">
+                        <div class="rc-airport">
+                            <span class="rc-code" id="rc-dep-code">IST</span>
+                            <span class="rc-city" id="rc-dep-name">Çıxış</span>
+                        </div>
+                        <div class="rc-arrow">
+                            <div class="rc-line">
+                                <i class="bi bi-airplane-fill rc-plane-icon"></i>
+                            </div>
+                            <span class="rc-dur" id="rc-dur">— dk</span>
+                        </div>
+                        <div class="rc-airport">
+                            <span class="rc-code" id="rc-arr-code">—</span>
+                            <span class="rc-city" id="rc-arr-name">Gəliş</span>
+                        </div>
+                    </div>
+
+                    <div class="rc-divider"></div>
+
+                    <div class="rc-meta">
+                        <div class="rc-meta-item">
+                            <span class="rc-meta-key">Çıxış</span>
+                            <span class="rc-meta-val" id="rc-dep-time">—</span>
+                        </div>
+                        <div class="rc-meta-item">
+                            <span class="rc-meta-key">Gəliş</span>
+                            <span class="rc-meta-val" id="rc-arr-time">—</span>
+                        </div>
+                        <div class="rc-meta-item">
+                            <span class="rc-meta-key">Tutum</span>
+                            <span class="rc-meta-val" id="rc-cap">—</span>
+                        </div>
+                        <div class="rc-meta-item">
+                            <span class="rc-meta-key">Qiymət</span>
+                            <span class="rc-meta-val" id="rc-price">—</span>
+                        </div>
+                    </div>
+
+                    <div class="rc-status" id="rc-status">
+                        <span class="dot"></span>
+                        <span id="rc-status-txt">Vəziyyət seçin</span>
+                    </div>
+                </div>
+
+                <div style="background:var(--white);border:1px solid var(--gray-100);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow-sm);">
+                    <div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:10px;">
+                        <i class="bi bi-info-circle-fill" style="color:var(--accent);margin-right:6px;"></i>Məlumat
+                    </div>
+                    <ul style="font-size:12px;color:var(--gray-500);padding-left:16px;line-height:1.8;margin:0;">
+                        <li><span style="color:#EF4444;">*</span> ilə işarələnmiş sahələr mütləqdir.</li>
+                        <li>Uçuş müddəti çıxış və gəliş saatlarından avtomatik hesablanır.</li>
+                        <li>IATA kodları 3 böyük hərf olmalıdır (IST, LHR, CDG…).</li>
+                        <li>Əsas qiymət vergisiz bilet haqqıdır.</li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+    </form>
+
+</main>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+
+        var statusColors = {
+            Scheduled : { bg:'rgba(30,111,217,.25)',  color:'#93C5FD',  label:'Planlaşdırılıb',   dot:'var(--accent)' },
+            Boarding  : { bg:'rgba(16,185,129,.25)',  color:'#6EE7B7',  label:'Minik',    dot:'#10B981' },
+            Delayed   : { bg:'rgba(245,158,11,.25)',  color:'#FCD34D',  label:'Gecikmə',   dot:'#F59E0B' },
+            Cancelled : { bg:'rgba(239,68,68,.25)',   color:'#FCA5A5',  label:'Ləğv',       dot:'#EF4444' },
+            Completed : { bg:'rgba(107,114,153,.2)',  color:'#C7D2FE',  label:'Tamamlanıb',  dot:'#9CA3AF' },
+        };
+
+        var currentSymbol = '';
+
+        function syncStatus() {
+            var val  = document.getElementById('statusSel').value;
+            var dot  = document.getElementById('statusDot');
+            var info = statusColors[val];
+
+            if (info && dot) dot.style.color = info.dot;
+
+            var rcs  = document.getElementById('rc-status');
+            var rcst = document.getElementById('rc-status-txt');
+            if (rcs && info) {
+                rcs.style.background = info.bg;
+                rcs.style.color      = info.color;
+            }
+            if (rcst) rcst.textContent = info ? info.label : 'Vəziyyət seçin';
+        }
+
+        function pickCurrency(radio, sym) {
+            currentSymbol = sym;
+            document.querySelectorAll('.cc-label').forEach(function(l){ l.classList.remove('selected'); });
+            if (radio && radio.closest) radio.closest('.cc-label').classList.add('selected');
+            syncPrice();
+        }
+
+        function syncPrice() {
+            var val = parseFloat(document.querySelector('[name="BasePrice"]').value) || 0;
+            var el  = document.getElementById('priceSuffix');
+            if (el) el.textContent = val > 0 ? currentSymbol + val.toLocaleString('tr-TR') : '—';
+
+            var rcp = document.getElementById('rc-price');
+            if (rcp) rcp.textContent = (val > 0 && currentSymbol) ? currentSymbol + val.toLocaleString('tr-TR') : '—';
+        }
+
+        function syncDurSuffix() {
+            var val = parseInt(document.getElementById('durInput').value) || 0;
+            var h   = Math.floor(val / 60), m = val % 60;
+            var txt = val > 0 ? (h > 0 ? h + 's ' + m + 'dk' : m + 'dk') : '—';
+            document.getElementById('durSuffix').textContent = txt;
+            document.getElementById('rc-dur').textContent = txt;
+        }
+
+        function calcDuration() {
+            var dv = document.querySelector('[name="DepartureTime"]').value;
+            var av = document.querySelector('[name="ArrivalTime"]').value;
+            if (!dv || !av) return;
+            var dep = new Date(dv), arr = new Date(av);
+            if (isNaN(dep) || isNaN(arr) || arr <= dep) return;
+            var mins = Math.round((arr - dep) / 60000);
+            document.getElementById('durInput').value = mins;
+            syncDurSuffix();
+        }
+
+        function syncCapacity() {
+            var total = parseInt(document.querySelector('[name="TotalSeats"]').value)     || 0;
+            var avail = parseInt(document.querySelector('[name="AvailableSeats"]').value) || 0;
+            var occ   = Math.max(0, total - avail);
+            var pct   = total > 0 ? Math.round(occ / total * 100) : 0;
+
+            var fill = document.getElementById('capFill');
+            if (fill) {
+                fill.style.width      = pct + '%';
+                fill.style.background = pct >= 90 ? '#EF4444' : pct >= 70 ? '#F59E0B' : 'var(--accent)';
+            }
+
+            document.getElementById('capPct').textContent  = total > 0 ? '%' + pct + ' dolu' : '—';
+            document.getElementById('capOcc').textContent  = total > 0 ? occ + ' dolu oturacaq' : '—';
+            document.getElementById('capFree').textContent = total > 0 ? avail + ' boş oturacaq' : '—';
+
+            document.getElementById('rc-cap').textContent  = total > 0 ? avail + '/' + total : '—';
+        }
+
+        function syncPreview() {
+            var no      = document.querySelector('[name="FlightNumber"]').value  || '——';
+            var dep     = document.querySelector('[name="DepartureAirportCode"]').value || 'IST';
+            var depName = document.querySelector('[name="DepartureAirportName"]').value || 'Çıxış';
+            var arr     = document.querySelector('[name="ArrivalAirportCode"]').value   || '—';
+            var arrName = document.querySelector('[name="ArrivalAirportName"]').value   || 'Gəliş';
+
+            var airlineSel = document.querySelector('[name="AirlineCode"]');
+            var airlineTxt = airlineSel && airlineSel.selectedIndex > 0
+                ? airlineSel.options[airlineSel.selectedIndex].text
+                : 'Aviaşirkət seçin';
+
+            document.getElementById('rc-no').textContent       = no;
+            document.getElementById('rc-airline').textContent  = airlineTxt;
+            document.getElementById('rc-dep-code').textContent = dep;
+            document.getElementById('rc-dep-name').textContent = depName;
+            document.getElementById('rc-arr-code').textContent = arr;
+            document.getElementById('rc-arr-name').textContent = arrName;
+
+            var depT = document.querySelector('[name="DepartureTime"]').value;
+            var arrT = document.querySelector('[name="ArrivalTime"]').value;
+
+            function fmtTime(s) {
+                if (!s) return '—';
+                var d = new Date(s);
+                return isNaN(d) ? '—' : d.toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' });
+            }
+
+            document.getElementById('rc-dep-time').textContent = fmtTime(depT);
+            document.getElementById('rc-arr-time').textContent = fmtTime(arrT);
+        }
+
+        document.getElementById('flightForm').addEventListener('submit', function() {
+            var btn  = document.getElementById('saveBtn');
+            document.getElementById('saveBtnIdle').style.display = 'none';
+            document.getElementById('saveBtnLoad').style.display = 'inline-flex';
+            btn.disabled = true;
+        });
+
+    </script>
+}
