@@ -9,461 +9,1124 @@
     int delayedFlights = Model?.Count(f => f.Status == "Delayed") ?? 0;
     int cancelledFlights = Model?.Count(f => f.Status == "Cancelled") ?? 0;
 
-    var statusMap = new Dictionary<string, (string Label, string Css, string Icon)>
+    var statusMap = new Dictionary<string, (string Label, string Css)>
     {
-        ["Scheduled"] = ("Planlaşdırılıb", "status-scheduled", "bi-calendar-check"),
-        ["Boarding"] = ("Boarding", "status-boarding", "bi-check2-circle"),
-        ["Delayed"] = ("Gecikir", "status-delayed", "bi-exclamation-triangle"),
-        ["Cancelled"] = ("Ləğv Edildi", "status-cancelled", "bi-x-circle"),
-        ["Completed"] = ("Tamamlandı", "status-completed", "bi-check-circle"),
+        ["Scheduled"] = ("Planlaşdırılıb", "sb-scheduled"),
+        ["Boarding"] = ("Boarding", "sb-boarding"),
+        ["Delayed"] = ("Gecikmiş", "sb-delayed"),
+        ["Cancelled"] = ("Ləğv edilib", "sb-cancelled"),
+        ["Completed"] = ("Tamamlanıb", "sb-completed"),
     };
+
+    var airlineMap = new Dictionary<string, (string Bg, string Fg, string Name)>
+    {
+        ["TK"] = ("#1a2e4a", "#ffffff", "Turkish Airlines"),
+        ["PC"] = ("#e8500a", "#ffffff", "Pegasus"),
+        ["XQ"] = ("#f5a800", "#1a1a1a", "SunExpress"),
+        ["LH"] = ("#06164d", "#f5c400", "Lufthansa"),
+        ["BA"] = ("#0b4ea2", "#ffffff", "British Airways"),
+        ["AF"] = ("#002395", "#ffffff", "Air France"),
+        ["KL"] = ("#009cde", "#ffffff", "KLM"),
+        ["EK"] = ("#c01628", "#ffffff", "Emirates"),
+        ["FR"] = ("#073693", "#f5c518", "Ryanair"),
+        ["U2"] = ("#ff6600", "#ffffff", "easyJet"),
+        ["W6"] = ("#c6007e", "#ffffff", "Wizz Air"),
+        ["QR"] = ("#5c0632", "#d4a843", "Qatar Airways"),
+        ["EY"] = ("#b5936a", "#ffffff", "Etihad"),
+        ["SQ"] = ("#0d3769", "#f0a500", "Singapore"),
+    };
+
+    (string Bg, string Fg, string Name) GetAirline(string code)
+    {
+        if (code != null && airlineMap.TryGetValue(code.ToUpper(), out var v)) return v;
+        return ("#64748b", "#ffffff", code ?? "");
+    }
+}
+
+@section Styles {
+    <style>
+
+        .fm-page {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .stat-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .ss-card {
+            background: #fff;
+            border: 1px solid #e8edf5;
+            border-radius: 14px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 1px 4px rgba(15,23,42,.05);
+            transition: box-shadow .2s, transform .2s;
+        }
+
+            .ss-card:hover {
+                box-shadow: 0 4px 16px rgba(15,23,42,.09);
+                transform: translateY(-1px);
+            }
+
+        .ss-ico {
+            width: 42px;
+            height: 42px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+            .ss-ico.blue {
+                background: #eff6ff;
+                color: #2563eb;
+            }
+
+            .ss-ico.green {
+                background: #f0fdf4;
+                color: #16a34a;
+            }
+
+            .ss-ico.amber {
+                background: #fffbeb;
+                color: #d97706;
+            }
+
+            .ss-ico.red {
+                background: #fef2f2;
+                color: #dc2626;
+            }
+
+        .ss-val {
+            font-family: 'Syne', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1;
+        }
+
+        .ss-lbl {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 3px;
+            font-weight: 500;
+        }
+
+        .ss-tag {
+            margin-top: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+            .ss-tag.up {
+                color: #16a34a;
+            }
+
+        .fm-card {
+            background: #fff;
+            border: 1px solid #e8edf5;
+            border-radius: 16px;
+            box-shadow: 0 1px 4px rgba(15,23,42,.05);
+            overflow: hidden;
+        }
+
+        .fm-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            background: #fff;
+            flex-wrap: wrap;
+        }
+
+        .fm-toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 0;
+            flex-wrap: wrap;
+        }
+
+        .fm-toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .fm-search {
+            position: relative;
+        }
+
+            .fm-search input {
+                height: 36px;
+                padding: 0 12px 0 36px;
+                border: 1.5px solid #e2e8f0;
+                border-radius: 9px;
+                font-family: 'DM Sans', sans-serif;
+                font-size: 13px;
+                color: #1e293b;
+                background: #f8fafc;
+                outline: none;
+                width: 240px;
+                transition: all .18s;
+            }
+
+                .fm-search input:focus {
+                    border-color: #3b82f6;
+                    background: #fff;
+                    box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+                }
+
+        .fm-search-icon {
+            position: absolute;
+            left: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 13px;
+            pointer-events: none;
+        }
+
+        .fm-select {
+            height: 36px;
+            padding: 0 28px 0 11px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 9px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            color: #1e293b;
+            background: #f8fafc;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 9px center;
+            transition: all .18s;
+        }
+
+            .fm-select:focus {
+                border-color: #3b82f6;
+                background-color: #fff;
+                box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+            }
+
+        .fm-count {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            padding: 4px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .fm-btn-new {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            height: 36px;
+            padding: 0 16px;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 9px;
+            text-decoration: none;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background .18s, box-shadow .18s, transform .18s;
+        }
+
+            .fm-btn-new:hover {
+                background: #1d4ed8;
+                color: #fff;
+                box-shadow: 0 4px 14px rgba(37,99,235,.35);
+                transform: translateY(-1px);
+            }
+
+        .fm-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+            .fm-table thead tr {
+                background: #f8fafc;
+            }
+
+            .fm-table thead th {
+                padding: 10px 16px;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: .7px;
+                text-transform: uppercase;
+                color: #94a3b8;
+                border-bottom: 1px solid #f1f5f9;
+                white-space: nowrap;
+                text-align: left;
+            }
+
+            .fm-table tbody tr {
+                transition: background .14s;
+                border-bottom: 1px solid #f8fafc;
+            }
+
+                .fm-table tbody tr:last-child {
+                    border-bottom: none;
+                }
+
+                .fm-table tbody tr:hover {
+                    background: #f8fafc;
+                }
+
+                    .fm-table tbody tr:hover .row-hover-accent {
+                        border-left: 3px solid #3b82f6;
+                    }
+
+            .fm-table tbody td {
+                padding: 14px 16px;
+                vertical-align: middle;
+                border-bottom: 1px solid #f1f5f9;
+            }
+
+            .fm-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+            .fm-table tbody td:first-child {
+                border-left: 3px solid transparent;
+                transition: border-color .14s;
+            }
+
+            .fm-table tbody tr:hover td:first-child {
+                border-left-color: #3b82f6;
+            }
+
+        .cell-flightno {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .fn-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #3b82f6;
+            flex-shrink: 0;
+            box-shadow: 0 0 0 3px rgba(59,130,246,.15);
+        }
+
+        .fn-number {
+            font-family: 'Syne', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            letter-spacing: .1px;
+        }
+
+        .cell-airline {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .al-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .4px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,.12);
+        }
+
+        .al-name {
+            font-size: 12.5px;
+            font-weight: 500;
+            color: #334155;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 120px;
+        }
+
+        .cell-route {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .route-codes {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .rc-code {
+            font-family: 'Syne', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            letter-spacing: .2px;
+        }
+
+        .rc-arrow {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #cbd5e1;
+            font-size: 11px;
+        }
+
+            .rc-arrow::before, .rc-arrow::after {
+                content: '';
+                display: block;
+                height: 1px;
+                background: #e2e8f0;
+            }
+
+            .rc-arrow::before {
+                width: 10px;
+            }
+
+            .rc-arrow::after {
+                width: 10px;
+            }
+
+        .route-names {
+            font-size: 11.5px;
+            font-weight: 400;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 220px;
+        }
+
+            .route-names span {
+                flex-shrink: 0;
+            }
+
+        .cell-time {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .t-main {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1e293b;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -.1px;
+        }
+
+        .t-date {
+            font-size: 11px;
+            font-weight: 400;
+            color: #94a3b8;
+        }
+
+        .cell-dur {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12.5px;
+            font-weight: 400;
+            color: #64748b;
+            background: #f8fafc;
+            border: 1px solid #f1f5f9;
+            padding: 4px 10px;
+            border-radius: 7px;
+            white-space: nowrap;
+        }
+
+            .cell-dur i {
+                font-size: 11px;
+                color: #94a3b8;
+            }
+
+        .cell-cap {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 90px;
+        }
+
+        .cap-row {
+            display: flex;
+            align-items: baseline;
+            gap: 3px;
+            font-size: 13px;
+        }
+
+        .cap-avail {
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .cap-slash {
+            font-weight: 400;
+            color: #cbd5e1;
+            font-size: 11px;
+        }
+
+        .cap-total {
+            font-weight: 400;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        .cap-track {
+            height: 5px;
+            background: #f1f5f9;
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .cap-bar {
+            height: 100%;
+            border-radius: 99px;
+            transition: width .5s ease;
+        }
+
+        .cap-green {
+            background: linear-gradient(90deg, #22c55e, #4ade80);
+        }
+
+        .cap-yellow {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+
+        .cap-red {
+            background: linear-gradient(90deg, #ef4444, #f87171);
+        }
+
+        .cell-price {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .p-amount {
+            font-family: 'Syne', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0f172a;
+            white-space: nowrap;
+        }
+
+        .p-cur {
+            font-size: 10.5px;
+            font-weight: 500;
+            color: #94a3b8;
+            letter-spacing: .3px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            letter-spacing: .1px;
+        }
+
+        .sb-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .sb-scheduled {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
+        }
+
+            .sb-scheduled .sb-dot {
+                background: #3b82f6;
+            }
+
+        .sb-boarding {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+        }
+
+            .sb-boarding .sb-dot {
+                background: #22c55e;
+                animation: blink 1.4s ease-in-out infinite;
+            }
+
+        .sb-delayed {
+            background: #fffbeb;
+            color: #d97706;
+            border: 1px solid #fde68a;
+        }
+
+            .sb-delayed .sb-dot {
+                background: #f59e0b;
+            }
+
+        .sb-cancelled {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+            .sb-cancelled .sb-dot {
+                background: #ef4444;
+            }
+
+        .sb-completed {
+            background: #f8fafc;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+
+            .sb-completed .sb-dot {
+                background: #94a3b8;
+            }
+
+        @@keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .25;
+            }
+        }
+
+        .cell-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .act {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            height: 30px;
+            padding: 0 10px;
+            border: 1px solid transparent;
+            border-radius: 7px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all .15s;
+        }
+
+            .act i {
+                font-size: 11px;
+            }
+
+        .act-view {
+            background: #eff6ff;
+            color: #2563eb;
+            border-color: #dbeafe;
+        }
+
+            .act-view:hover {
+                background: #dbeafe;
+                color: #1d4ed8;
+            }
+
+        .act-edit {
+            background: #fffbeb;
+            color: #d97706;
+            border-color: #fef3c7;
+        }
+
+            .act-edit:hover {
+                background: #fef3c7;
+                color: #b45309;
+            }
+
+        .act-del {
+            background: #fef2f2;
+            color: #dc2626;
+            border-color: #fecaca;
+        }
+
+            .act-del:hover {
+                background: #fecaca;
+                color: #b91c1c;
+            }
+
+        .empty-state {
+            padding: 64px 24px;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+            .empty-state i {
+                font-size: 40px;
+                display: block;
+                margin-bottom: 12px;
+                opacity: .3;
+            }
+
+            .empty-state p {
+                font-size: 14px;
+                margin: 0;
+            }
+
+        .fm-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            border-top: 1px solid #f1f5f9;
+            background: #fafbfc;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .fm-footer-info {
+            font-size: 12.5px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .pag-list {
+            display: flex;
+            gap: 3px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+            .pag-list li a,
+            .pag-list li span {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 32px;
+                height: 32px;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 500;
+                color: #64748b;
+                text-decoration: none;
+                cursor: pointer;
+                border: 1px solid #e2e8f0;
+                background: #fff;
+                transition: all .14s;
+            }
+
+                .pag-list li a:hover {
+                    background: #eff6ff;
+                    border-color: #bfdbfe;
+                    color: #2563eb;
+                }
+
+            .pag-list li.active a {
+                background: #2563eb;
+                border-color: #2563eb;
+                color: #fff;
+                box-shadow: 0 2px 8px rgba(37,99,235,.3);
+                font-weight: 600;
+            }
+
+            .pag-list li.disabled span {
+                opacity: .35;
+                cursor: not-allowed;
+            }
+
+        .modal-overlay {
+            align-items: center;
+        }
+
+        @@media (max-width: 1100px) {
+            .stat-strip {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .al-name {
+                display: none;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .stat-strip {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .fm-search input {
+                width: 180px;
+            }
+
+            .act .act-label {
+                display: none;
+            }
+        }
+
+    </style>
 }
 
 <main class="main-content" id="main-content">
+    <div class="fm-page">
 
-    <div class="page-header">
-        <div class="page-title-group">
-            <div class="page-breadcrumb">
-                <i class="bi bi-grid-1x2-fill"></i>
-                <span>Dashboard</span>
-                <i class="bi bi-chevron-right sep"></i>
-                <span style="color:var(--accent);">Flights Management</span>
+        <div class="page-header">
+            <div class="page-title-group">
+                <div class="page-breadcrumb">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    <span>Dashboard</span>
+                    <i class="bi bi-chevron-right sep"></i>
+                    <span style="color:var(--accent);">Flights</span>
+                </div>
+                <h1 class="page-title">Flights Management</h1>
+                <p class="page-desc">Sistemdə qeydiyyatdan keçmiş uçuşları idarə edin, redaktə edin və ya yenisini əlavə edin.</p>
             </div>
-            <h1 class="page-title">Flights Management</h1>
-            <p class="page-desc">
-                Sistemdə qeydiyyatdan keçmiş uçuşlara baxa, onları redaktə edə və ya yeni uçuşlar əlavə edə bilərsiniz.
-            </p>
+            <a asp-area="Admin" asp-controller="Flights" asp-action="Create" class="fm-btn-new">
+                <i class="bi bi-plus-lg"></i> Yeni Uçuş
+            </a>
         </div>
-        <button class="btn-add" onclick="openModal()">
-            <i class="bi bi-plus-lg"></i>
-            <span>Yeni Uçuş Əlavə Et</span>
-        </button>
-    </div>
 
-    <div class="stats-row">
-        <div class="stat-card">
-            <div class="stat-icon blue"><i class="bi bi-airplane-fill"></i></div>
-            <div class="stat-body">
-                <div class="stat-value">@totalFlights</div>
-                <div class="stat-label">Ümumi Uçuş</div>
+        <div class="stat-strip">
+            <div class="ss-card">
+                <div class="ss-ico blue"><i class="bi bi-airplane-fill"></i></div>
+                <div>
+                    <div class="ss-val">@totalFlights</div>
+                    <div class="ss-lbl">Ümumi Uçuş</div>
+                </div>
+            </div>
+            <div class="ss-card">
+                <div class="ss-ico green"><i class="bi bi-check-circle-fill"></i></div>
+                <div>
+                    <div class="ss-val">@completedFlights</div>
+                    <div class="ss-lbl">Tamamlanmış</div>
+                    @if (totalFlights > 0)
+                    {
+                        <div class="ss-tag up">
+                            <i class="bi bi-arrow-up-short"></i>
+                            %@Math.Round((double)completedFlights / totalFlights * 100, 0)
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="ss-card">
+                <div class="ss-ico amber"><i class="bi bi-clock-fill"></i></div>
+                <div>
+                    <div class="ss-val">@delayedFlights</div>
+                    <div class="ss-lbl">Gecikmiş</div>
+                </div>
+            </div>
+            <div class="ss-card">
+                <div class="ss-ico red"><i class="bi bi-x-circle-fill"></i></div>
+                <div>
+                    <div class="ss-val">@cancelledFlights</div>
+                    <div class="ss-lbl">Ləğv Edilmiş</div>
+                </div>
             </div>
         </div>
-        <div class="stat-card">
-            <div class="stat-icon green"><i class="bi bi-check-circle-fill"></i></div>
-            <div class="stat-body">
-                <div class="stat-value">@completedFlights</div>
-                <div class="stat-label">Tamamlanan</div>
-                @if (totalFlights > 0)
-                {
-                    <div class="stat-change up">
-                        <i class="bi bi-arrow-up-short"></i>
-                        %@Math.Round((double)completedFlights / totalFlights * 100, 0) faiz
+
+        <div class="fm-card">
+
+            <div class="fm-toolbar">
+                <div class="fm-toolbar-left">
+
+                    <div class="fm-search">
+                        <i class="bi bi-search fm-search-icon"></i>
+                        <input type="text"
+                               id="searchInput"
+                               placeholder="Uçuş nömrəsi, aeroport, aviaşirkət…"
+                               oninput="filterTable()" />
                     </div>
-                }
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon orange"><i class="bi bi-clock-fill"></i></div>
-            <div class="stat-body">
-                <div class="stat-value">@delayedFlights</div>
-                <div class="stat-label">Gecikmiş</div>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon red"><i class="bi bi-x-circle-fill"></i></div>
-            <div class="stat-body">
-                <div class="stat-value">@cancelledFlights</div>
-                <div class="stat-label">Ləğv Edilən</div>
-            </div>
-        </div>
-    </div>
 
-    <div class="table-card">
+                    <select class="fm-select" id="statusFilter" onchange="filterTable()">
+                        <option value="">Bütün Statuslar</option>
+                        <option value="Scheduled">Planlaşdırılıb</option>
+                        <option value="Boarding">Boarding</option>
+                        <option value="Delayed">Gecikmiş</option>
+                        <option value="Cancelled">Ləğv edilib</option>
+                        <option value="Completed">Tamamlanıb</option>
+                    </select>
 
-        <div class="table-card-header">
-
-            {{-- Axtarış --}}
-            <div class="tbl-search">
-                <i class="bi bi-search si"></i>
-                <input type="text"
-                       id="searchInput"
-                       placeholder="Uçuş nömrəsi, hava limanı, hava yolu axtar…"
-                       oninput="filterTable()" />
-            </div>
-
-            {{-- Status filtri --}}
-            <select class="filter-select" id="statusFilter" onchange="filterTable()">
-                <option value="">Bütün Statuslar</option>
-                <option value="Scheduled">Planlaşdırılıb</option>
-                <option value="Boarding">Boarding</option>
-                <option value="Delayed">Gecikmiş</option>
-                <option value="Cancelled">Ləğv Edilib</option>
-                <option value="Completed">Tamamlandı</option>
-            </select>
-
-            {{-- Hava yolu filtri (modeldən dinamik) --}}
-            <select class="filter-select" id="airlineFilter" onchange="filterTable()">
-                <option value="">Bütün Hava Yolları</option>
-                @if (Model != null)
-                {
-                    foreach (var code in Model.Select(f => f.AirlineCode).Distinct().OrderBy(c => c))
-                    {
-                        <option value="@code">@code</option>
-                    }
-                }
-            </select>
-
-            <span class="tbl-count" id="rowCount">@totalFlights uçuş göstərilir</span>
-        </div>
-
-        <div style="overflow-x:auto;">
-            <table class="flights-table" id="flightsTable">
-                <thead>
-                    <tr>
-                        <th>UÇUŞ NÖMRƏSİ</th>
-                        <th>HAVA YOLU</th>
-                        <th>YOLA DÜŞMƏ</th>
-                        <th>GƏLİŞ</th>
-                        <th>YOLA DÜŞMƏ SAATI</th>
-                        <th>GƏLİŞ SAATI</th>
-                        <th>MÜDDƏT</th>
-                        <th>TUTUM</th>
-                        <th>QİYMƏT</th>
-                        <th>STATUS</th>
-                        <th>ƏMƏLİYYATLAR</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    @if (Model == null || !Model.Any())
-                    {
-                        <tr>
-                            <td colspan="11" class="empty-row">
-                                <i class="bi bi-airplane" style="font-size:28px;display:block;margin-bottom:8px;opacity:.4;"></i>
-                                Qeydiyyatdan keçmiş uçuş tapılmadı.
-                            </td>
-                        </tr>
-                    }
-                    else
-                    {
-                        foreach (var flight in Model)
+                    <select class="fm-select" id="airlineFilter" onchange="filterTable()">
+                        <option value="">Bütün Aviaşirkətlər</option>
+                        @if (Model != null)
                         {
-                            var (label, css, icon) = statusMap.TryGetValue(flight.Status, out var sv)
-                            ? sv
-                            : (flight.Status, "status-scheduled", "bi-circle");
+                            foreach (var code in Model.Select(f => f.AirlineCode).Distinct().OrderBy(c => c))
+                            {
+                                <option value="@code">@code</option>
+                            }
+                        }
+                    </select>
 
-                            int occupancy = flight.TotalSeats > 0
-                            ? (int)Math.Round((double)(flight.TotalSeats - flight.AvailableSeats) / flight.TotalSeats * 100)
-                            : 0;
+                </div>
+                <div class="fm-toolbar-right">
+                    <span class="fm-count" id="rowCount">@totalFlights uçuş</span>
+                </div>
+            </div>
 
-                            int durHour = flight.DurationMinutes / 60;
-                            int durMin = flight.DurationMinutes % 60;
-                            string durStr = durHour > 0 ? $"{durHour}s {durMin}dəq" : $"{durMin}dəq";
+            <div style="overflow-x:auto;">
+                <table class="fm-table" id="flightsTable">
+                    <thead>
+                        <tr>
+                            <th>UÇUŞ NÖMRƏSİ</th>
+                            <th>AVİAŞİRKƏT</th>
+                            <th>MARŞRUT</th>
+                            <th>GEDİŞ</th>
+                            <th>ENİŞ</th>
+                            <th>MÜDDƏT</th>
+                            <th>TUTUM</th>
+                            <th>QİYMƏT</th>
+                            <th>STATUS</th>
+                            <th>ƏMƏLİYYATLAR</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
 
-                            <tr data-flight-no="@flight.FlightNumber.ToLower()"
-                                data-dep-airport="@flight.DepartureAirportCode.ToLower() @flight.DepartureAirportName.ToLower()"
-                                data-arr-airport="@flight.ArrivalAirportCode.ToLower() @flight.ArrivalAirportName.ToLower()"
-                                data-airline="@flight.AirlineCode"
-                                data-status="@flight.Status">
-
-                                <td>
-                                    <div class="flight-no">
-                                        <span class="flight-no-dot"></span>
-                                        @flight.FlightNumber
+                        @if (Model == null || !Model.Any())
+                        {
+                            <tr>
+                                <td colspan="10">
+                                    <div class="empty-state">
+                                        <i class="bi bi-airplane"></i>
+                                        <p>Qeydiyyatdan keçmiş uçuş tapılmadı.</p>
                                     </div>
                                 </td>
-
-                                <td>
-                                    <span class="airline-chip">@flight.AirlineCode</span>
-                                </td>
-
-                                <td>
-                                    <div class="airport-cell">
-                                        <span class="airport-code">@flight.DepartureAirportCode</span>
-                                        <span class="airport-name">@flight.DepartureAirportName</span>
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <div class="airport-cell">
-                                        <span class="airport-code">@flight.ArrivalAirportCode</span>
-                                        <span class="airport-name">@flight.ArrivalAirportName</span>
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <span class="time-cell">@flight.DepartureTime.ToString("HH:mm")</span>
-                                    <span class="date-sub">@flight.DepartureTime.ToString("dd MMM", new System.Globalization.CultureInfo("az-Latn-AZ"))</span>
-                                </td>
-
-                                <td>
-                                    <span class="time-cell">@flight.ArrivalTime.ToString("HH:mm")</span>
-                                    <span class="date-sub">@flight.ArrivalTime.ToString("dd MMM", new System.Globalization.CultureInfo("az-Latn-AZ"))</span>
-                                </td>
-
-                                <td>
-                                    <span class="duration-cell">
-                                        <i class="bi bi-clock"></i> @durStr
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <div class="capacity-cell">
-                                        <div class="capacity-text">
-                                            <span class="cap-available">@flight.AvailableSeats</span>
-                                            <span class="cap-sep">/</span>
-                                            <span class="cap-total">@flight.TotalSeats</span>
-                                        </div>
-                                        <div class="cap-bar">
-                                            <div class="cap-fill @(occupancy >= 90 ? "cap-critical" : occupancy >= 70 ? "cap-warning" : "cap-ok")"
-                                                 style="width:@occupancy%;"
-                                                 title="Doluluq: %@occupancy"></div>
-                                        </div>
-                                    </div>
-                                </td>
-
-                                <td>
-                                    <span class="price-cell">
-                                        @flight.BasePrice.ToString("N0") <small>@flight.Currency</small>
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <span class="status-badge @css">
-                                        <span class="dot"></span>@label
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <div class="actions-cell">
-                                        <a asp-area="Admin"
-                                           asp-controller="Flights"
-                                           asp-action="Detail"
-                                           asp-route-id="@flight.FlightId"
-                                           class="act-btn act-view"
-                                           title="Bax">
-                                            <i class="bi bi-eye-fill"></i>
-                                            <span class="btn-label">Bax</span>
-                                        </a>
-                                        <a asp-area="Admin"
-                                           asp-controller="Flights"
-                                           asp-action="Edit"
-                                           asp-route-id="@flight.FlightId"
-                                           class="act-btn act-edit"
-                                           title="Redaktə et">
-                                            <i class="bi bi-pencil-fill"></i>
-                                            <span class="btn-label">Redaktə et</span>
-                                        </a>
-                                        <button class="act-btn act-del"
-                                                title="Sil"
-                                                onclick="confirmDelete('@flight.FlightId', '@flight.FlightNumber')">
-                                            <i class="bi bi-trash-fill"></i>
-                                            <span class="btn-label">Sil</span>
-                                        </button>
-                                    </div>
-                                </td>
-
                             </tr>
                         }
-                    }
-                </tbody>
-            </table>
-        </div>
+                        else
+                        {
+                            foreach (var f in Model)
+                            {
+                                var (statusLabel, statusCss) = statusMap.TryGetValue(f.Status, out var sv)
+                                ? sv : (f.Status, "sb-scheduled");
 
-        <div class="table-card-footer">
-            <span class="footer-info" id="footerInfo"></span>
-            <ul class="pagination-list" id="paginationList"></ul>
+                                int occ = f.TotalSeats > 0
+                                ? (int)Math.Round((double)(f.TotalSeats - f.AvailableSeats) / f.TotalSeats * 100)
+                                : 0;
+
+                                string capClass = occ >= 85 ? "cap-red" : occ >= 60 ? "cap-yellow" : "cap-green";
+
+                                int dH = f.DurationMinutes / 60;
+                                int dM = f.DurationMinutes % 60;
+                                string durStr = dH > 0 ? $"{dH}s {dM}dəq" : $"{dM}dəq";
+
+                                var (alBg, alFg, alName) = GetAirline(f.AirlineCode);
+
+                                <tr data-flight-no="@f.FlightNumber.ToLower()"
+                                    data-dep-airport="@f.DepartureAirportCode.ToLower() @f.DepartureAirportName.ToLower()"
+                                    data-arr-airport="@f.ArrivalAirportCode.ToLower() @f.ArrivalAirportName.ToLower()"
+                                    data-airline="@f.AirlineCode"
+                                    data-status="@f.Status">
+
+                                    <td>
+                                        <div class="cell-flightno">
+                                            <span class="fn-indicator"></span>
+                                            <span class="fn-number">@f.FlightNumber</span>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="cell-airline">
+                                            <div class="al-logo"
+                                                 style="background:@alBg; color:@alFg;"
+                                                 title="@alName">
+                                                @f.AirlineCode
+                                            </div>
+                                            <span class="al-name">@alName</span>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="cell-route">
+                                            <div class="route-codes">
+                                                <span class="rc-code">@f.DepartureAirportCode</span>
+                                                <div class="rc-arrow">
+                                                    <i class="bi bi-arrow-right"></i>
+                                                </div>
+                                                <span class="rc-code">@f.ArrivalAirportCode</span>
+                                            </div>
+                                            <div class="route-names">
+                                                <span>@f.DepartureAirportName</span>
+                                                <span style="color:#e2e8f0;">·</span>
+                                                <span>@f.ArrivalAirportName</span>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="cell-time">
+                                            <span class="t-main">@f.DepartureTime.ToString("HH:mm")</span>
+                                            <span class="t-date">@f.DepartureTime.ToString("dd MMM", new System.Globalization.CultureInfo("az-Latn-AZ"))</span>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="cell-time">
+                                            <span class="t-main">@f.ArrivalTime.ToString("HH:mm")</span>
+                                            <span class="t-date">@f.ArrivalTime.ToString("dd MMM", new System.Globalization.CultureInfo("az-Latn-AZ"))</span>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <span class="cell-dur">
+                                            <i class="bi bi-clock"></i> @durStr
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <div class="cell-cap">
+                                            <div class="cap-row">
+                                                <span class="cap-avail">@f.AvailableSeats</span>
+                                                <span class="cap-slash">/</span>
+                                                <span class="cap-total">@f.TotalSeats</span>
+                                            </div>
+                                            <div class="cap-track">
+                                                <div class="cap-bar @capClass"
+                                                     style="width:@occ%"
+                                                     title="%@occ dolu"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="cell-price">
+                                            <span class="p-amount">@f.BasePrice.ToString("N0")</span>
+                                            <span class="p-cur">@f.Currency</span>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <span class="status-badge @statusCss">
+                                            <span class="sb-dot"></span>
+                                            @statusLabel
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <div class="cell-actions">
+                                            <a asp-area="Admin"
+                                               asp-controller="Flights"
+                                               asp-action="Detail"
+                                               asp-route-id="@f.FlightId"
+                                               class="act act-view">
+                                                <i class="bi bi-eye-fill"></i>
+                                                <span class="act-label">Görüntülə</span>
+                                            </a>
+                                            <a asp-area="Admin"
+                                               asp-controller="Flights"
+                                               asp-action="Edit"
+                                               asp-route-id="@f.FlightId"
+                                               class="act act-edit">
+                                                <i class="bi bi-pencil-fill"></i>
+                                                <span class="act-label">Redaktə et</span>
+                                            </a>
+                                            <button class="act act-del"
+                                                    onclick="confirmDelete('@f.FlightId', '@f.FlightNumber')">
+                                                <i class="bi bi-trash-fill"></i>
+                                                <span class="act-label">Sil</span>
+                                            </button>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="fm-footer">
+                <span class="fm-footer-info" id="footerInfo"></span>
+                <ul class="pag-list" id="paginationList"></ul>
+            </div>
+
         </div>
 
     </div>
-
 </main>
 
 <div class="modal-overlay" id="deleteModal">
-    <div class="modal-box" style="max-width:420px;">
+    <div class="modal-box" style="max-width:400px;">
         <div class="modal-head">
-            <span class="modal-title" style="color:#DC2626;">
-                <i class="bi bi-exclamation-triangle-fill" style="margin-right:8px;"></i>
-                Uçuşu Sil
+            <span class="modal-title" style="color:#dc2626;">
+                <i class="bi bi-exclamation-triangle-fill" style="margin-right:8px;"></i>Uçuşu Sil
             </span>
             <button class="modal-close" onclick="closeDeleteModal()"><i class="bi bi-x-lg"></i></button>
         </div>
         <div class="modal-body">
-            <p style="font-size:14px;color:var(--gray-700);line-height:1.6;">
-                <strong id="deleteFlightNo"></strong> nömrəli uçuşu silmək istədiyinizə əminsiniz?
-                Bu əməliyyat geri qaytarıla bilməz.
+            <p style="font-size:14px;color:#475569;line-height:1.7;margin:0;">
+                <strong id="deleteFlightNo" style="color:#0f172a;"></strong> uçuşunu silmək istədiyinizə əminsiniz? Bu əməliyyat <strong>geri qaytarıla bilməz.</strong>
             </p>
         </div>
         <div class="modal-foot">
             <button class="btn-cancel" onclick="closeDeleteModal()">İmtina et</button>
             <form id="deleteForm" method="post">
                 @Html.AntiForgeryToken()
-                <button type="submit" class="btn-save" style="background:#DC2626;">
-                    <i class="bi bi-trash-fill" style="margin-right:6px;"></i>Bəli, Sil
+                <button type="submit" class="btn-save" style="background:#dc2626;">
+                    <i class="bi bi-trash-fill" style="margin-right:5px;"></i>Sil
                 </button>
             </form>
         </div>
     </div>
 </div>
 
-<div class="toast-container-custom" id="toastContainer"></div>
-
 @if (TempData["SuccessMessage"] != null)
 {
     <script>
-        document.addEventListener('DOMContentLoaded', () =>
-            showToast('@TempData["SuccessMessage"]', 'success'));
+        document.addEventListener('DOMContentLoaded', function () {
+            showToast('@TempData["SuccessMessage"]', 'success');
+        });
     </script>
 }
 @if (TempData["ErrorMessage"] != null)
 {
     <script>
-        document.addEventListener('DOMContentLoaded', () =>
-            showToast('@TempData["ErrorMessage"]', 'danger'));
+        document.addEventListener('DOMContentLoaded', function () {
+            showToast('@TempData["ErrorMessage"]', 'danger');
+        });
     </script>
-}
-
-@section Styles {
-    <style>
-
-        .airline-chip {
-            display: inline-block;
-            padding: 3px 10px;
-            background: var(--navy);
-            color: #fff;
-            border-radius: 6px;
-            font-family: 'Syne', sans-serif;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: .5px;
-        }
-
-        .airport-cell {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.3;
-        }
-
-        .airport-code {
-            font-family: 'Syne', sans-serif;
-            font-weight: 700;
-            font-size: 14px;
-            color: var(--navy);
-        }
-
-        .airport-name {
-            font-size: 11px;
-            color: var(--gray-300);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 140px;
-        }
-        .date-sub {
-            display: block;
-            font-size: 11px;
-            color: var(--gray-300);
-            margin-top: 1px;
-        }
-
-        .duration-cell {
-            font-size: 12.5px;
-            color: var(--gray-500);
-            white-space: nowrap;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .capacity-cell {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            min-width: 80px;
-        }
-
-        .capacity-text {
-            font-size: 12.5px;
-            font-weight: 600;
-            color: var(--gray-700);
-        }
-
-        .cap-available {
-            color: #10B981;
-        }
-
-        .cap-sep {
-            color: var(--gray-300);
-            margin: 0 1px;
-        }
-
-        .cap-total {
-            color: var(--gray-500);
-        }
-
-        .cap-bar {
-            height: 5px;
-            background: var(--gray-100);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .cap-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width .5s ease;
-        }
-
-        .cap-ok {
-            background: #10B981;
-        }
-
-        .cap-warning {
-            background: #F59E0B;
-        }
-
-        .cap-critical {
-            background: #EF4444;
-        }
-
-        .price-cell {
-            font-family: 'Syne', sans-serif;
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--navy);
-            white-space: nowrap;
-        }
-
-            .price-cell small {
-                font-family: 'DM Sans', sans-serif;
-                font-size: 10px;
-                font-weight: 600;
-                color: var(--gray-300);
-                margin-left: 2px;
-            }
-
-        .status-completed {
-            background: rgba(107,114,153,.1);
-            color: var(--gray-500);
-        }
-
-            .status-completed .dot {
-                background: var(--gray-300);
-            }
-
-        .empty-row {
-            text-align: center;
-            padding: 48px 20px !important;
-            color: var(--gray-300);
-            font-size: 14px;
-        }
-
-    </style>
 }
 
 @section Scripts {
     <script>
-        const PER_PAGE = 8;
-        let currentPage = 1;
+
+        var PER_PAGE    = 8;
+        var currentPage = 1;
 
         function allRows() {
             return Array.from(document.querySelectorAll('#tableBody tr[data-flight-no]'));
@@ -471,101 +1134,91 @@
 
         function filterTable() {
             currentPage = 1;
-            applyFiltersAndRender();
+            applyAndRender();
         }
 
-        function applyFiltersAndRender() {
-            const q       = (document.getElementById('searchInput').value || '').toLowerCase().trim();
-            const status  = document.getElementById('statusFilter').value;
-            const airline = document.getElementById('airlineFilter').value;
+        function applyAndRender() {
+            var q       = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+            var status  = document.getElementById('statusFilter').value;
+            var airline = document.getElementById('airlineFilter').value;
+            var rows    = allRows();
 
-            const rows = allRows();
+            var visible = rows.filter(function (row) {
+                var matchQ  = !q      || [
+                    row.dataset.flightNo,
+                    row.dataset.depAirport,
+                    row.dataset.arrAirport,
+                    row.dataset.airline
+                ].some(function (v) { return (v || '').includes(q); });
 
-                const flightNo   = row.dataset.flightNo   || '';
-                const depAirport = row.dataset.depAirport || '';
-                const arrAirport = row.dataset.arrAirport || '';
-                const rowAirline = row.dataset.airline    || '';
-                const rowStatus  = row.dataset.status     || '';
-
-                const matchQ       = !q      || [flightNo, depAirport, arrAirport, rowAirline].some(v => v.includes(q));
-                const matchStatus  = !status  || rowStatus  === status;
-                const matchAirline = !airline || rowAirline === airline;
+                var matchS  = !status  || row.dataset.status  === status;
+                var matchA  = !airline || row.dataset.airline === airline;
 
                 row.style.display = 'none';
-                return matchQ && matchStatus && matchAirline;
+                return matchQ && matchS && matchA;
             });
 
-            const total      = visible.length;
-            const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+            var total      = visible.length;
+            var totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
             if (currentPage > totalPages) currentPage = totalPages;
 
-            const from  = total === 0 ? 0 : (currentPage - 1) * PER_PAGE + 1;
-            const to    = Math.min(currentPage * PER_PAGE, total);
-            const slice = visible.slice(from - 1, to);
+            var from  = total === 0 ? 0 : (currentPage - 1) * PER_PAGE + 1;
+            var to    = Math.min(currentPage * PER_PAGE, total);
 
-            slice.forEach(row => row.style.display = '');
+            visible.slice(from - 1, to).forEach(function (r) { r.style.display = ''; });
 
-           
-            document.getElementById('rowCount').textContent   = `${total} uçuş tapıldı`;
-            document.getElementById('footerInfo').textContent = `${from}–${to} / ${total} uçuş`;
+            document.getElementById('rowCount').textContent    = total + ' uçuş';
+            document.getElementById('footerInfo').textContent  = total === 0 ? '' : from + '–' + to + ' / ' + total + ' qeyd';
 
             renderPagination(totalPages);
         }
 
-     
         function renderPagination(totalPages) {
-            const ul = document.getElementById('paginationList');
-            let html = '';
+            var ul   = document.getElementById('paginationList');
+            var html = '';
 
-       
-            html += `<li class="${currentPage === 1 ? 'disabled' : ''}">
-                <span onclick="${currentPage > 1 ? 'goPage(currentPage-1)' : ''}"
-                      style="cursor:${currentPage === 1 ? 'default' : 'pointer'}">
-                    <i class="bi bi-chevron-left" style="font-size:11px;"></i>
-                </span>
-            </li>`;
-      
-            const pages = buildPageRange(currentPage, totalPages);
-            pages.forEach(p => {
+            html += '<li class="' + (currentPage === 1 ? 'disabled' : '') + '">'
+                  + '<span onclick="' + (currentPage > 1 ? 'goPage(currentPage-1)' : '') + '" style="cursor:' + (currentPage === 1 ? 'default' : 'pointer') + '">'
+                  + '<i class="bi bi-chevron-left" style="font-size:11px;"></i></span></li>';
+
+            buildRange(currentPage, totalPages).forEach(function (p) {
                 if (p === '...') {
-                    html += `<li><span style="cursor:default;border:none;color:var(--gray-300);">…</span></li>`;
+                    html += '<li><span style="cursor:default;border:none;background:none;color:#94a3b8;">…</span></li>';
                 } else {
-                    html += `<li class="${p === currentPage ? 'active' : ''}">
-                        <a onclick="goPage(${p})">${p}</a>
-                    </li>`;
+                    html += '<li class="' + (p === currentPage ? 'active' : '') + '">'
+                          + '<a onclick="goPage(' + p + ')">' + p + '</a></li>';
                 }
             });
-      
-            html += `<li class="${currentPage === totalPages ? 'disabled' : ''}">
-                <span onclick="${currentPage < totalPages ? 'goPage(currentPage+1)' : ''}"
-                      style="cursor:${currentPage === totalPages ? 'default' : 'pointer'}">
-                    <i class="bi bi-chevron-right" style="font-size:11px;"></i>
-                </span>
-            </li>`;
+
+            html += '<li class="' + (currentPage === totalPages ? 'disabled' : '') + '">'
+                  + '<span onclick="' + (currentPage < totalPages ? 'goPage(currentPage+1)' : '') + '" style="cursor:' + (currentPage === totalPages ? 'default' : 'pointer') + '">'
+                  + '<i class="bi bi-chevron-right" style="font-size:11px;"></i></span></li>';
 
             ul.innerHTML = html;
         }
 
-        function buildPageRange(current, total) {
-            if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
-            const pages = [];
-            pages.push(1);
-            if (current > 3)           pages.push('...');
-            for (let p = Math.max(2, current - 1); p <= Math.min(total - 1, current + 1); p++) pages.push(p);
-            if (current < total - 2)   pages.push('...');
-            pages.push(total);
-            return pages;
+        function buildRange(cur, total) {
+            if (total <= 7) {
+                var a = [];
+                for (var i = 1; i <= total; i++) a.push(i);
+                return a;
+            }
+            var p = [1];
+            if (cur > 3) p.push('...');
+            for (var x = Math.max(2, cur - 1); x <= Math.min(total - 1, cur + 1); x++) p.push(x);
+            if (cur < total - 2) p.push('...');
+            p.push(total);
+            return p;
         }
 
         function goPage(p) {
             currentPage = p;
-            applyFiltersAndRender();
+            applyAndRender();
         }
 
-        function confirmDelete(flightId, flightNo) {
-            document.getElementById('deleteFlightNo').textContent = flightNo;
-            document.getElementById('deleteForm').action =
-                `/Admin/Flights/Delete/${flightId}`;        
+        function confirmDelete(id, no) {
+            document.getElementById('deleteFlightNo').textContent = no;
+            document.getElementById('deleteForm').action = '/Admin/Flights/Delete/' + id;
             document.getElementById('deleteModal').classList.add('open');
         }
 
@@ -573,30 +1226,11 @@
             document.getElementById('deleteModal').classList.remove('open');
         }
 
-       
         document.getElementById('deleteModal').addEventListener('click', function (e) {
             if (e.target === this) closeDeleteModal();
         });
 
+        document.addEventListener('DOMContentLoaded', function () { applyAndRender(); });
 
-        function showToast(msg, type = 'info') {
-            const icons = {
-                success: 'bi-check-circle-fill',
-                danger:  'bi-x-circle-fill',
-                warning: 'bi-exclamation-triangle-fill',
-                info:    'bi-info-circle-fill',
-            };
-            const container = document.getElementById('toastContainer');
-            const t = document.createElement('div');
-            t.className = 'toast-item';
-            t.innerHTML = `<i class="bi ${icons[type] ?? icons.info} toast-icon ${type}"></i><span>${msg}</span>`;
-            container.appendChild(t);
-            setTimeout(() => {
-                t.style.cssText += 'opacity:0;transform:translateY(20px);transition:.3s;';
-                setTimeout(() => t.remove(), 320);
-            }, 3200);
-        }
-
-        document.addEventListener('DOMContentLoaded', () => applyFiltersAndRender());
     </script>
 }
