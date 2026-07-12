@@ -691,6 +691,18 @@
                 color: #b91c1c;
             }
 
+        .act-book {
+            background: #f0fdf4;
+            color: #16a34a;
+            border-color: #bbf7d0;
+        }
+
+            .act-book:hover {
+                background: #dcfce7;
+                color: #15803d;
+            }
+
+
         .empty-state {
             padding: 64px 24px;
             text-align: center;
@@ -1037,7 +1049,9 @@
                                     </td>
 
                                     <td>
+                                        
                                         <div class="cell-actions">
+                                           
                                             <a asp-area="Admin"
                                                asp-controller="Flights"
                                                asp-action="Detail"
@@ -1053,6 +1067,14 @@
                                                class="act act-edit">
                                                 <i class="bi bi-pencil-fill"></i>
                                                 <span class="act-label">Redaktə et</span>
+                                            </a>
+                                            <a asp-area="Admin"
+                                               asp-controller="Bookings"
+                                               asp-action="Create"
+                                               asp-route-flightId="@f.FlightId"
+                                               class="act act-book">
+                                                <i class="bi bi-ticket-perforated-fill"></i>
+                                                <span class="act-label">Rezervasiya Et</span>
                                             </a>
                                             <button class="act act-del"
                                                     onclick="confirmDelete('@f.FlightId', '@f.FlightNumber')">

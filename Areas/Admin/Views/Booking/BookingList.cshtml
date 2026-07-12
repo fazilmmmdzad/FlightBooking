@@ -1,0 +1,297 @@
+﻿@{
+    ViewData["Title"] = "BookingList";
+    Layout = "~/Areas/Admin/Views/Layout/AdminLayout.cshtml";
+}
+<main class="main-content" id="main-content">
+    <div class="container-fluid mt-4 px-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-1" style="font-size:13px;">
+                        <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Rezervasiya Siyahısı</li>
+                    </ol>
+                </nav>
+                <h4 class="fw-bold mb-0" style="color:#0f172a;">Rezervasiya Siyahısı</h4>
+                <p class="text-muted mb-0" style="font-size:13px;">Sistemdəki bütün rezervasiyaları görüntüləyin və idarə edin.</p>
+            </div>
+            <a href="#" class="btn btn-primary px-4" style="border-radius:9px;font-weight:600;font-size:13.5px;">
+                <i class="bi bi-plus-lg me-2"></i>Yeni Rezervasiya
+            </a>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4" style="border-radius:14px;">
+            <div class="card-body px-4 py-3">
+                <div class="row g-3 align-items-end">
+                    <div class="col-12 col-md-3">
+                        <label class="form-label fw-semibold mb-1" style="font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:.4px;">Uçuş Nömrəsi</label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text bg-light border-end-0" style="border-radius:8px 0 0 8px;border-color:#e5e7eb;">
+                                <i class="bi bi-search text-muted" style="font-size:12px;"></i>
+                            </span>
+                            <input type="text" id="filterFlight" class="form-control border-start-0"
+                                   placeholder="TK102..." onkeyup="applyFilter()"
+                                   style="border-radius:0 8px 8px 0;border-color:#e5e7eb;font-size:13px;" />
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <label class="form-label fw-semibold mb-1" style="font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:.4px;">Status</label>
+                        <select id="filterStatus" class="form-select form-select-sm" onchange="applyFilter()"
+                                style="border-radius:8px;border-color:#e5e7eb;font-size:13px;">
+                            <option value="">Hamısı</option>
+                            <option value="Confirmed">Təsdiqlənib</option>
+                            <option value="Pending">Gözləmədə</option>
+                            <option value="Cancelled">Ləğv edilib</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <label class="form-label fw-semibold mb-1" style="font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:.4px;">Rezervasiya Tarixi</label>
+                        <input type="date" id="filterDate" class="form-control form-control-sm" onchange="applyFilter()"
+                               style="border-radius:8px;border-color:#e5e7eb;font-size:13px;" />
+                    </div>
+                    <div class="col-12 col-md-3 d-flex gap-2">
+                        <button class="btn btn-primary btn-sm flex-fill" onclick="applyFilter()" style="border-radius:8px;font-weight:600;">
+                            <i class="bi bi-funnel-fill me-1"></i> Filtrlə
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="clearFilter()" style="border-radius:8px;" title="Təmizlə">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm" style="border-radius:14px;overflow:hidden;">
+            <div class="card-header bg-white border-bottom px-4 py-3 d-flex align-items-center justify-content-between">
+                <span class="fw-semibold" style="font-size:13.5px;color:#0f172a;">
+                    Bütün Rezervasiyalar
+                </span>
+                <span class="badge bg-primary-subtle text-primary rounded-pill px-3" id="totalCount" style="font-size:12px;">20 qeyd</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="bookingTable">
+                    <thead style="background:#f8fafc;">
+                        <tr>
+                            <th style="font-size:11px;font-weight:700;letter-spacing:.7px;color:#94a3b8;text-transform:uppercase;padding:12px 16px;border-bottom:1px solid #f1f5f9;">#</th>
+                            <th style="font-size:11px;font-weight:700;letter-spacing:.7px;color:#94a3b8;text-transform:uppercase;padding:12px 16px;border-bottom:1px solid #f1f5f9;">Uçuş Nömrəsi</th>
+                            <th style="font-size:11px;font-weight:700;letter-spacing:.7px;color:#94a3b8;text-transform:uppercase;padding:12px 16px;border-bottom:1px solid #f1f5f9;">Əlaqə Adı</th>
+                            <th style="font-size:11px;font-weight:700;letter-spacing:.7px;color:#94a3b8;text-transform:uppercase;padding:12px 16px;border-bottom:1px solid #f1f5f9;">Sərnişin Sayı</th>
+                            <th style="font-size:11px;font-weight:700;letter-spacing:.7px;color:#94a3b8;text-transform:uppercase;padding:12px 16px;border-bottom:1px solid #f1f5f9;">Ümumi Qiymət</th>
+                            <th style="font-size:11px;font-weight:700;letter-spacing:.7px;color:#94a3b8;text-transform:uppercase;padding:12px 16px;border-bottom:1px solid #f1f5f9;">Rezervasiya Tarixi</th>
+                            <th style="font-size:11px;font-weight:700;letter-spacing:.7px;color:#94a3b8;text-transform:uppercase;padding:12px 16px;border-bottom:1px solid #f1f5f9;">Status</th>
+                            <th style="font-size:11px;font-weight:700;letter-spacing:.7px;color:#94a3b8;text-transform:uppercase;padding:12px 16px;border-bottom:1px solid #f1f5f9;">Əməliyyatlar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" style="font-size:13.5px;">
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer bg-white border-top px-4 py-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                <span class="text-muted" style="font-size:12.5px;" id="pageInfo"></span>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0 gap-1" id="pagination"></ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var allData = [
+            { id:'RES-001', flight:'TK1932', name:'Ahmet Yılmaz', passengers:2, price:'492 EUR', date:'2025-04-06', status:'Confirmed' },
+            { id:'RES-002', flight:'PC2014', name:'Ayşe Kara', passengers:1, price:'146 EUR', date:'2025-04-06', status:'Pending' },
+            { id:'RES-003', flight:'TK1021', name:'Mehmet Demir', passengers:3, price:'633 EUR', date:'2025-04-07', status:'Confirmed' },
+            { id:'RES-004', flight:'LH1305', name:'Fatma Çelik', passengers:1, price:'260 EUR', date:'2025-04-07', status:'Cancelled' },
+            { id:'RES-005', flight:'TK1850', name:'Ali Öztürk', passengers:4, price:'1100 EUR',date:'2025-04-08', status:'Confirmed' },
+            { id:'RES-006', flight:'PC3022', name:'Zeynep Arslan', passengers:2, price:'640 EUR', date:'2025-04-08', status:'Pending' },
+            { id:'RES-007', flight:'TK9001', name:'Hasan Şahin', passengers:1, price:'780 EUR', date:'2025-04-09', status:'Confirmed' },
+            { id:'RES-008', flight:'TK1932', name:'Elif Yıldız', passengers:2, price:'492 EUR', date:'2025-04-09', status:'Cancelled' },
+            { id:'RES-009', flight:'LH1305', name:'Mustafa Aydın', passengers:3, price:'780 EUR', date:'2025-04-10', status:'Confirmed' },
+            { id:'RES-010', flight:'PC2014', name:'Selin Güneş', passengers:1, price:'146 EUR', date:'2025-04-10', status:'Pending' },
+            { id:'RES-011', flight:'TK1021', name:'Burak Koç', passengers:2, price:'422 EUR', date:'2025-04-11', status:'Confirmed' },
+            { id:'RES-012', flight:'TK9001', name:'Deniz Polat', passengers:1, price:'780 EUR', date:'2025-04-11', status:'Cancelled' },
+            { id:'RES-013', flight:'PC3022', name:'Gizem Erdoğan', passengers:4, price:'1280 EUR',date:'2025-04-12', status:'Confirmed' },
+            { id:'RES-014', flight:'TK1850', name:'Serkan Doğan', passengers:2, price:'550 EUR', date:'2025-04-12', status:'Pending' },
+            { id:'RES-015', flight:'LH1305', name:'Merve Aksoy', passengers:1, price:'260 EUR', date:'2025-04-13', status:'Confirmed' },
+            { id:'RES-016', flight:'TK1932', name:'Cem Kılıç', passengers:3, price:'738 EUR', date:'2025-04-13', status:'Confirmed' },
+            { id:'RES-017', flight:'PC2014', name:'Neslihan Bozkurt', passengers:1, price:'146 EUR', date:'2025-04-14', status:'Cancelled' },
+            { id:'RES-018', flight:'TK1021', name:'Oğuz Tekin', passengers:2, price:'422 EUR', date:'2025-04-14', status:'Pending' },
+            { id:'RES-019', flight:'TK9001', name:'Pınar Çakır', passengers:1, price:'780 EUR', date:'2025-04-15', status:'Confirmed' },
+            { id:'RES-020', flight:'LH1305', name:'Emre Yavuz', passengers:3, price:'780 EUR', date:'2025-04-15', status:'Confirmed' }
+        ];
+
+        var filtered = allData.slice();
+        var currentPage = 1;
+        var perPage = 8;
+
+        var statusCfg = {
+            'Confirmed': { label: 'Təsdiqlənib', cls: 'bg-success-subtle text-success', icon: 'bi-check-circle-fill' },
+            'Pending' : { label: 'Gözləmədə', cls: 'bg-warning-subtle text-warning', icon: 'bi-clock-fill' },
+            'Cancelled': { label: 'Ləğv edilib', cls: 'bg-danger-subtle text-danger', icon: 'bi-x-circle-fill' }
+        };
+
+        function applyFilter() {
+            var flightQ = (document.getElementById('filterFlight').value || '').toLowerCase().trim();
+            var statusQ = document.getElementById('filterStatus').value;
+            var dateQ = document.getElementById('filterDate').value;
+
+            filtered = allData.filter(function (r) {
+                var mF = !flightQ || r.flight.toLowerCase().includes(flightQ) || r.id.toLowerCase().includes(flightQ);
+                var mS = !statusQ || r.status === statusQ;
+                var mD = !dateQ || r.date === dateQ;
+                return mF && mS && mD;
+            });
+
+            currentPage = 1;
+            render();
+        }
+
+        function clearFilter() {
+            document.getElementById('filterFlight').value = '';
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterDate').value = '';
+            filtered = allData.slice();
+            currentPage = 1;
+            render();
+        }
+
+        function render() {
+            var total = filtered.length;
+            var totalPages = Math.max(1, Math.ceil(total / perPage));
+            if (currentPage > totalPages) currentPage = totalPages;
+
+            var from = total === 0 ? 0 : (currentPage - 1) * perPage + 1;
+            var to = Math.min(currentPage * perPage, total);
+            var slice = filtered.slice(from - 1, to);
+
+            document.getElementById('totalCount').textContent = total + ' qeyd';
+            document.getElementById('pageInfo').textContent = total === 0
+                ? 'Nəticə tapılmadı'
+                : from + '–' + to + ' / ' + total + ' qeyd göstərilir';
+
+            var tbody = document.getElementById('tableBody');
+
+            if (slice.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center py-5 text-muted">' +
+                    '<i class="bi bi-inbox" style="font-size:32px;display:block;margin-bottom:10px;opacity:.25;"></i>' +
+                    'Qeyd tapılmadı.' +
+                '</td></tr>';
+                document.getElementById('pagination').innerHTML = '';
+                return;
+            }
+
+            tbody.innerHTML = slice.map(function (r, i) {
+                var cfg = statusCfg[r.status] || { label: r.status, cls: 'bg-secondary-subtle text-secondary', icon: 'bi-circle' };
+                var rowNum = (currentPage - 1) * perPage + i + 1;
+
+                return '<tr style="border-bottom:1px solid #f1f5f9;">' +
+                    '<td style="padding:13px 16px;color:#94a3b8;font-size:12px;font-weight:600;">' + rowNum + '</td>' +
+                    '<td style="padding:13px 16px;">' +
+                        '<span style="font-family:monospace;font-weight:700;font-size:13.5px;color:#0f172a;">' + r.flight + '</span>' +
+                        '<div style="font-size:11px;color:#94a3b8;margin-top:1px;">' + r.id + '</div>' +
+                    '</td>' +
+                    '<td style="padding:13px 16px;">' +
+                        '<div class="d-flex align-items-center gap-2">' +
+                            '<div style="width:30px;height:30px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#475569;flex-shrink:0;">' +
+                                r.name.split(' ').map(function(w){ return w[0]; }).join('').slice(0,2).toUpperCase() +
+                            '</div>' +
+                            '<span style="font-weight:500;color:#1e293b;">' + r.name + '</span>' +
+                        '</div>' +
+                    '</td>' +
+                    '<td style="padding:13px 16px;">' +
+                        '<div class="d-flex align-items-center gap-1">' +
+                            '<i class="bi bi-people-fill text-muted" style="font-size:12px;"></i>' +
+                            '<span style="font-weight:600;color:#0f172a;">' + r.passengers + '</span>' +
+                            '<span style="font-size:12px;color:#94a3b8;"> sərnişin</span>' +
+                        '</div>' +
+                    '</td>' +
+                    '<td style="padding:13px 16px;">' +
+                        '<span style="font-weight:700;color:#0f172a;font-size:14px;">' + r.price + '</span>' +
+                    '</td>' +
+                    '<td style="padding:13px 16px;">' +
+                        '<span style="color:#374151;font-size:13px;">' + formatDate(r.date) + '</span>' +
+                    '</td>' +
+                    '<td style="padding:13px 16px;">' +
+                        '<span class="badge ' + cfg.cls + ' d-inline-flex align-items-center gap-1 px-2 py-1 rounded-pill" style="font-size:11.5px;font-weight:600;">' +
+                            '<i class="bi ' + cfg.icon + '" style="font-size:9px;"></i>' + cfg.label +
+                        '</span>' +
+                    '</td>' +
+                    '<td style="padding:13px 16px;">' +
+                        '<div class="d-flex gap-1">' +
+                            '<a href="#" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-1" style="border-radius:7px;font-size:12px;padding:4px 10px;">' +
+                                '<i class="bi bi-eye-fill" style="font-size:11px;"></i> Təfərrüat' +
+                            '</a>' +
+                            '<button class="btn btn-outline-danger btn-sm d-inline-flex align-items-center gap-1" style="border-radius:7px;font-size:12px;padding:4px 10px;" onclick="cancelBooking(\'' + r.id + '\')">' +
+                                '<i class="bi bi-x-circle-fill" style="font-size:11px;"></i> Ləğv et' +
+                            '</button>' +
+                        '</div>' +
+                    '</td>' +
+                '</tr>';
+            }).join('');
+
+            renderPagination(totalPages);
+        }
+
+        function renderPagination(totalPages) {
+            var ul = document.getElementById('pagination');
+            var html = '';
+            html += '<li class="page-item' + (currentPage === 1 ? ' disabled' : '') + '">' +
+                '<a class="page-link" href="#" onclick="goPage(currentPage-1);return false;" style="border-radius:8px;font-size:12.5px;">' +
+                    '<i class="bi bi-chevron-left" style="font-size:10px;"></i>' +
+                '</a></li>';
+
+            var pages = buildRange(currentPage, totalPages);
+            pages.forEach(function (p) {
+                if (p === '...') {
+                    html += '<li class="page-item disabled"><span class="page-link" style="border:none;background:none;color:#94a3b8;">…</span></li>';
+                } else {
+                    html += '<li class="page-item' + (p === currentPage ? ' active' : '') + '">' +
+                        '<a class="page-link" href="#" onclick="goPage(' + p + ');return false;" style="border-radius:8px;font-size:12.5px;font-weight:' + (p === currentPage ? '700' : '500') + ';">' + p + '</a>' +
+                    '</li>';
+                }
+            });
+
+            html += '<li class="page-item' + (currentPage === totalPages ? ' disabled' : '') + '">' +
+                '<a class="page-link" href="#" onclick="goPage(currentPage+1);return false;" style="border-radius:8px;font-size:12.5px;">' +
+                    '<i class="bi bi-chevron-right" style="font-size:10px;"></i>' +
+                '</a></li>';
+
+            ul.innerHTML = html;
+        }
+
+        function buildRange(cur, total) {
+            if (total <= 7) {
+                var a = [];
+                for (var i = 1; i <= total; i++) a.push(i);
+                return a;
+            }
+            var p = [1];
+            if (cur > 3) p.push('...');
+            for (var x = Math.max(2, cur-1); x <= Math.min(total-1, cur+1); x++) p.push(x);
+            if (cur < total - 2) p.push('...');
+            p.push(total);
+            return p;
+        }
+
+        function goPage(p) {
+            var totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+            if (p < 1 || p > totalPages) return;
+            currentPage = p;
+            render();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function formatDate(d) {
+            var months = ['Yan','Fev','Mar','Apr','May','İyn','İyl','Avq','Sen','Okt','Noy','Dek'];
+            var parts = d.split('-');
+            return parts[2] + ' ' + months[parseInt(parts[1])-1] + ' ' + parts[0];
+        }
+
+        function cancelBooking(id) {
+            if (!confirm(id + ' nömrəli rezervasiyanı ləğv etmək istədiyinizə əminsiniz?')) return;
+            var row = allData.find(function(r){ return r.id === id; });
+            if (row) { row.status = 'Cancelled'; applyFilter(); }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () { render(); });
+    </script>
+</main>
