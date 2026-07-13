@@ -14,7 +14,7 @@ public class BookingService : IBookingService
         var client = new MongoClient(settings.ConnectionString);
         var database = client.GetDatabase(settings.DatabaseName);
 
-        _bookingCollection = database.GetCollection<Booking>("Bookings");
+        _bookingCollection = database.GetCollection<Booking>(settings.BookingCollectionName);
         _flightCollection = database.GetCollection<Flight>(settings.FlightCollectionName);
     }
 
@@ -24,13 +24,13 @@ public class BookingService : IBookingService
             .Find(x => x.FlightId == dto.FlightId)
             .FirstOrDefaultAsync();
 
-        if (flight == null)
-            throw new Exception("Uçuş bulunamadı");
+        //if (flight == null)
+        //    throw new Exception("Uçuş bulunamadı");
 
         var passengerCount = dto.Passengers.Count;
 
-        if (flight.AvailableSeats < passengerCount)
-            throw new Exception("Yeterli koltuk yok");
+        //if (flight.AvailableSeats < passengerCount)
+        //    throw new Exception("Yeterli koltuk yok");
 
         var passengers = dto.Passengers.Select(x => new Passenger
         {
@@ -59,12 +59,12 @@ public class BookingService : IBookingService
 
         await _bookingCollection.InsertOneAsync(booking);
 
-        var update = Builders<Flight>.Update
-            .Inc(x => x.AvailableSeats, -passengerCount);
+        //var update = Builders<Flight>.Update
+        //    .Inc(x => x.AvailableSeats, -passengerCount);
 
-        await _flightCollection.UpdateOneAsync(
-            x => x.FlightId == dto.FlightId,
-            update
-        );
+        //await _flightCollection.UpdateOneAsync(
+        //    x => x.FlightId == dto.FlightId,
+        //    update
+        //);
     }
 }
