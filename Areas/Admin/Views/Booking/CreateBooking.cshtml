@@ -39,19 +39,19 @@
                         <div class="row g-3">
                             <div class="col-md-3 col-6">
                                 <label class="form-label fw-semibold text-muted" style="font-size:11px;letter-spacing:.5px;text-transform:uppercase;">Uçuş Nömrəsi</label>
-                                <input type="text" class="form-control form-control-sm bg-light border-0 fw-bold" value="TK1932" readonly style="border-radius:8px;font-size:14px;color:#0f172a;" />
+                                <input type="text" class="form-control form-control-sm bg-light border-0 fw-bold" value="@ViewBag.FlightNumber" readonly style="border-radius:8px;font-size:14px;color:#0f172a;" />
                             </div>
                             <div class="col-md-3 col-6">
                                 <label class="form-label fw-semibold text-muted" style="font-size:11px;letter-spacing:.5px;text-transform:uppercase;">Qalxış</label>
-                                <input type="text" class="form-control form-control-sm bg-light border-0" value="IST – İstanbul" readonly style="border-radius:8px;font-size:13px;color:#0f172a;" />
+                                <input type="text" class="form-control form-control-sm bg-light border-0" value="@ViewBag.DepartureAirportCode – @ViewBag.DepartureAirportName" readonly style="border-radius:8px;font-size:13px;color:#0f172a;" />
                             </div>
                             <div class="col-md-3 col-6">
                                 <label class="form-label fw-semibold text-muted" style="font-size:11px;letter-spacing:.5px;text-transform:uppercase;">Eniş</label>
-                                <input type="text" class="form-control form-control-sm bg-light border-0" value="LHR – Londra" readonly style="border-radius:8px;font-size:13px;color:#0f172a;" />
+                                <input type="text" class="form-control form-control-sm bg-light border-0" value="@ViewBag.ArrivalAirportCode – @ViewBag.ArrivalAirportName" readonly style="border-radius:8px;font-size:13px;color:#0f172a;" />
                             </div>
                             <div class="col-md-3 col-6">
                                 <label class="form-label fw-semibold text-muted" style="font-size:11px;letter-spacing:.5px;text-transform:uppercase;">Tarix</label>
-                                <input type="text" class="form-control form-control-sm bg-light border-0" value="06 Apr 2025 · 08:30" readonly style="border-radius:8px;font-size:13px;color:#0f172a;" />
+                                <input type="text" class="form-control form-control-sm bg-light border-0" value="@ViewBag.DepartureTime" readonly style="border-radius:8px;font-size:13px;color:#0f172a;" />
                             </div>
                         </div>
                         <div class="mt-3 p-3 rounded-3 d-flex align-items-center gap-3 flex-wrap"
