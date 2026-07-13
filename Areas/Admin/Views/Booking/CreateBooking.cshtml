@@ -56,17 +56,17 @@
                         </div>
                         <div class="mt-3 p-3 rounded-3 d-flex align-items-center gap-3 flex-wrap"
                              style="background:#f8fafc;border:1px solid #f1f5f9;">
-                            <span class="badge fw-bold px-3 py-2 rounded-3" style="background:#1a2e4a;font-size:12px;">TK</span>
+                            <span class="badge fw-bold px-3 py-2 rounded-3" style="background:#1a2e4a;font-size:12px;">@ViewBag.AirlineCode</span>
                             <div class="d-flex align-items-center gap-2">
-                                <span class="fw-bold" style="font-size:18px;color:#0f172a;">IST</span>
+                                <span class="fw-bold" style="font-size:18px;color:#0f172a;">@ViewBag.DepartureAirportCode</span>
                                 <div class="d-flex align-items-center gap-1 text-muted">
                                     <div style="width:28px;height:1px;background:#e2e8f0;"></div>
                                     <i class="bi bi-airplane-fill" style="font-size:13px;color:#3b82f6;"></i>
                                     <div style="width:28px;height:1px;background:#e2e8f0;"></div>
                                 </div>
-                                <span class="fw-bold" style="font-size:18px;color:#0f172a;">LHR</span>
+                                <span class="fw-bold" style="font-size:18px;color:#0f172a;">@ViewBag.AirlineCode</span>
                             </div>
-                            <span class="text-muted" style="font-size:13px;">08:30 → 11:00</span>
+                            <span class="text-muted" style="font-size:13px;">@ViewBag.DepartureTime → @ViewBag.ArrivalTime</span>
                             <span class="ms-auto badge bg-success-subtle text-success fw-semibold px-3 py-2 rounded-3">
                                 <i class="bi bi-circle-fill me-1" style="font-size:7px;"></i> Planlaşdırılıb
                             </span>
@@ -175,15 +175,15 @@
                         <div class="card-body px-4 py-3">
                             <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
                                 <span class="text-muted" style="font-size:13px;">Uçuş</span>
-                                <span class="fw-semibold" style="font-size:13px;color:#0f172a;">TK1932</span>
+                                <span class="fw-semibold" style="font-size:13px;color:#0f172a;">@ViewBag.FlightNumber</span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
                                 <span class="text-muted" style="font-size:13px;">Marşrut</span>
-                                <span class="fw-semibold" style="font-size:13px;color:#0f172a;">IST → LHR</span>
+                                <span class="fw-semibold" style="font-size:13px;color:#0f172a;">@ViewBag.DepartureAirportCode → @ViewBag.ArrivalAirportCode</span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
                                 <span class="text-muted" style="font-size:13px;">Tarix</span>
-                                <span class="fw-semibold" style="font-size:13px;color:#0f172a;">06 Apr 2025</span>
+                                <span class="fw-semibold" style="font-size:13px;color:#0f172a;">@ViewBag.DepartureTime</span>
                             </div>
                             <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
                                 <span class="text-muted" style="font-size:13px;">Ümumi Sərnişin</span>
