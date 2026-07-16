@@ -1,0 +1,889 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Layout/AdminLayout.cshtml";
+    ViewData["Title"] = "Uçuş Sərnişin Siyahısı";
+}
+<style>
+    .pl-page {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .flight-summary {
+        background: #fff;
+        border: 1px solid #e8edf5;
+        border-radius: 14px;
+        box-shadow: 0 1px 4px rgba(15,23,42,.06);
+        padding: 24px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+
+    .fs-left {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .fs-airline {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: #1a2e4a;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 13px;
+        letter-spacing: .4px;
+        flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(26,46,74,.25);
+    }
+
+    .fs-route {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .fs-codes {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 22px;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: -.3px;
+        line-height: 1;
+    }
+
+        .fs-codes .arrow {
+            font-size: 14px;
+            color: #cbd5e1;
+            font-weight: 400;
+        }
+
+    .fs-meta {
+        font-size: 12.5px;
+        color: #64748b;
+        font-weight: 400;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .fs-meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+    .fs-divider {
+        width: 1px;
+        height: 48px;
+        background: #f1f5f9;
+        flex-shrink: 0;
+    }
+
+    .fs-stats {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        flex-wrap: wrap;
+    }
+
+    .fs-stat {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .fs-stat-val {
+        font-size: 18px;
+        font-weight: 700;
+        color: #0f172a;
+        line-height: 1;
+    }
+
+    .fs-stat-lbl {
+        font-size: 11px;
+        font-weight: 600;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+    }
+
+    .cap-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .cap-bar-track {
+        width: 120px;
+        height: 6px;
+        background: #f1f5f9;
+        border-radius: 99px;
+        overflow: hidden;
+    }
+
+    .cap-bar-fill {
+        height: 100%;
+        border-radius: 99px;
+        background: linear-gradient(90deg,#f59e0b,#fbbf24);
+    }
+
+    .cap-nums {
+        font-size: 11px;
+        color: #64748b;
+        font-weight: 500;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .filter-card {
+        background: #fff;
+        border: 1px solid #e8edf5;
+        border-radius: 14px;
+        box-shadow: 0 1px 4px rgba(15,23,42,.06);
+        padding: 18px 24px;
+    }
+
+    .filter-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        color: #94a3b8;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    .filter-input {
+        height: 36px;
+        font-size: 13px;
+        border-color: #e2e8f0;
+        border-radius: 8px;
+        color: #1e293b;
+        transition: border-color .15s, box-shadow .15s;
+    }
+
+        .filter-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+        }
+
+    .table-card {
+        background: #fff;
+        border: 1px solid #e8edf5;
+        border-radius: 14px;
+        box-shadow: 0 1px 4px rgba(15,23,42,.06);
+        overflow: hidden;
+    }
+
+    .table-card-header {
+        padding: 16px 20px;
+        border-bottom: 1px solid #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .pax-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .pax-table thead th {
+            padding: 10px 14px;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: .7px;
+            text-transform: uppercase;
+            color: #94a3b8;
+            background: #f8fafc;
+            border-bottom: 1px solid #f1f5f9;
+            white-space: nowrap;
+        }
+
+        .pax-table tbody tr {
+            transition: background .12s;
+            border-bottom: 1px solid #f8fafc;
+        }
+
+            .pax-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+            .pax-table tbody tr:hover {
+                background: #f8fafc;
+            }
+
+                .pax-table tbody tr:hover td:first-child {
+                    border-left: 3px solid #3b82f6;
+                }
+
+        .pax-table tbody td {
+            padding: 13px 14px;
+            vertical-align: middle;
+            font-size: 13.5px;
+            border-bottom: 1px solid #f1f5f9;
+            border-left: 3px solid transparent;
+            transition: border-color .12s;
+        }
+
+        .pax-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+    .pax-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 800;
+        flex-shrink: 0;
+        letter-spacing: .3px;
+    }
+
+    .pax-name-cell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .pax-name-text {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+    }
+
+    .pax-name {
+        font-weight: 600;
+        font-size: 13.5px;
+        color: #0f172a;
+        white-space: nowrap;
+    }
+
+    .pax-email {
+        font-size: 11px;
+        color: #94a3b8;
+        font-weight: 400;
+    }
+
+    .badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 99px;
+        font-size: 11.5px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+        .badge-pill .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+            flex-shrink: 0;
+        }
+
+    .bp-green {
+        background: #f0fdf4;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
+    }
+
+    .bp-gray {
+        background: #f8fafc;
+        color: #64748b;
+        border: 1px solid #e2e8f0;
+    }
+
+    .bp-yellow {
+        background: #fffbeb;
+        color: #d97706;
+        border: 1px solid #fde68a;
+    }
+
+    .bp-red {
+        background: #fef2f2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+    }
+
+    .bp-blue {
+        background: #eff6ff;
+        color: #2563eb;
+        border: 1px solid #bfdbfe;
+    }
+
+    .seat-badge {
+        display: inline-block;
+        padding: 3px 9px;
+        border-radius: 7px;
+        font-size: 12px;
+        font-weight: 700;
+        background: #f1f5f9;
+        color: #475569;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: .3px;
+    }
+
+    .act-wrap {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .act-icon-btn {
+        width: 30px;
+        height: 30px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 7px;
+        border: 1px solid transparent;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all .14s;
+        text-decoration: none;
+    }
+
+    .aib-view {
+        background: #eff6ff;
+        color: #2563eb;
+        border-color: #dbeafe;
+    }
+
+        .aib-view:hover {
+            background: #dbeafe;
+        }
+
+    .aib-edit {
+        background: #fffbeb;
+        color: #d97706;
+        border-color: #fef3c7;
+    }
+
+        .aib-edit:hover {
+            background: #fef3c7;
+        }
+
+    .aib-del {
+        background: #fef2f2;
+        color: #dc2626;
+        border-color: #fecaca;
+    }
+
+        .aib-del:hover {
+            background: #fecaca;
+        }
+
+    .pag-wrap {
+        padding: 14px 20px;
+        border-top: 1px solid #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        background: #fafbfc;
+    }
+
+    .pag-info {
+        font-size: 12.5px;
+        color: #94a3b8;
+        font-weight: 500;
+    }
+
+    .pag-list {
+        display: flex;
+        gap: 3px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+        .pag-list li a,
+        .pag-list li span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            font-size: 12.5px;
+            font-weight: 500;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            color: #64748b;
+            text-decoration: none;
+            transition: all .14s;
+            cursor: pointer;
+        }
+
+            .pag-list li a:hover {
+                background: #eff6ff;
+                border-color: #bfdbfe;
+                color: #2563eb;
+            }
+
+        .pag-list li.active a {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: #fff;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(37,99,235,.3);
+        }
+
+        .pag-list li.disabled span {
+            opacity: .35;
+            cursor: not-allowed;
+        }
+
+    @@media (max-width:1100px) {
+        .fs-divider {
+            display: none;
+        }
+    }
+
+    @@media (max-width:768px) {
+        .flight-summary {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
+
+<div class="main-content" id="main-content">
+    <div class="container-fluid px-4 py-4">
+        <div class="pl-page">
+
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-1" style="font-size:12.5px;">
+                            <li class="breadcrumb-item">
+                                <a href="#" class="text-decoration-none text-muted">İdarə Paneli</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="#" class="text-decoration-none text-muted">Uçuşlar</a>
+                            </li>
+                            <li class="breadcrumb-item active">Sərnişin Siyahısı</li>
+                        </ol>
+                    </nav>
+                    <h4 class="fw-bold mb-1" style="color:#0f172a;">Uçuş Sərnişin Siyahısı</h4>
+                    <p class="text-muted mb-0" style="font-size:13px;">
+                        Seçilmiş uçuşa aid bütün sərnişinləri görüntüləyin və idarə edin.
+                    </p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="#" class="btn btn-outline-secondary btn-sm px-3"
+                       style="border-radius:8px;font-size:13px;">
+                        <i class="bi bi-arrow-left me-1"></i> Geri
+                    </a>
+                </div>
+            </div>
+
+            <div class="flight-summary">
+                <div class="fs-left">
+                    <div class="fs-airline">TK</div>
+                    <div class="fs-route">
+                        <div class="fs-codes">
+                            IST
+                            <span class="arrow"><i class="bi bi-arrow-right"></i></span>
+                            CDG
+                        </div>
+                        <div class="fs-meta">
+                            <span><i class="bi bi-hash" style="font-size:11px;"></i> TK1021</span>
+                            <span style="color:#e2e8f0;">·</span>
+                            <span><i class="bi bi-calendar3" style="font-size:11px;"></i> 06 Aprel 2026</span>
+                            <span style="color:#e2e8f0;">·</span>
+                            <span><i class="bi bi-clock" style="font-size:11px;"></i> 07:00 → 09:45</span>
+                        </div>
+                    </div>
+                    <div class="fs-divider"></div>
+                    <div class="fs-stats">
+                        <div class="fs-stat">
+                            <span class="fs-stat-val">148</span>
+                            <span class="fs-stat-lbl">Ümumi Sərnişin</span>
+                        </div>
+                        <div class="fs-stat">
+                            <span class="fs-stat-val">180</span>
+                            <span class="fs-stat-lbl">Tutum</span>
+                        </div>
+                        <div class="cap-wrap">
+                            <div class="cap-bar-track">
+                                <div class="cap-bar-fill" style="width:82%;"></div>
+                            </div>
+                            <div class="cap-nums">
+                                <span style="color:#d97706;font-weight:700;">%82 Dolu</span>
+                                <span>32 boş</span>
+                            </div>
+                        </div>
+                        <div class="fs-stat">
+                            <span class="badge-pill bp-blue" style="font-size:12px;">
+                                <i class="bi bi-circle-fill" style="font-size:7px;"></i> Planlaşdırılıb
+                            </span>
+                            <span class="fs-stat-lbl mt-1">Vəziyyət</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="fs-right d-flex gap-2 flex-wrap">
+                    <button class="btn btn-outline-primary btn-sm px-3"
+                            style="border-radius:8px;font-size:13px;font-weight:600;">
+                        <i class="bi bi-grid-3x3-gap me-1"></i> Oturacaq Xəritəsi
+                    </button>
+                    <button class="btn btn-success btn-sm px-3"
+                            style="border-radius:8px;font-size:13px;font-weight:600;background:#16a34a;border-color:#16a34a;">
+                        <i class="bi bi-file-earmark-excel me-1"></i> Excel Yüklə
+                    </button>
+                </div>
+            </div>
+
+            <div class="filter-card">
+                <div class="row g-3 align-items-end">
+                    <div class="col-12 col-md-2">
+                        <label class="filter-label">Ad Soyad</label>
+                        <input type="text" id="fName" class="form-control filter-input"
+                               placeholder="Sərnişin adı…" oninput="applyFilter()" />
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <label class="filter-label">PNR</label>
+                        <input type="text" id="fPnr" class="form-control filter-input"
+                               placeholder="ABC123" oninput="applyFilter()" />
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <label class="filter-label">Check-in Vəziyyəti</label>
+                        <select id="fCheckin" class="form-select filter-input" onchange="applyFilter()">
+                            <option value="">Hamısı</option>
+                            <option value="Checked-In">Check-in Edilib</option>
+                            <option value="Not Checked">Edilməyib</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <label class="filter-label">Ödəniş Vəziyyəti</label>
+                        <select id="fPayment" class="form-select filter-input" onchange="applyFilter()">
+                            <option value="">Hamısı</option>
+                            <option value="Paid">Ödənilib</option>
+                            <option value="Pending">Gözləmədə</option>
+                            <option value="Failed">Uğursuz</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <label class="filter-label">Sərnişin Tipi</label>
+                        <select id="fType" class="form-select filter-input" onchange="applyFilter()">
+                            <option value="">Hamısı</option>
+                            <option value="Yetişkin">Yetişkin</option>
+                            <option value="Çocuk">Uşaq</option>
+                            <option value="Bebek">Körpə</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-2 d-flex gap-2">
+                        <button class="btn btn-primary btn-sm flex-fill fw-semibold"
+                                onclick="applyFilter()"
+                                style="border-radius:8px;height:36px;">
+                            <i class="bi bi-funnel-fill me-1"></i> Filtrlə
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm"
+                                onclick="clearFilter()"
+                                style="border-radius:8px;height:36px;width:36px;padding:0;"
+                                title="Təmizlə">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-card">
+                <div class="table-card-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="fw-semibold" style="font-size:13.5px;color:#0f172a;">
+                            Sərnişin Siyahısı
+                        </span>
+                        <span class="badge rounded-pill"
+                              id="totalBadge"
+                              style="background:#eff6ff;color:#2563eb;font-size:11.5px;font-weight:700;padding:4px 10px;">
+                            8 sərnişin
+                        </span>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary btn-sm"
+                                style="border-radius:8px;font-size:12.5px;">
+                            <i class="bi bi-arrow-up-down me-1"></i> Sırala
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm"
+                                style="border-radius:8px;font-size:12.5px;">
+                            <i class="bi bi-columns me-1"></i> Sütun
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="pax-table" id="paxTable">
+                        <thead>
+                            <tr>
+                                <th>SƏRNİŞİN</th>
+                                <th>CİNSİYYƏT</th>
+                                <th>TİP</th>
+                                <th>PNR</th>
+                                <th>KOLTUK</th>
+                                <th>CHECK-IN</th>
+                                <th>ÖDƏNİŞ</th>
+                                <th>BİLET</th>
+                                <th>ƏLAQƏ</th>
+                                <th>ƏMƏLİYYATLAR</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+                <div class="pag-wrap">
+                    <span class="pag-info" id="pageInfo"></span>
+                    <ul class="pag-list" id="pagination"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var passengers = [
+        {
+            name:'Ahmet Yılmaz', email:'ahmet@mail.com', gender:'Kişi',
+            type:'Yetişkin', pnr:'TKX471', seat:'12A',
+            checkin:'Checked-In', payment:'Paid', ticket:'Issued',
+            phone:'+90 532 111 22 33', color:'#1a2e4a'
+        },
+        {
+            name:'John Doe', email:'john.doe@mail.com', gender:'Kişi',
+            type:'Yetişkin', pnr:'TKX482', seat:'12B',
+            checkin:'Checked-In', payment:'Paid', ticket:'Issued',
+            phone:'+44 7700 900123', color:'#065f46'
+        },
+        {
+            name:'Maria Garcia', email:'maria.g@mail.com', gender:'Qadın',
+            type:'Yetişkin', pnr:'TKX495', seat:'14C',
+            checkin:'Not Checked', payment:'Paid', ticket:'Issued',
+            phone:'+34 612 345 678', color:'#7c2d12'
+        },
+        {
+            name:'Mehmet Demir', email:'mdemir@mail.com', gender:'Kişi',
+            type:'Yetişkin', pnr:'TKX501', seat:'15D',
+            checkin:'Not Checked', payment:'Pending', ticket:'Not Issued',
+            phone:'+90 555 444 33 22', color:'#1e40af'
+        },
+        {
+            name:'Sophie Martin', email:'sophie.m@mail.com', gender:'Qadın',
+            type:'Yetişkin', pnr:'TKX512', seat:'17A',
+            checkin:'Checked-In', payment:'Paid', ticket:'Issued',
+            phone:'+33 6 12 34 56 78', color:'#6b21a8'
+        },
+        {
+            name:'Fatma Kaya', email:'fatmakaya@mail.com', gender:'Qadın',
+            type:'Yetişkin', pnr:'TKX528', seat:'18B',
+            checkin:'Not Checked', payment:'Failed', ticket:'Not Issued',
+            phone:'+90 543 222 11 00', color:'#991b1b'
+        },
+        {
+            name:'Lucas Müller', email:'lucas.m@mail.com', gender:'Kişi',
+            type:'Uşaq', pnr:'TKX534', seat:'18C',
+            checkin:'Checked-In', payment:'Paid', ticket:'Issued',
+            phone:'+49 151 234 56789', color:'#0e7490'
+        },
+        {
+            name:'Elif Şahin', email:'elif.sahin@mail.com', gender:'Qadın',
+            type:'Körpə', pnr:'TKX549', seat:'18D',
+            checkin:'Not Checked', payment:'Pending', ticket:'Not Issued',
+            phone:'+90 501 876 54 32', color:'#a16207'
+        },
+    ];
+
+    var filtered = passengers.slice();
+    var currentPage = 1;
+    var perPage = 5;
+
+    function checkinBadge(v) {
+        return v === 'Checked-In'
+            ? '<span class="badge-pill bp-green"><span class="dot"></span>Edilib</span>'
+            : '<span class="badge-pill bp-gray"><span class="dot"></span>Edilməyib</span>';
+    }
+    function paymentBadge(v) {
+        if (v === 'Paid') return '<span class="badge-pill bp-green"><span class="dot"></span>Ödənilib</span>';
+        if (v === 'Pending') return '<span class="badge-pill bp-yellow"><span class="dot"></span>Gözləmədə</span>';
+        return '<span class="badge-pill bp-red"><span class="dot"></span>Uğursuz</span>';
+    }
+    function ticketBadge(v) {
+        return v === 'Issued'
+            ? '<span class="badge-pill bp-blue"><span class="dot"></span>Kesilib</span>'
+            : '<span class="badge-pill bp-gray"><span class="dot"></span>Kesilməyib</span>';
+    }
+    function typeBadge(v) {
+        var cls = v === 'Yetişkin' ? 'bp-blue' : v === 'Uşaq' ? 'bp-yellow' : 'bp-gray';
+        return '<span class="badge-pill ' + cls + '">' + v + '</span>';
+    }
+    function initials(name) {
+        return name.split(' ').map(function(w){ return w[0]; }).join('').slice(0,2).toUpperCase();
+    }
+
+    function applyFilter() {
+        var name = (document.getElementById('fName').value || '').toLowerCase().trim();
+        var pnr = (document.getElementById('fPnr').value || '').toLowerCase().trim();
+        var checkin = document.getElementById('fCheckin').value;
+        var payment = document.getElementById('fPayment').value;
+        var type = document.getElementById('fType').value;
+
+        filtered = passengers.filter(function(p) {
+            return (!name || p.name.toLowerCase().includes(name))
+                && (!pnr || p.pnr.toLowerCase().includes(pnr))
+                && (!checkin || p.checkin === checkin)
+                && (!payment || p.payment === payment)
+                && (!type || p.type === type);
+        });
+        currentPage = 1;
+        render();
+    }
+
+    function clearFilter() {
+        document.getElementById('fName').value = '';
+        document.getElementById('fPnr').value = '';
+        document.getElementById('fCheckin').value = '';
+        document.getElementById('fPayment').value = '';
+        document.getElementById('fType').value = '';
+        filtered = passengers.slice();
+        currentPage = 1;
+        render();
+    }
+
+    function render() {
+        var total = filtered.length;
+        var totalPages = Math.max(1, Math.ceil(total / perPage));
+        if (currentPage > totalPages) currentPage = totalPages;
+        var from = total === 0 ? 0 : (currentPage - 1) * perPage + 1;
+        var to = Math.min(currentPage * perPage, total);
+        var slice = filtered.slice(from - 1, to);
+
+        document.getElementById('totalBadge').textContent = total + ' sərnişin';
+        document.getElementById('pageInfo').textContent = total === 0
+            ? 'Nəticə tapılmadı'
+            : 'Showing ' + from + ' to ' + to + ' of ' + total + ' entries';
+
+        var tbody = document.getElementById('tableBody');
+        if (slice.length === 0) {
+            tbody.innerHTML =
+                '<tr><td colspan="10" class="text-center py-5 text-muted">' +
+                    '<i class="bi bi-person-slash" style="font-size:32px;display:block;margin-bottom:10px;opacity:.2;"></i>' +
+                    'Sərnişin tapılmadı.' +
+                '</td></tr>';
+            document.getElementById('pagination').innerHTML = '';
+            return;
+        }
+
+        tbody.innerHTML = slice.map(function(p) {
+            return '<tr>' +
+                '<td>' +
+                    '<div class="pax-name-cell">' +
+                        '<div class="pax-avatar" style="background:' + p.color + '1a;color:' + p.color + ';">' +
+                            initials(p.name) +
+                        '</div>' +
+                        '<div class="pax-name-text">' +
+                            '<span class="pax-name">' + p.name + '</span>' +
+                            '<span class="pax-email">' + p.email + '</span>' +
+                        '</div>' +
+                    '</div>' +
+                '</td>' +
+                '<td><span style="font-size:13px;color:#475569;">' +
+                    '<i class="bi bi-' + (p.gender === 'Kişi' ? 'gender-male text-primary' : 'gender-female text-danger') + ' me-1"></i>' +
+                    p.gender +
+                '</span></td>' +
+                '<td>' + typeBadge(p.type) + '</td>' +
+                '<td><span style="font-family:monospace;font-weight:700;font-size:13px;color:#0f172a;background:#f8fafc;padding:3px 8px;border-radius:6px;border:1px solid #f1f5f9;">' +
+                    p.pnr +
+                '</span></td>' +
+                '<td><span class="seat-badge">' + p.seat + '</span></td>' +
+                '<td>' + checkinBadge(p.checkin) + '</td>' +
+                '<td>' + paymentBadge(p.payment) + '</td>' +
+                '<td>' + ticketBadge(p.ticket) + '</td>' +
+                '<td><span style="font-size:12.5px;color:#64748b;white-space:nowrap;">' +
+                    '<i class="bi bi-telephone me-1" style="font-size:11px;"></i>' + p.phone +
+                '</span></td>' +
+                '<td>' +
+                    '<div class="act-wrap">' +
+                        '<a href="#" class="act-icon-btn aib-view" title="Detal">' +
+                            '<i class="bi bi-eye-fill"></i>' +
+                        '</a>' +
+                        '<a href="#" class="act-icon-btn aib-edit" title="Düzəliş">' +
+                            '<i class="bi bi-pencil-fill"></i>' +
+                        '</a>' +
+                        '<button class="act-icon-btn aib-del" title="Ləğv et" style="border:none;cursor:pointer;">' +
+                            '<i class="bi bi-trash-fill"></i>' +
+                        '</button>' +
+                    '</div>' +
+                '</td>' +
+            '</tr>';
+        }).join('');
+
+        renderPagination(totalPages);
+    }
+
+    function renderPagination(totalPages) {
+        var ul = document.getElementById('pagination');
+        var html = '';
+        html += '<li class="' + (currentPage === 1 ? 'disabled' : '') + '">' +
+            '<span onclick="' + (currentPage > 1 ? 'goPage(currentPage-1)' : '') + '"' +
+            ' style="cursor:' + (currentPage === 1 ? 'default' : 'pointer') + '">' +
+            '<i class="bi bi-chevron-left" style="font-size:10px;"></i></span></li>';
+
+        buildRange(currentPage, totalPages).forEach(function(p) {
+            if (p === '...') {
+                html += '<li><span style="cursor:default;border:none;background:none;color:#94a3b8;">…</span></li>';
+            } else {
+                html += '<li class="' + (p === currentPage ? 'active' : '') + '">' +
+                    '<a onclick="goPage(' + p + ')">' + p + '</a></li>';
+            }
+        });
+
+        html += '<li class="' + (currentPage === totalPages ? 'disabled' : '') + '">' +
+            '<span onclick="' + (currentPage < totalPages ? 'goPage(currentPage+1)' : '') + '"' +
+            ' style="cursor:' + (currentPage === totalPages ? 'default' : 'pointer') + '">' +
+            '<i class="bi bi-chevron-right" style="font-size:10px;"></i></span></li>';
+
+        ul.innerHTML = html;
+    }
+
+    function buildRange(cur, total) {
+        if (total <= 7) {
+            var a = [];
+            for (var i = 1; i <= total; i++) a.push(i);
+            return a;
+        }
+        var p = [1];
+        if (cur > 3) p.push('...');
+        for (var x = Math.max(2, cur-1); x <= Math.min(total-1, cur+1); x++) p.push(x);
+        if (cur < total-2) p.push('...');
+        p.push(total);
+        return p;
+    }
+
+    function goPage(p) {
+        var total = Math.max(1, Math.ceil(filtered.length / perPage));
+        if (p < 1 || p > total) return;
+        currentPage = p;
+        render();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() { render(); });
+</script>
