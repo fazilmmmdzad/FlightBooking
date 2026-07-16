@@ -1,27 +1,21 @@
 ﻿@model List<FlightBooking.Dtos.PassengerDtos.PassengerListItemDto>
-
 @{
     Layout = "~/Areas/Admin/Views/Layout/AdminLayout.cshtml";
-    ViewData["Title"] = "Uçuş Yolcu Listesi";
+    ViewData["Title"] = "Uçuş Sərnişin Siyahısı";
 
-    @* Stat hesaplamaları *@
     int totalPassengers = Model?.Count ?? 0;
-
     int checkedIn = Model?.Count(p => p.CheckInStatus == "Checked-In") ?? 0;
     int paid = Model?.Count(p => p.PaymentStatus == "Paid") ?? 0;
     int issued = Model?.Count(p => p.TicketStatus == "Issued") ?? 0;
 }
-
 @section Styles {
     <style>
-
         .pl-page {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
-        /* ── Flight Summary ───────────────────────────────────── */
         .flight-summary {
             background: #fff;
             border: 1px solid #e8edf5;
@@ -141,7 +135,6 @@
             justify-content: space-between;
         }
 
-        /* ── Mini stat cards (check-in/ödeme/bilet) ───────────── */
         .mini-stats {
             display: grid;
             grid-template-columns: repeat(3,1fr);
@@ -184,7 +177,6 @@
             margin-top: 2px;
         }
 
-        /* ── Filter ───────────────────────────────────────────── */
         .filter-card {
             background: #fff;
             border: 1px solid #e8edf5;
@@ -217,7 +209,6 @@
                 box-shadow: 0 0 0 3px rgba(59,130,246,.12);
             }
 
-        /* ── Table Card ───────────────────────────────────────── */
         .table-card {
             background: #fff;
             border: 1px solid #e8edf5;
@@ -236,7 +227,6 @@
             gap: 10px;
         }
 
-        /* ── Pax Table ────────────────────────────────────────── */
         .pax-table {
             width: 100%;
             border-collapse: separate;
@@ -280,7 +270,6 @@
                 border-bottom: none;
             }
 
-        /* Avatar */
         .pax-avatar {
             width: 34px;
             height: 34px;
@@ -312,7 +301,6 @@
             color: #94a3b8;
         }
 
-        /* Badges */
         .bp {
             display: inline-flex;
             align-items: center;
@@ -362,7 +350,6 @@
             border: 1px solid #bfdbfe;
         }
 
-        /* Seat */
         .seat-badge {
             display: inline-block;
             padding: 3px 9px;
@@ -375,7 +362,6 @@
             letter-spacing: .3px;
         }
 
-        /* Action buttons */
         .act-wrap {
             display: flex;
             align-items: center;
@@ -426,7 +412,6 @@
                 background: #fecaca;
             }
 
-        /* Pagination */
         .pag-wrap {
             padding: 14px 20px;
             border-top: 1px solid #f1f5f9;
@@ -489,7 +474,6 @@
                 cursor: not-allowed;
             }
 
-        /* Empty state */
         .empty-state {
             padding: 56px 24px;
             text-align: center;
@@ -523,7 +507,6 @@
                 grid-template-columns: 1fr;
             }
         }
-
     </style>
 }
 
@@ -531,24 +514,23 @@
     <div class="container-fluid px-4 py-4">
         <div class="pl-page">
 
-            @* ── Başlık ── *@
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                 <div>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb mb-1" style="font-size:12.5px;">
                             <li class="breadcrumb-item">
-                                <a href="#" class="text-decoration-none text-muted">Dashboard</a>
+                                <a href="#" class="text-decoration-none text-muted">İdarə Paneli</a>
                             </li>
                             <li class="breadcrumb-item">
                                 <a asp-area="Admin" asp-controller="Flights" asp-action="Index"
                                    class="text-decoration-none text-muted">Uçuşlar</a>
                             </li>
-                            <li class="breadcrumb-item active">Yolcu Listesi</li>
+                            <li class="breadcrumb-item active">Sərnişin Siyahısı</li>
                         </ol>
                     </nav>
-                    <h4 class="fw-bold mb-1" style="color:#0f172a;">Uçuş Yolcu Listesi</h4>
+                    <h4 class="fw-bold mb-1" style="color:#0f172a;">Uçuş Sərnişin Siyahısı</h4>
                     <p class="text-muted mb-0" style="font-size:13px;">
-                        Seçilen uçuşa ait tüm yolcuları görüntüleyin ve yönetin.
+                        Seçilmiş uçuşa aid bütün sərnişinləri görüntüləyin və idarə edin.
                     </p>
                 </div>
                 <div class="d-flex gap-2">
@@ -560,11 +542,9 @@
                 </div>
             </div>
 
-            @* ── Flight Summary Card (ViewBag ile statik) ── *@
             <div class="flight-summary">
                 <div class="fs-left">
                     <div class="fs-airline">@ViewBag.AirlineCode</div>
-
                     <div>
                         <div class="fs-codes">
                             @ViewBag.DepartureAirportCode
@@ -586,19 +566,16 @@
                             </span>
                         </div>
                     </div>
-
                     <div class="fs-divider"></div>
-
                     <div class="fs-stats">
                         <div class="fs-stat">
                             <span class="fs-stat-val">@totalPassengers</span>
-                            <span class="fs-stat-lbl">Yolcu</span>
+                            <span class="fs-stat-lbl">Sərnişin</span>
                         </div>
                         <div class="fs-stat">
                             <span class="fs-stat-val">@ViewBag.TotalSeats</span>
-                            <span class="fs-stat-lbl">Kapasite</span>
+                            <span class="fs-stat-lbl">Tutum</span>
                         </div>
-
                         @{
                             int totalSeats = (int)(ViewBag.TotalSeats ?? 1);
                             int occRate = totalSeats > 0
@@ -610,7 +587,6 @@
                             ? "background:linear-gradient(90deg,#f59e0b,#fbbf24)"
                             : "background:linear-gradient(90deg,#22c55e,#4ade80)";
                         }
-
                         <div>
                             <div class="cap-bar-track">
                                 <div class="cap-bar-fill" style="width:@occRate%;@barColor"></div>
@@ -622,30 +598,27 @@
                                 <span>@(totalSeats - totalPassengers) boş</span>
                             </div>
                         </div>
-
                         <div class="fs-stat">
                             <span class="bp bp-blue" style="font-size:12px;">
                                 <i class="bi bi-circle-fill" style="font-size:7px;"></i>
                                 @ViewBag.Status
                             </span>
-                            <span class="fs-stat-lbl mt-1">Durum</span>
+                            <span class="fs-stat-lbl mt-1">Vəziyyət</span>
                         </div>
                     </div>
                 </div>
-
                 <div class="d-flex gap-2 flex-wrap">
                     <button class="btn btn-outline-primary btn-sm px-3"
                             style="border-radius:8px;font-size:13px;font-weight:600;">
-                        <i class="bi bi-grid-3x3-gap me-1"></i> Seat Map
+                        <i class="bi bi-grid-3x3-gap me-1"></i> Oturacaq Xəritəsi
                     </button>
                     <button class="btn btn-sm px-3 fw-semibold"
                             style="border-radius:8px;font-size:13px;background:#16a34a;color:#fff;border-color:#16a34a;">
-                        <i class="bi bi-file-earmark-excel me-1"></i> Excel İndir
+                        <i class="bi bi-file-earmark-excel me-1"></i> Excel Yüklə
                     </button>
                 </div>
             </div>
 
-            @* ── Mini İstatistik Kartları (model'den dinamik) ── *@
             <div class="mini-stats">
                 <div class="mini-stat">
                     <div class="mini-stat-ico" style="background:#f0fdf4;color:#16a34a;">
@@ -653,7 +626,7 @@
                     </div>
                     <div>
                         <div class="mini-stat-val">@checkedIn / @totalPassengers</div>
-                        <div class="mini-stat-lbl">Check-in Yapıldı</div>
+                        <div class="mini-stat-lbl">Check-in Edilib</div>
                     </div>
                 </div>
                 <div class="mini-stat">
@@ -662,7 +635,7 @@
                     </div>
                     <div>
                         <div class="mini-stat-val">@paid / @totalPassengers</div>
-                        <div class="mini-stat-lbl">Ödeme Tamamlandı</div>
+                        <div class="mini-stat-lbl">Ödəniş Tamamlanıb</div>
                     </div>
                 </div>
                 <div class="mini-stat">
@@ -671,82 +644,72 @@
                     </div>
                     <div>
                         <div class="mini-stat-val">@issued / @totalPassengers</div>
-                        <div class="mini-stat-lbl">Bilet Kesildi</div>
+                        <div class="mini-stat-lbl">Bilet Kesilib</div>
                     </div>
                 </div>
             </div>
 
-            @* ── Filtre ── *@
             <div class="filter-card">
                 <div class="row g-3 align-items-end">
-
                     <div class="col-12 col-md-2">
                         <label class="filter-label">Ad Soyad</label>
                         <input type="text" id="fName" class="form-control filter-input"
-                               placeholder="Yolcu adı…" oninput="applyFilter()" />
+                               placeholder="Sərnişin adı…" oninput="applyFilter()" />
                     </div>
-
                     <div class="col-12 col-md-2">
                         <label class="filter-label">PNR</label>
                         <input type="text" id="fPnr" class="form-control filter-input"
                                placeholder="ABC123" oninput="applyFilter()" />
                     </div>
-
                     <div class="col-12 col-md-2">
-                        <label class="filter-label">Check-in Durumu</label>
+                        <label class="filter-label">Check-in Vəziyyəti</label>
                         <select id="fCheckin" class="form-select filter-input" onchange="applyFilter()">
-                            <option value="">Tümü</option>
-                            <option value="Checked-In">Check-in Yapıldı</option>
-                            <option value="Not Checked">Yapılmadı</option>
+                            <option value="">Hamısı</option>
+                            <option value="Checked-In">Check-in Edilib</option>
+                            <option value="Not Checked">Edilməyib</option>
                         </select>
                     </div>
-
                     <div class="col-12 col-md-2">
-                        <label class="filter-label">Ödeme Durumu</label>
+                        <label class="filter-label">Ödəniş Vəziyyəti</label>
                         <select id="fPayment" class="form-select filter-input" onchange="applyFilter()">
-                            <option value="">Tümü</option>
-                            <option value="Paid">Ödendi</option>
-                            <option value="Pending">Beklemede</option>
-                            <option value="Failed">Başarısız</option>
+                            <option value="">Hamısı</option>
+                            <option value="Paid">Ödənilib</option>
+                            <option value="Pending">Gözləmədə</option>
+                            <option value="Failed">Uğursuz</option>
                         </select>
                     </div>
-
                     <div class="col-12 col-md-2">
-                        <label class="filter-label">Yolcu Tipi</label>
+                        <label class="filter-label">Sərnişin Tipi</label>
                         <select id="fType" class="form-select filter-input" onchange="applyFilter()">
-                            <option value="">Tümü</option>
+                            <option value="">Hamısı</option>
                             <option value="Yetişkin">Yetişkin</option>
-                            <option value="Çocuk">Çocuk</option>
-                            <option value="Bebek">Bebek</option>
+                            <option value="Çocuk">Uşaq</option>
+                            <option value="Bebek">Körpə</option>
                         </select>
                     </div>
-
                     <div class="col-12 col-md-2 d-flex gap-2">
                         <button class="btn btn-primary btn-sm flex-fill fw-semibold"
                                 onclick="applyFilter()"
                                 style="border-radius:8px;height:36px;">
-                            <i class="bi bi-funnel-fill me-1"></i> Filtrele
+                            <i class="bi bi-funnel-fill me-1"></i> Filtrlə
                         </button>
                         <button class="btn btn-outline-secondary btn-sm"
                                 onclick="clearFilter()"
                                 style="border-radius:8px;height:36px;width:36px;padding:0;"
-                                title="Temizle">
+                                title="Təmizlə">
                             <i class="bi bi-x-lg"></i>
                         </button>
                     </div>
-
                 </div>
             </div>
 
-            @* ── Table Card ── *@
             <div class="table-card">
-
                 <div class="table-card-header">
                     <div class="d-flex align-items-center gap-2">
-                        <span class="fw-semibold" style="font-size:13.5px;color:#0f172a;">Yolcu Listesi</span>
+                        <span class="fw-semibold" style="font-size:13.5px;color:#0f172a;">Sərnişin Siyahısı</span>
                         <span class="bp bp-blue" id="totalBadge"
                               style="font-size:11.5px;padding:4px 10px;">
-                            @totalPassengers yolcu
+                            @totalPassengers sərnişin
                         </span>
                     </div>
                     <div class="d-flex gap-2">
@@ -756,67 +719,58 @@
                         </button>
                     </div>
                 </div>
-
                 <div class="table-responsive">
                     <table class="pax-table" id="paxTable">
                         <thead>
                             <tr>
-                                <th>YOLCU</th>
-                                <th>CİNSİYET</th>
+                                <th>SƏRNİŞİN</th>
+                                <th>CİNSİYYƏT</th>
                                 <th>TİP</th>
                                 <th>PNR</th>
                                 <th>KOLTUK</th>
                                 <th>CHECK-IN</th>
-                                <th>ÖDEME</th>
+                                <th>ÖDƏNİŞ</th>
                                 <th>BİLET</th>
-                                <th>İLETİŞİM</th>
-                                <th>İŞLEMLER</th>
+                                <th>ƏLAQƏ</th>
+                                <th>ƏMƏLİYYATLAR</th>
                             </tr>
                         </thead>
-                        <tbody id="tableBody">
-                            @* JS tarafından render edilir *@
-                        </tbody>
+                        <tbody id="tableBody"></tbody>
                     </table>
                 </div>
-
                 <div class="pag-wrap">
                     <span class="pag-info" id="pageInfo"></span>
                     <ul class="pag-list" id="pagination"></ul>
                 </div>
-
             </div>
-
         </div>
     </div>
 </main>
 
 @section Scripts {
     <script>
-
-        @* Razor'dan JS dizisine veri aktar *@
         var allPassengers = [
             @if (Model != null && Model.Any())
             {
                     foreach (var p in Model)
                     {
                             @:{ name: "@p.Name", surname: "@p.Surname",
-                            @:  email: "@(p.Email ?? "")", phone: "@(p.Phone ?? "")",
-                            @:  gender: "@(p.Gender ?? "")",
-                            @:  type: "@(p.PassengerType ?? "")",
-                            @:  pnr: "@(p.PnrNumber ?? "")",
-                            @:  seat: "@(p.SeatNumber ?? "—")",
-                            @:  checkin: "@(p.CheckInStatus ?? "Not Checked")",
-                            @:  payment: "@(p.PaymentStatus ?? "Pending")",
-                            @:  ticket: "@(p.TicketStatus ?? "Not Issued")" },
+                            @: email: "@(p.Email ?? "")", phone: "@(p.Phone ?? "")",
+                            @: gender: "@(p.Gender ?? "")",
+                            @: type: "@(p.PassengerType ?? "")",
+                            @: pnr: "@(p.PnrNumber ?? "")",
+                            @: seat: "@(p.SeatNumber ?? "—")",
+                            @: checkin: "@(p.CheckInStatus ?? "Not Checked")",
+                            @: payment: "@(p.PaymentStatus ?? "Pending")",
+                            @: ticket: "@(p.TicketStatus ?? "Not Issued")" },
                     }
             }
         ];
 
-        var filtered    = allPassengers.slice();
+        var filtered = allPassengers.slice();
         var currentPage = 1;
-        var perPage     = 8;
+        var perPage = 8;
 
-        /* ── Avatar renkleri ─────────────────────────────────── */
         var avatarColors = [
             '#1a2e4a','#065f46','#7c2d12','#1e40af',
             '#6b21a8','#991b1b','#0e7490','#a16207',
@@ -828,90 +782,80 @@
             for (var c = 0; c < name.length; c++) i += name.charCodeAt(c);
             return avatarColors[i % avatarColors.length];
         }
-
         function initials(name, surname) {
             return ((name[0] || '') + (surname[0] || '')).toUpperCase();
         }
 
-        /* ── Badge helpers ───────────────────────────────────── */
         function checkinBadge(v) {
             return v === 'Checked-In'
-                ? '<span class="bp bp-green"><span class="dot"></span>Yapıldı</span>'
-                : '<span class="bp bp-gray"><span class="dot"></span>Yapılmadı</span>';
+                ? '<span class="bp bp-green"><span class="dot"></span>Edilib</span>'
+                : '<span class="bp bp-gray"><span class="dot"></span>Edilməyib</span>';
         }
-
         function paymentBadge(v) {
-            if (v === 'Paid')    return '<span class="bp bp-green"><span class="dot"></span>Ödendi</span>';
-            if (v === 'Pending') return '<span class="bp bp-yellow"><span class="dot"></span>Beklemede</span>';
-            if (v === 'Failed')  return '<span class="bp bp-red"><span class="dot"></span>Başarısız</span>';
+            if (v === 'Paid') return '<span class="bp bp-green"><span class="dot"></span>Ödənilib</span>';
+            if (v === 'Pending') return '<span class="bp bp-yellow"><span class="dot"></span>Gözləmədə</span>';
+            if (v === 'Failed') return '<span class="bp bp-red"><span class="dot"></span>Uğursuz</span>';
             return '<span class="bp bp-gray"><span class="dot"></span>' + (v || '—') + '</span>';
         }
-
         function ticketBadge(v) {
             return v === 'Issued'
-                ? '<span class="bp bp-blue"><span class="dot"></span>Kesildi</span>'
-                : '<span class="bp bp-gray"><span class="dot"></span>Kesilmedi</span>';
+                ? '<span class="bp bp-blue"><span class="dot"></span>Kesilib</span>'
+                : '<span class="bp bp-gray"><span class="dot"></span>Kesilməyib</span>';
         }
-
         function typeBadge(v) {
-            var cls = v === 'Yetişkin' ? 'bp-blue' : v === 'Çocuk' ? 'bp-yellow' : 'bp-gray';
+            var cls = v === 'Yetişkin' ? 'bp-blue' : v === 'Uşaq' ? 'bp-yellow' : 'bp-gray';
             return '<span class="bp ' + cls + '">' + (v || '—') + '</span>';
         }
 
-        /* ── Filter ──────────────────────────────────────────── */
         function applyFilter() {
-            var name    = (document.getElementById('fName').value    || '').toLowerCase().trim();
-            var pnr     = (document.getElementById('fPnr').value     || '').toLowerCase().trim();
-            var checkin =  document.getElementById('fCheckin').value;
-            var payment =  document.getElementById('fPayment').value;
-            var type    =  document.getElementById('fType').value;
+            var name = (document.getElementById('fName').value || '').toLowerCase().trim();
+            var pnr = (document.getElementById('fPnr').value || '').toLowerCase().trim();
+            var checkin = document.getElementById('fCheckin').value;
+            var payment = document.getElementById('fPayment').value;
+            var type = document.getElementById('fType').value;
 
             filtered = allPassengers.filter(function(p) {
                 var fullName = (p.name + ' ' + p.surname).toLowerCase();
-                return (!name    || fullName.includes(name))
-                    && (!pnr     || (p.pnr || '').toLowerCase().includes(pnr))
+                return (!name || fullName.includes(name))
+                    && (!pnr || (p.pnr || '').toLowerCase().includes(pnr))
                     && (!checkin || p.checkin === checkin)
                     && (!payment || p.payment === payment)
-                    && (!type    || p.type    === type);
+                    && (!type || p.type === type);
             });
-
             currentPage = 1;
             render();
         }
 
         function clearFilter() {
-            document.getElementById('fName').value    = '';
-            document.getElementById('fPnr').value     = '';
+            document.getElementById('fName').value = '';
+            document.getElementById('fPnr').value = '';
             document.getElementById('fCheckin').value = '';
             document.getElementById('fPayment').value = '';
-            document.getElementById('fType').value    = '';
+            document.getElementById('fType').value = '';
             filtered = allPassengers.slice();
             currentPage = 1;
             render();
         }
 
-        /* ── Render ──────────────────────────────────────────── */
         function render() {
-            var total      = filtered.length;
+            var total = filtered.length;
             var totalPages = Math.max(1, Math.ceil(total / perPage));
             if (currentPage > totalPages) currentPage = totalPages;
-
-            var from  = total === 0 ? 0 : (currentPage - 1) * perPage + 1;
-            var to    = Math.min(currentPage * perPage, total);
+            var from = total === 0 ? 0 : (currentPage - 1) * perPage + 1;
+            var to = Math.min(currentPage * perPage, total);
             var slice = filtered.slice(from - 1, to);
 
-            document.getElementById('totalBadge').textContent = total + ' yolcu';
-            document.getElementById('pageInfo').textContent   = total === 0
-                ? 'Sonuç bulunamadı'
+            document.getElementById('totalBadge').textContent = total + ' sərnişin';
+            document.getElementById('pageInfo').textContent = total === 0
+                ? 'Nəticə tapılmadı'
                 : 'Showing ' + from + ' to ' + to + ' of ' + total + ' entries';
 
             var tbody = document.getElementById('tableBody');
-
             if (slice.length === 0) {
                 tbody.innerHTML =
                     '<tr><td colspan="10" class="text-center py-5 text-muted">' +
                         '<i class="bi bi-person-slash" style="font-size:36px;display:block;margin-bottom:10px;opacity:.2;"></i>' +
-                        'Yolcu bulunamadı.' +
+                        'Sərnişin tapılmadı.' +
                     '</td></tr>';
                 document.getElementById('pagination').innerHTML = '';
                 return;
@@ -919,11 +863,8 @@
 
             tbody.innerHTML = slice.map(function(p) {
                 var color = getColor(p.name);
-                var init  = initials(p.name, p.surname);
-
+                var init = initials(p.name, p.surname);
                 return '<tr>' +
-
-                    /* Yolcu */
                     '<td>' +
                         '<div class="pax-name-cell">' +
                             '<div class="pax-avatar" style="background:' + color + '1a;color:' + color + ';">' + init + '</div>' +
@@ -933,58 +874,37 @@
                             '</div>' +
                         '</div>' +
                     '</td>' +
-
-                    /* Cinsiyet */
                     '<td><span style="font-size:13px;color:#475569;">' +
-                        '<i class="bi bi-' + (p.gender === 'Erkek' ? 'gender-male text-primary' : p.gender === 'Kadın' ? 'gender-female text-danger' : 'dash') + ' me-1"></i>' +
+                        '<i class="bi bi-' + (p.gender === 'Kişi' ? 'gender-male text-primary' : p.gender === 'Qadın' ? 'gender-female text-danger' : 'dash') + ' me-1"></i>' +
                         (p.gender || '—') +
                     '</span></td>' +
-
-                    /* Tip */
                     '<td>' + typeBadge(p.type) + '</td>' +
-
-                    /* PNR */
                     '<td><span style="font-family:monospace;font-weight:700;font-size:12.5px;color:#0f172a;background:#f8fafc;padding:3px 8px;border-radius:6px;border:1px solid #f1f5f9;">' +
                         (p.pnr || '—') +
                     '</span></td>' +
-
-                    /* Koltuk */
                     '<td><span class="seat-badge">' + (p.seat || '—') + '</span></td>' +
-
-                    /* Check-in */
                     '<td>' + checkinBadge(p.checkin) + '</td>' +
-
-                    /* Ödeme */
                     '<td>' + paymentBadge(p.payment) + '</td>' +
-
-                    /* Bilet */
                     '<td>' + ticketBadge(p.ticket) + '</td>' +
-
-                    /* İletişim */
                     '<td><span style="font-size:12.5px;color:#64748b;white-space:nowrap;">' +
                         (p.phone ? '<i class="bi bi-telephone me-1" style="font-size:11px;"></i>' + p.phone : '—') +
                     '</span></td>' +
-
-                    /* İşlemler */
                     '<td>' +
                         '<div class="act-wrap">' +
-                            '<a href="#" class="aib aib-view" title="Detay"><i class="bi bi-eye-fill"></i></a>' +
-                            '<a href="#" class="aib aib-edit" title="Düzenle"><i class="bi bi-pencil-fill"></i></a>' +
-                            '<button class="aib aib-del" title="İptal" style="border:none;cursor:pointer;"><i class="bi bi-trash-fill"></i></button>' +
+                            '<a href="#" class="aib aib-view" title="Detal"><i class="bi bi-eye-fill"></i></a>' +
+                            '<a href="#" class="aib aib-edit" title="Düzəliş"><i class="bi bi-pencil-fill"></i></a>' +
+                            '<button class="aib aib-del" title="Ləğv et" style="border:none;cursor:pointer;"><i class="bi bi-trash-fill"></i></button>' +
                         '</div>' +
                     '</td>' +
-
                 '</tr>';
             }).join('');
 
             renderPagination(totalPages);
         }
 
-        /* ── Pagination ──────────────────────────────────────── */
         function renderPagination(totalPages) {
-            var ul   = document.getElementById('pagination');
+            var ul = document.getElementById('pagination');
             var html = '';
-
             html += '<li class="' + (currentPage === 1 ? 'disabled' : '') + '">' +
                 '<span onclick="' + (currentPage > 1 ? 'goPage(currentPage-1)' : '') + '"' +
                 ' style="cursor:' + (currentPage === 1 ? 'default' : 'pointer') + '">' +
@@ -1030,6 +950,5 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() { render(); });
-
     </script>
 }
