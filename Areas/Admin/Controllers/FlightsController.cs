@@ -32,8 +32,8 @@ namespace FlightBooking.Areas.Admin.Controllers
         }
         public async Task<IActionResult> FlightDetail(string id)
         {
-            //var flight = await _flightService.GetFlightByIdAsync(id);
-            //var passengers = await _flightService.GetFlightDetailsWithPassengers(id);
+            var flight = await _flightService.GetFlightByIdAsync(id);
+            var passengers = await _flightService.GetFlightDetailsWithPassengers(id);
 
             //ViewBag.FlightNumber = flight?.FlightNumber ?? "—";
             //ViewBag.AirlineCode = flight?.AirlineCode ?? "—";
@@ -53,9 +53,8 @@ namespace FlightBooking.Areas.Admin.Controllers
 
             ////TempData["PassengerName"] = passengers.Select(x => x.Name).FirstOrDefault();
 
-            //return View(passengers);
-
-            return View();
+            ViewBag.Flights = flight;
+            return View(passengers);
         }
     }
 }
