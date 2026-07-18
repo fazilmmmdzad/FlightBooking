@@ -58,10 +58,10 @@ namespace FlightBooking.Services.FlightServices
                     PassengerType = p.PassengerType,
                     PnrNumber = b.PnrNumber,       
                     Phone = b.ContactPhone,
-                    //SeatNumber = p.SeatNumber,
-                    //CheckInStatus = p.CheckInStatus,
-                    //TicketStatus = p.TicketStatus,
-                    //PassengerId = p.PassengerId
+                    SeatNumber = p.SeatNumber,
+                    CheckInStatus = p.CheckInStatus,
+                    TicketStatus = p.TicketStatus,
+                    PassengerId = p.PassengerId
                 }))
                 .ToList();
 

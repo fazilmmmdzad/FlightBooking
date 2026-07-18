@@ -170,6 +170,16 @@
             line-height: 1;
         }
 
+        .aib-checkin {
+            background: #f0fdf4;
+            color: #16a34a;
+            border-color: #bbf7d0;
+        }
+
+            .aib-checkin:hover {
+                background: #bbf7d0;
+            }
+
         .mini-stat-lbl {
             font-size: 11px;
             color: #94a3b8;
@@ -727,7 +737,8 @@
                                 <th>CİNSİYYƏT</th>
                                 <th>TİP</th>
                                 <th>PNR</th>
-                                <th>KOLTUK</th>
+                                <th>SƏRNİŞİN ID</th>
+                                <th>OTURACAQ</th>
                                 <th>CHECK-IN</th>
                                 <th>ÖDƏNİŞ</th>
                                 <th>BİLET</th>
@@ -752,18 +763,19 @@
         var allPassengers = [
             @if (Model != null && Model.Any())
             {
-                    foreach (var p in Model)
-                    {
-                            @:{ name: "@p.Name", surname: "@p.Surname",
-                            @: email: "@(p.Email ?? "")", phone: "@(p.Phone ?? "")",
-                            @: gender: "@(p.Gender ?? "")",
-                            @: type: "@(p.PassengerType ?? "")",
-                            @: pnr: "@(p.PnrNumber ?? "")",
-                            @: seat: "@(p.SeatNumber ?? "—")",
-                            @: checkin: "@(p.CheckInStatus ?? "Not Checked")",
-                            @: payment: "@(p.PaymentStatus ?? "Pending")",
-                            @: ticket: "@(p.TicketStatus ?? "Not Issued")" },
-                    }
+                        foreach (var p in Model)
+                        {
+                                    @:{ name: "@p.Name", surname: "@p.Surname",
+                                    @: email: "@(p.Email ?? "")", phone: "@(p.Phone ?? "")",
+                                    @: gender: "@(p.Gender ?? "")",
+                                    @: type: "@(p.PassengerType ?? "")",
+                                    @: pnr: "@(p.PnrNumber ?? "")",
+                                    @: passengerId: "@p.PassengerId",
+                                    @: seat: "@(p.SeatNumber ?? "—")",
+                                    @: checkin: "@(p.CheckInStatus ?? "Not Checked")",
+                                    @: payment: "@(p.PaymentStatus ?? "Pending")",
+                                    @: ticket: "@(p.TicketStatus ?? "Not Issued")" },
+                        }
             }
         ];
 
@@ -874,13 +886,20 @@
                             '</div>' +
                         '</div>' +
                     '</td>' +
-                    '<td><span style="font-size:13px;color:#475569;">' +
-                        '<i class="bi bi-' + (p.gender === 'Kişi' ? 'gender-male text-primary' : p.gender === 'Qadın' ? 'gender-female text-danger' : 'dash') + ' me-1"></i>' +
-                        (p.gender || '—') +
-                    '</span></td>' +
+                                                    '<td><span style="font-size:13px;color:#475569;">' +
+            ((p.gender || '').toLowerCase().includes('ki')
+                ? '<i class="fa-solid fa-mars me-1 text-primary"></i>'
+                : (p.gender || '').toLowerCase().includes('qa')
+                    ? '<i class="fa-solid fa-venus me-1 text-danger"></i>'
+                    : '<i class="fa-solid fa-user me-1"></i>') +
+            (p.gender || '—') +
+        '</span></td>' +
                     '<td>' + typeBadge(p.type) + '</td>' +
                     '<td><span style="font-family:monospace;font-weight:700;font-size:12.5px;color:#0f172a;background:#f8fafc;padding:3px 8px;border-radius:6px;border:1px solid #f1f5f9;">' +
                         (p.pnr || '—') +
+                    '</span></td>' +
+                    '<td><span class="pid-badge">' +
+                        '#' + (p.passengerId || '—') +
                     '</span></td>' +
                     '<td><span class="seat-badge">' + (p.seat || '—') + '</span></td>' +
                     '<td>' + checkinBadge(p.checkin) + '</td>' +
@@ -893,6 +912,7 @@
                         '<div class="act-wrap">' +
                             '<a href="#" class="aib aib-view" title="Detal"><i class="bi bi-eye-fill"></i></a>' +
                             '<a href="#" class="aib aib-edit" title="Düzəliş"><i class="bi bi-pencil-fill"></i></a>' +
+                            '<button class="aib aib-checkin" title="Check-in Et" style="border:none;cursor:pointer;" onclick="doCheckin(\'' + p.passengerId + '\')"><i class="bi bi-person-check-fill"></i></button>' +
                             '<button class="aib aib-del" title="Ləğv et" style="border:none;cursor:pointer;"><i class="bi bi-trash-fill"></i></button>' +
                         '</div>' +
                     '</td>' +
@@ -925,6 +945,10 @@
                 '<i class="bi bi-chevron-right" style="font-size:10px;"></i></span></li>';
 
             ul.innerHTML = html;
+        }
+
+        function doCheckin(passengerId) {
+                window.location.href = '/Admin/CheckIn/Index/' + passengerId;
         }
 
         function buildRange(cur, total) {
