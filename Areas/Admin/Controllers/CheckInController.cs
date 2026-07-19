@@ -1,15 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FlightBooking.Services.BookingServices;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FlightBooking.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class CheckInController : Controller
     {
-        public IActionResult Index(string id)
+        private readonly IBookingService _bookingService;
+        public CheckInController(IBookingService bookingService)
         {
-            ViewBag.FlightNumber = TempData["FlightNumber"];
-            ViewBag.DepartureTime = TempData["DepartureTime"];
-            ViewBag.ArrivalTime = TempData["ArrivalTime"];
+            _bookingService = bookingService;
+        }
+        public async Task<IActionResult> Index(string id)
+        {
+            ViewBag.FlightNumber = TempData.Peek("FlightNumber");
+            ViewBag.DepartureTime = TempData.Peek("DepartureTime");
+            ViewBag.ArrivalTime = TempData.Peek("ArrivalTime");
+
+            var passenger = await _bookingService.GetPassengerNameByIdAsync(id);
+            //var pnrNumber = await _bookingService.GetPnrByPassengerIdAsync(id);
+            //var gate = await _bookingService.GetGateByPassengerIdAsync(id);
+            
+            ViewBag.Name = passenger.Name;
+            ViewBag.Surname = passenger.Surname;
+            ViewBag.PassengerName = passenger.Name + " " + passenger.Surname;
+            //ViewBag.PnrNumber = pnrNumber;
+            //ViewBag.Pnr = pnrNumber;   // modal'da @ViewBag.Pnr kullanılıyor
+            //ViewBag.Gate = gate;
+
             return View();
         }
     }

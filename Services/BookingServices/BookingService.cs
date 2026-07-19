@@ -57,6 +57,21 @@ public class BookingService : IBookingService
         await _bookingCollection.InsertOneAsync(booking);
     }
 
+    public async Task<(string Name, string Surname)> GetPassengerNameByIdAsync(string passengerId)
+    {
+        var booking = await _bookingCollection.Find(x => x.Passengers.Any(p => p.PassengerId == passengerId)).FirstOrDefaultAsync();
+
+        if (booking == null)
+            return (null, null);
+
+        var passenger = booking.Passengers.FirstOrDefault(p => p.PassengerId == passengerId);
+
+        if (passenger == null)
+            return (null, null);
+
+        return (passenger.Name, passenger.Surname);
+    }
+
     private async Task<string> GenerateUniquePnrAsync()
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
