@@ -1,0 +1,45 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Flight Forecast";
+    Layout = "~/Areas/Admin/Views/Layout/AdminLayout.cshtml";
+}
+
+<main class="main-content" id="main-content">
+
+    <h2>Uçuş Doluluq Təxmini</h2>
+
+    <form method="post">
+
+        <label>Uçuş Tarixi</label>
+        <br />
+        <input type="date" name="flightDate" class="form-control" />
+
+        <br />
+
+        <label>Uçuş Tipi</label>
+        <br />
+        <select name="flightType" class="form-control">
+            <option value="Morning">Morning</option>
+            <option value="Evening">Evening</option>
+        </select>
+
+        <br /><br />
+
+        <button class="btn btn-primary">Təxmin Et</button>
+
+    </form>
+
+    @if (ViewBag.Result != null)
+    {
+        <hr />
+
+        <h3>@ViewBag.Result</h3>
+
+        <h4>
+            Doluluk Ehtimalı:
+            %@((ViewBag.Probability * 100).ToString("0.00"))
+        </h4>
+    }
+</main>

@@ -1,4 +1,5 @@
-﻿using FlightBooking.Services.MachineLearningServices;
+﻿using FlightBooking.MachineLearningModels;
+using FlightBooking.Services.MachineLearningServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FlightBooking.Areas.Admin.Controllers
@@ -24,6 +25,34 @@ namespace FlightBooking.Areas.Admin.Controllers
 
             _flightMlService.Train(mlData);
             
+            return View();
+        }
+
+        public IActionResult Predict()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Predict(DateTime flightDate, string flightType)
+        {
+            var input = new FlightData
+            {
+                Month = flightDate.Month,
+
+                DayOfWeek = (float)flightDate.DayOfWeek,
+
+                FlightType = flightType == "Morning" ? 0 : 1
+            };
+
+            var prediction = _flightMlService.Predict(input);
+
+            ViewBag.Result = prediction.PredictedLabel
+                ? "Bu uçuş böyük ehtimal dolacaqdır."
+                : "Bu uçuşda yoğunluq az görünür.";
+
+            ViewBag.Probability = prediction.Probability;
+
             return View();
         }
     }
