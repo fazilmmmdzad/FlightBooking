@@ -11,11 +11,31 @@ namespace FlightBooking.Services.MachineLearningServices
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
-            _collection = database.GetCollection<FlightRawData>("FligtForecastDatas");
+            _collection = database.GetCollection<FlightRawData>("FlightDemandHistories");
         }
         public async Task<List<FlightRawData>> GetAllAsync()
         {
             return await _collection.Find(_ => true).ToListAsync();
+        }
+        public async Task<List<FlightData>> ConvertToMlDataAsync()
+        {
+            var rawData = await GetAllAsync();
+
+            if (rawData.Count == 0)
+                throw new Exception("MongoDB collection is empty.");
+
+            var mlData = rawData.Select(x => new FlightData
+            {
+                Month = DateTime.Parse(x.FlightDate).Month,
+
+                DayOfWeek = (float)DateTime.Parse(x.FlightDate).DayOfWeek,
+
+                FlightType = x.FlightType == "Morning" ? 0 : 1,
+
+                IsFull = x.PassengerCount >= x.Capacity * 0.9
+            }).ToList();
+
+            return mlData;
         }
     }
 }
