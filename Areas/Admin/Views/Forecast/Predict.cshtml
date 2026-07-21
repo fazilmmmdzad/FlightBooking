@@ -1,7 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
     ViewData["Title"] = "Flight Forecast";
     Layout = "~/Areas/Admin/Views/Layout/AdminLayout.cshtml";
 }
@@ -38,7 +35,7 @@
         <h3>@ViewBag.Result</h3>
 
         <h4>
-            Doluluk Ehtimalı:
+            Doluluq Ehtimalı:
             %@((ViewBag.Probability * 100).ToString("0.00"))
         </h4>
     }
