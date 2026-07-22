@@ -9,7 +9,7 @@
     Func<string, string> riskColor = (r) => r == "Critical" ? "#dc2626" : r == "High" ? "#ea580c" : r == "Medium" ? "#d97706" : "#16a34a";
     Func<string, string> riskBg = (r) => r == "Critical" ? "#fef2f2" : r == "High" ? "#fff7ed" : r == "Medium" ? "#fffbeb" : "#f0fdf4";
     Func<string, string> riskBorder = (r) => r == "Critical" ? "#fecaca" : r == "High" ? "#fed7aa" : r == "Medium" ? "#fde68a" : "#bbf7d0";
-    Func<string, string> riskLabel = (r) => r == "Critical" ? "Kritik" : r == "High" ? "Yüksek" : r == "Medium" ? "Orta" : "Düşük";
+    Func<string, string> riskLabel = (r) => r == "Critical" ? "Kritik" : r == "High" ? "Yüksək" : r == "Medium" ? "Orta" : "Aşağı";
     Func<string, string> riskIcon = (r) => r == "Critical" ? "bi-fire" : r == "High" ? "bi-exclamation-triangle-fill" : r == "Medium" ? "bi-dash-circle" : "bi-check-circle";
 }
 
@@ -21,7 +21,6 @@
             gap: 24px;
         }
 
-        /* ─── HEADER ─── */
         .ob-header {
             display: flex;
             align-items: flex-start;
@@ -86,7 +85,6 @@
                 color: #0f172a;
             }
 
-        /* ─── FLIGHT OPERATION SUMMARY ─── */
         .fos-card {
             background: #fff;
             border: 1px solid #e8edf5;
@@ -354,7 +352,6 @@
                 font-size: 15px;
             }
 
-        /* ─── KPI CARDS ─── */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(6,1fr);
@@ -503,7 +500,6 @@
             color: #0891b2;
         }
 
-        /* ─── HEATMAP ─── */
         .heatmap-card {
             background: #fff;
             border: 1px solid #e8edf5;
@@ -615,7 +611,6 @@
             opacity: .8;
         }
 
-        /* ─── ANA TABLO ─── */
         .ob-table-card {
             background: #fff;
             border: 1px solid #e8edf5;
@@ -876,7 +871,6 @@
                 font-size: 10px;
             }
 
-        /* ─── AIRCRAFT ─── */
         .aircraft-grid {
             display: grid;
             grid-template-columns: repeat(4,1fr);
@@ -979,7 +973,6 @@
             font-weight: 600;
         }
 
-        /* ─── AI INSIGHTS ─── */
         .ins-grid {
             display: grid;
             grid-template-columns: repeat(3,1fr);
@@ -1038,7 +1031,6 @@
             font-weight: 600;
         }
 
-        /* ─── PRESSURE WIDGETS ─── */
         .pressure-grid {
             display: grid;
             grid-template-columns: repeat(5,1fr);
@@ -1111,7 +1103,6 @@
             gap: 4px;
         }
 
-        /* ─── TIMELINE ─── */
         .timeline-card {
             background: #fff;
             border: 1px solid #e8edf5;
@@ -1257,7 +1248,6 @@
             flex-shrink: 0;
         }
 
-        /* ─── SECTION TITLE ─── */
         .ob-sec-title {
             font-size: 15px;
             font-weight: 700;
@@ -1280,7 +1270,6 @@
             margin-left: 4px;
         }
 
-        /* ─── RESPONSIVE ─── */
         @@media (max-width:1200px) {
             .kpi-grid {
                 grid-template-columns: repeat(3,1fr);
@@ -1338,7 +1327,6 @@
     <div class="container-fluid px-4 py-4">
         <div class="ob-page">
 
-            @* ═══════ 1 — HEADER ═══════ *@
             <div class="ob-header">
                 <div>
                     <nav aria-label="breadcrumb">
@@ -1350,7 +1338,7 @@
                     <h2 class="ob-title">AI Airline Risk Intelligence</h2>
                     <p class="ob-sub">
                         <i class="bi bi-robot me-1"></i>
-                        Overbooking Control Center &bull; @Model.TotalFlightCount uçuş &bull; @Model.TotalPassengerCount yolcu
+                        Overbooking Control Center &bull; @Model.TotalFlightCount uçuş &bull; @Model.TotalPassengerCount sərnişin
                     </p>
                 </div>
                 <div class="ob-actions">
@@ -1359,14 +1347,13 @@
                 </div>
             </div>
 
-            @* ═══════ 2 — FLIGHT OPERATION SUMMARY ═══════ *@
             <div class="fos-card">
                 <div class="fos-top">
                     <div class="fos-route-wrap">
                         <div class="fos-airport">
                             <span class="fos-iata">SAW</span>
                             <span class="fos-apt-name">İstanbul Sabiha Gökçen</span>
-                            <span class="fos-apt-country">Türkiye</span>
+                            <span class="fos-apt-country">Türkiyə</span>
                         </div>
                         <div class="fos-connector">
                             <div class="fos-conn-line">
@@ -1377,21 +1364,21 @@
                                 <span class="fos-conn-dot"></span>
                             </div>
                             <div class="fos-conn-meta">
-                                <span><i class="bi bi-clock me-1"></i>~2s 30dk</span>
+                                <span><i class="bi bi-clock me-1"></i>~2s 30dəq</span>
                                 <span><i class="bi bi-arrows-expand me-1"></i>1.380 km</span>
                             </div>
                         </div>
                         <div class="fos-airport fos-airport-right">
                             <span class="fos-iata">BGY</span>
                             <span class="fos-apt-name">Milano Bergamo</span>
-                            <span class="fos-apt-country">İtalya</span>
+                            <span class="fos-apt-country">İtaliya</span>
                         </div>
                     </div>
                     <div class="fos-badges">
-                        <span class="fos-badge fb-blue"><i class="bi bi-calendar3"></i> 2026 Yıllık</span>
-                        <span class="fos-badge fb-green"><i class="bi bi-check-circle-fill"></i> Aktif Rota</span>
-                        <span class="fos-badge fb-purple"><i class="bi bi-robot"></i> AI Aktif</span>
-                        <span class="fos-badge fb-orange"><i class="bi bi-shield-exclamation"></i> Risk Monitörü</span>
+                        <span class="fos-badge fb-blue"><i class="bi bi-calendar3"></i> 2026 İllik</span>
+                        <span class="fos-badge fb-green"><i class="bi bi-check-circle-fill"></i> Aktiv Marşrut</span>
+                        <span class="fos-badge fb-purple"><i class="bi bi-robot"></i> AI Aktiv</span>
+                        <span class="fos-badge fb-orange"><i class="bi bi-shield-exclamation"></i> Risk Monitoru</span>
                     </div>
                 </div>
                 <div class="fos-divider"></div>
@@ -1399,16 +1386,16 @@
                     <div class="fos-meta-item">
                         <div class="fos-meta-ico" style="background:#eff6ff;color:#2563eb;"><i class="bi bi-calendar-range"></i></div>
                         <div class="fos-meta-body">
-                            <span class="fos-meta-lbl">Analiz Dönemi</span>
-                            <span class="fos-meta-val">01 Oca — 31 Ara 2026</span>
-                            <span class="fos-meta-sub">365 günlük veri seti</span>
+                            <span class="fos-meta-lbl">Analiz Dövrü</span>
+                            <span class="fos-meta-val">01 Yan — 31 Dek 2026</span>
+                            <span class="fos-meta-sub">365 günlük məlumat toplusu</span>
                         </div>
                     </div>
                     <div class="fos-meta-sep"></div>
                     <div class="fos-meta-item">
                         <div class="fos-meta-ico" style="background:#f0fdf4;color:#16a34a;"><i class="bi bi-airplane-engines-fill"></i></div>
                         <div class="fos-meta-body">
-                            <span class="fos-meta-lbl">Günlük Operasyon</span>
+                            <span class="fos-meta-lbl">Günlük Əməliyyat</span>
                             <span class="fos-meta-val">4 Uçuş / Gün</span>
                             <div class="fos-chips">
                                 <span class="fos-chip fc-morning">M1</span>
@@ -1422,16 +1409,16 @@
                     <div class="fos-meta-item">
                         <div class="fos-meta-ico" style="background:#f5f3ff;color:#7c3aed;"><i class="bi bi-database-fill"></i></div>
                         <div class="fos-meta-body">
-                            <span class="fos-meta-lbl">Toplam Veri</span>
-                            <span class="fos-meta-val">@Model.TotalFlightCount Kayıt</span>
-                            <span class="fos-meta-sub">@Model.TotalPassengerCount yolcu</span>
+                            <span class="fos-meta-lbl">Ümumi Məlumat</span>
+                            <span class="fos-meta-val">@Model.TotalFlightCount Qeyd</span>
+                            <span class="fos-meta-sub">@Model.TotalPassengerCount sərnişin</span>
                         </div>
                     </div>
                     <div class="fos-meta-sep"></div>
                     <div class="fos-meta-item">
                         <div class="fos-meta-ico" style="background:#fff7ed;color:#ea580c;"><i class="bi bi-cpu-fill"></i></div>
                         <div class="fos-meta-body">
-                            <span class="fos-meta-lbl">AI Modülleri</span>
+                            <span class="fos-meta-lbl">AI Modulları</span>
                             <div class="fos-chips">
                                 <span class="fos-chip fc-ai">Forecasting</span>
                                 <span class="fos-chip fc-ai">No-Show</span>
@@ -1443,7 +1430,7 @@
                     <div class="fos-meta-item" style="flex:1.4;">
                         <div class="fos-meta-ico" style="background:#fef2f2;color:#dc2626;"><i class="bi bi-airplane-fill"></i></div>
                         <div class="fos-meta-body">
-                            <span class="fos-meta-lbl">Kullanılan Filo</span>
+                            <span class="fos-meta-lbl">İstifadə Olunan Təyyarə Parkı</span>
                             <div class="fos-fleet">
                                 <span class="fos-fleet-item"><i class="bi bi-dot"></i>Airbus A320</span>
                                 <span class="fos-fleet-item"><i class="bi bi-dot"></i>Airbus A321</span>
@@ -1455,7 +1442,6 @@
                 </div>
             </div>
 
-            @* ═══════ 3 — KPI CARDS ═══════ *@
             <div class="kpi-grid">
                 <div class="kpi-card kc-blue">
                     <div class="kpi-top">
@@ -1465,13 +1451,13 @@
                     <div class="kpi-val">%@Model.AverageNoShowRate.ToString("0.0")</div>
                     <div class="kpi-foot">
                         <span class="kpi-bdg @(Model.AverageNoShowRate >= 7 ? "kb-red" : Model.AverageNoShowRate >= 5 ? "kb-orange" : "kb-green")">
-                            @(Model.AverageNoShowRate >= 7 ? "Yüksek" : Model.AverageNoShowRate >= 5 ? "Orta" : "Kontrollü")
-                        </span> tüm slotlar
+                            @(Model.AverageNoShowRate >= 7 ? "Yüksək" : Model.AverageNoShowRate >= 5 ? "Orta" : "Nəzarətdə")
+                        </span> bütün slotlar
                     </div>
                 </div>
                 <div class="kpi-card kc-red">
                     <div class="kpi-top">
-                        <div class="kpi-lbl">En Riskli Slot</div>
+                        <div class="kpi-lbl">Ən Riskli Slot</div>
                         <div class="kpi-ico" style="background:#fef2f2;color:#dc2626;"><i class="bi bi-exclamation-triangle-fill"></i></div>
                     </div>
                     <div class="kpi-val-sm">@Model.MostRiskySlot</div>
@@ -1479,31 +1465,31 @@
                 </div>
                 <div class="kpi-card kc-green">
                     <div class="kpi-top">
-                        <div class="kpi-lbl">En Stabil Slot</div>
+                        <div class="kpi-lbl">Ən Stabil Slot</div>
                         <div class="kpi-ico" style="background:#f0fdf4;color:#16a34a;"><i class="bi bi-shield-check-fill"></i></div>
                     </div>
                     <div class="kpi-val-sm">@Model.MostStableSlot</div>
-                    <div class="kpi-foot"><span class="kpi-bdg kb-green"><i class="bi bi-check-lg" style="font-size:9px;"></i> Stabil</span> en düşük no-show</div>
+                    <div class="kpi-foot"><span class="kpi-bdg kb-green"><i class="bi bi-check-lg" style="font-size:9px;"></i> Stabil</span> ən aşağı no-show</div>
                 </div>
                 <div class="kpi-card kc-orange">
                     <div class="kpi-top">
-                        <div class="kpi-lbl">Overbooking Önerisi</div>
+                        <div class="kpi-lbl">Overbooking Tövsiyəsi</div>
                         <div class="kpi-ico" style="background:#fffbeb;color:#d97706;"><i class="bi bi-airplane-fill"></i></div>
                     </div>
                     <div class="kpi-val">%@Model.SuggestedOverbookingRate.ToString("0.0")</div>
-                    <div class="kpi-foot"><span class="kpi-bdg kb-orange"><i class="bi bi-info-circle" style="font-size:9px;"></i></span> önerilen oran</div>
+                    <div class="kpi-foot"><span class="kpi-bdg kb-orange"><i class="bi bi-info-circle" style="font-size:9px;"></i></span> tövsiyə olunan nisbət</div>
                 </div>
                 <div class="kpi-card kc-purple">
                     <div class="kpi-top">
-                        <div class="kpi-lbl">Toplam Yolcu</div>
+                        <div class="kpi-lbl">Ümumi Sərnişin</div>
                         <div class="kpi-ico" style="background:#f5f3ff;color:#7c3aed;"><i class="bi bi-people-fill"></i></div>
                     </div>
                     <div class="kpi-val" style="font-size:20px;">@Model.TotalPassengerCount.ToString("N0")</div>
-                    <div class="kpi-foot"><span class="kpi-bdg kb-purple">2026</span> yıllık</div>
+                    <div class="kpi-foot"><span class="kpi-bdg kb-purple">2026</span> illik</div>
                 </div>
                 <div class="kpi-card kc-teal">
                     <div class="kpi-top">
-                        <div class="kpi-lbl">Toplam Uçuş</div>
+                        <div class="kpi-lbl">Ümumi Uçuş</div>
                         <div class="kpi-ico" style="background:#ecfeff;color:#0891b2;"><i class="bi bi-airplane-engines-fill"></i></div>
                     </div>
                     <div class="kpi-val">@Model.TotalFlightCount</div>
@@ -1511,25 +1497,24 @@
                 </div>
             </div>
 
-            @* ═══════ 4 — RISK HEATMAP ═══════ *@
             <div class="heatmap-card">
                 <div class="heatmap-head">
-                    <div class="heatmap-title"><i class="bi bi-grid-3x3-gap-fill"></i> Risk Heatmap — Slot x Hafta</div>
+                    <div class="heatmap-title"><i class="bi bi-grid-3x3-gap-fill"></i> Risk Heatmap — Slot x Həftə</div>
                     <div class="heatmap-legend">
-                        <div class="hml-item"><div class="hml-dot" style="background:#f0fdf4;border:1px solid #bbf7d0;"></div> Düşük</div>
+                        <div class="hml-item"><div class="hml-dot" style="background:#f0fdf4;border:1px solid #bbf7d0;"></div> Aşağı</div>
                         <div class="hml-item"><div class="hml-dot" style="background:#fffbeb;border:1px solid #fde68a;"></div> Orta</div>
-                        <div class="hml-item"><div class="hml-dot" style="background:#fff7ed;border:1px solid #fed7aa;"></div> Yüksek</div>
+                        <div class="hml-item"><div class="hml-dot" style="background:#fff7ed;border:1px solid #fed7aa;"></div> Yüksək</div>
                         <div class="hml-item"><div class="hml-dot" style="background:#fef2f2;border:1px solid #fecaca;"></div> Kritik</div>
                     </div>
                 </div>
                 <div class="heatmap-body">
                     @{
                         var slotNames = new[] { "Morning-1", "Morning-2", "Evening-1", "Evening-2" };
-                        var weekLabels = new[] { "Hafta 1", "Hafta 2", "Hafta 3", "Hafta 4" };
+                        var weekLabels = new[] { "Həftə 1", "Həftə 2", "Həftə 3", "Həftə 4" };
 
                         string HmBg(double rate) => rate >= 8 ? "#fef2f2" : rate >= 6 ? "#fff7ed" : rate >= 4 ? "#fffbeb" : "#f0fdf4";
                         string HmColor(double rate) => rate >= 8 ? "#dc2626" : rate >= 6 ? "#ea580c" : rate >= 4 ? "#d97706" : "#16a34a";
-                        string HmLbl(double rate) => rate >= 8 ? "Kritik" : rate >= 6 ? "Yüksek" : rate >= 4 ? "Orta" : "Düşük";
+                        string HmLbl(double rate) => rate >= 8 ? "Kritik" : rate >= 6 ? "Yüksək" : rate >= 4 ? "Orta" : "Aşağı";
                     }
                     <div class="heatmap-grid">
                         <div></div>
@@ -1558,36 +1543,35 @@
                 </div>
             </div>
 
-            @* ═══════ 5 — ANA TABLO ═══════ *@
             <div class="ob-table-card">
                 <div class="ob-table-head">
-                    <div class="ob-table-title"><i class="bi bi-table"></i> Overbooking Öneri Tablosu</div>
-                    <span class="ob-rec-count" id="obRecCount">@(Model.Recommendations?.Count ?? 0) kayıt</span>
+                    <div class="ob-table-title"><i class="bi bi-table"></i> Overbooking Tövsiyə Cədvəli</div>
+                    <span class="ob-rec-count" id="obRecCount">@(Model.Recommendations?.Count ?? 0) qeyd</span>
                 </div>
                 <div class="ob-filter-bar">
-                    <span class="ob-chip active" onclick="obFilter('all',this)">Tümü</span>
+                    <span class="ob-chip active" onclick="obFilter('all',this)">Hamısı</span>
                     <span class="ob-chip" onclick="obFilter('Critical',this)"><i class="bi bi-circle-fill" style="font-size:7px;color:#dc2626;"></i> Kritik</span>
-                    <span class="ob-chip" onclick="obFilter('High',this)"><i class="bi bi-circle-fill" style="font-size:7px;color:#ea580c;"></i> Yüksek</span>
+                    <span class="ob-chip" onclick="obFilter('High',this)"><i class="bi bi-circle-fill" style="font-size:7px;color:#ea580c;"></i> Yüksək</span>
                     <span class="ob-chip" onclick="obFilter('Medium',this)"><i class="bi bi-circle-fill" style="font-size:7px;color:#d97706;"></i> Orta</span>
-                    <span class="ob-chip" onclick="obFilter('Low',this)"><i class="bi bi-circle-fill" style="font-size:7px;color:#16a34a;"></i> Düşük</span>
+                    <span class="ob-chip" onclick="obFilter('Low',this)"><i class="bi bi-circle-fill" style="font-size:7px;color:#16a34a;"></i> Aşağı</span>
                     <div class="ob-search">
                         <i class="bi bi-search"></i>
-                        <input type="text" placeholder="Tarih / Slot..." oninput="obSearch(this.value)" />
+                        <input type="text" placeholder="Tarix / Slot..." oninput="obSearch(this.value)" />
                     </div>
                 </div>
                 <div style="overflow-x:auto;">
                     <table class="ob-table" id="obTable">
                         <thead>
                             <tr>
-                                <th>Tarih</th>
+                                <th>Tarix</th>
                                 <th>Slot</th>
                                 <th>Boarded Passenger</th>
-                                <th style="min-width:110px;">Kapasite</th>
-                                <th>Bek. No-Show</th>
-                                <th>Önerilen Satış</th>
-                                <th>Ekstra Koltuk</th>
+                                <th style="min-width:110px;">Tutum</th>
+                                <th>Gözlənilən No-Show</th>
+                                <th>Tövsiyə Olunan Satış</th>
+                                <th>Əlavə Oturacaq</th>
                                 <th>Risk</th>
-                                <th>AI Öneri</th>
+                                <th>AI Tövsiyə</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1600,7 +1584,7 @@
                                     string slotIco = slotCls == "sp-morning" ? "bi-sunrise" : "bi-moon-stars";
                                     string dayName = "";
                                     if (DateTime.TryParse(rec.FlightDate, out DateTime fd))
-                                        dayName = fd.ToString("ddd", new System.Globalization.CultureInfo("tr-TR"));
+                                        dayName = fd.ToString("ddd", new System.Globalization.CultureInfo("az-Latn-AZ"));
 
                                     <tr class="ob-row"
                                         data-risk="@rec.RiskLevel"
@@ -1663,136 +1647,134 @@
                 </div>
             </div>
 
-            @* ═══════ 6 — AIRCRAFT INTELLIGENCE ═══════ *@
             <div>
                 <h3 class="ob-sec-title">
                     <i class="bi bi-airplane-engines-fill"></i> Aircraft Intelligence
-                    <span class="ob-sec-sub">Uçak tipi bazlı risk profili</span>
+                    <span class="ob-sec-sub">Təyyarə tipinə əsaslanan risk profili</span>
                 </h3>
                 <div class="aircraft-grid">
 
                     <div class="aircraft-card">
                         <div class="ac-header">
                             <div class="ac-ico" style="background:#eff6ff;color:#2563eb;"><i class="bi bi-airplane-fill"></i></div>
-                            <div><div class="ac-name">Airbus A320</div><div class="ac-type">180 koltuk · Narrow-body</div></div>
+                            <div><div class="ac-name">Airbus A320</div><div class="ac-type">180 oturacaq · Narrow-body</div></div>
                         </div>
                         <div class="ac-metrics">
                             <div class="ac-metric">
-                                <div class="ac-metric-header"><span class="ac-metric-lbl">Operasyon Riski</span><span class="ac-metric-val" style="color:#d97706;">Orta</span></div>
+                                <div class="ac-metric-header"><span class="ac-metric-lbl">Əməliyyat Riski</span><span class="ac-metric-val" style="color:#d97706;">Orta</span></div>
                                 <div class="ac-bar-bg"><div class="ac-bar-fill" style="width:55%;background:#d97706;"></div></div>
                             </div>
                             <div class="ac-metric">
-                                <div class="ac-metric-header"><span class="ac-metric-lbl">No-Show Eğilimi</span><span class="ac-metric-val" style="color:#2563eb;">%5.2</span></div>
+                                <div class="ac-metric-header"><span class="ac-metric-lbl">No-Show Meyli</span><span class="ac-metric-val" style="color:#2563eb;">%5.2</span></div>
                                 <div class="ac-bar-bg"><div class="ac-bar-fill" style="width:52%;background:#2563eb;"></div></div>
                             </div>
                             <div class="ac-metric">
-                                <div class="ac-metric-header"><span class="ac-metric-lbl">Overbooking Uygunluğu</span><span class="ac-metric-val" style="color:#16a34a;">Yüksek</span></div>
+                                <div class="ac-metric-header"><span class="ac-metric-lbl">Overbooking Uyğunluğu</span><span class="ac-metric-val" style="color:#16a34a;">Yüksək</span></div>
                                 <div class="ac-bar-bg"><div class="ac-bar-fill" style="width:75%;background:#16a34a;"></div></div>
                             </div>
                         </div>
                         <div class="ac-tags">
                             <span class="ac-tag" style="background:#eff6ff;color:#2563eb;">Short-haul</span>
-                            <span class="ac-tag" style="background:#f0fdf4;color:#16a34a;">Uygun</span>
+                            <span class="ac-tag" style="background:#f0fdf4;color:#16a34a;">Uyğun</span>
                         </div>
                     </div>
 
                     <div class="aircraft-card">
                         <div class="ac-header">
                             <div class="ac-ico" style="background:#f5f3ff;color:#7c3aed;"><i class="bi bi-airplane-fill"></i></div>
-                            <div><div class="ac-name">Airbus A321</div><div class="ac-type">220 koltuk · Narrow-body</div></div>
+                            <div><div class="ac-name">Airbus A321</div><div class="ac-type">220 oturacaq · Narrow-body</div></div>
                         </div>
                         <div class="ac-metrics">
                             <div class="ac-metric">
-                                <div class="ac-metric-header"><span class="ac-metric-lbl">Operasyon Riski</span><span class="ac-metric-val" style="color:#16a34a;">Düşük</span></div>
+                                <div class="ac-metric-header"><span class="ac-metric-lbl">Əməliyyat Riski</span><span class="ac-metric-val" style="color:#16a34a;">Aşağı</span></div>
                                 <div class="ac-bar-bg"><div class="ac-bar-fill" style="width:35%;background:#16a34a;"></div></div>
                             </div>
                             <div class="ac-metric">
-                                <div class="ac-metric-header"><span class="ac-metric-lbl">No-Show Eğilimi</span><span class="ac-metric-val" style="color:#2563eb;">%4.8</span></div>
+                                <div class="ac-metric-header"><span class="ac-metric-lbl">No-Show Meyli</span><span class="ac-metric-val" style="color:#2563eb;">%4.8</span></div>
                                 <div class="ac-bar-bg"><div class="ac-bar-fill" style="width:48%;background:#2563eb;"></div></div>
                             </div>
                             <div class="ac-metric">
-                                <div class="ac-metric-header"><span class="ac-metric-lbl">Overbooking Uygunluğu</span><span class="ac-metric-val" style="color:#16a34a;">Çok Yüksek</span></div>
+                                <div class="ac-metric-header"><span class="ac-metric-lbl">Overbooking Uyğunluğu</span><span class="ac-metric-val" style="color:#16a34a;">Çox Yüksək</span></div>
                                 <div class="ac-bar-bg"><div class="ac-bar-fill" style="width:88%;background:#16a34a;"></div></div>
                             </div>
                         </div>
                         <div class="ac-tags">
-                            <span class="ac-tag" style="background:#f5f3ff;color:#7c3aed;">Geniş Kapasite</span>
-                            <span class="ac-tag" style="background:#f0fdf4;color:#16a34a;">Tercih Edilen</span>
+                            <span class="ac-tag" style="background:#f5f3ff;color:#7c3aed;">Geniş Tutum</span>
+                            <span class="ac-tag" style="background:#f0fdf4;color:#16a34a;">Üstünlük Verilən</span>
                         </div>
                     </div>
 
                     <div class="aircraft-card">
                         <div class="ac-header">
                             <div class="ac-ico" style="background:#fff7ed;color:#ea580c;"><i class="bi bi-airplane-fill"></i></div>
-                            <div><div class="ac-name">Boeing 737 MAX</div><div class="ac-type">189 koltuk · Narrow-body</div></div>
+                            <div><div class="ac-name">Boeing 737 MAX</div><div class="ac-type">189 oturacaq · Narrow-body</div></div>
                         </div>
                         <div class="ac-metrics">
                             <div class="ac-metric">
-                                <div class="ac-metric-header"><span class="ac-metric-lbl">Operasyon Riski</span><span class="ac-metric-val" style="color:#dc2626;">Yüksek</span></div>
+                                <div class="ac-metric-header"><span class="ac-metric-lbl">Əməliyyat Riski</span><span class="ac-metric-val" style="color:#dc2626;">Yüksək</span></div>
                                 <div class="ac-bar-bg"><div class="ac-bar-fill" style="width:72%;background:#dc2626;"></div></div>
                             </div>
                             <div class="ac-metric">
-                                <div class="ac-metric-header"><span class="ac-metric-lbl">No-Show Eğilimi</span><span class="ac-metric-val" style="color:#2563eb;">%6.9</span></div>
+                                <div class="ac-metric-header"><span class="ac-metric-lbl">No-Show Meyli</span><span class="ac-metric-val" style="color:#2563eb;">%6.9</span></div>
                                 <div class="ac-bar-bg"><div class="ac-bar-fill" style="width:69%;background:#2563eb;"></div></div>
                             </div>
                             <div class="ac-metric">
-                                <div class="ac-metric-header"><span class="ac-metric-lbl">Overbooking Uygunluğu</span><span class="ac-metric-val" style="color:#d97706;">Orta</span></div>
+                                <div class="ac-metric-header"><span class="ac-metric-lbl">Overbooking Uyğunluğu</span><span class="ac-metric-val" style="color:#d97706;">Orta</span></div>
                                 <div class="ac-bar-bg"><div class="ac-bar-fill" style="width:50%;background:#d97706;"></div></div>
                             </div>
                         </div>
                         <div class="ac-tags">
-                            <span class="ac-tag" style="background:#fff7ed;color:#ea580c;">Dikkat</span>
-                            <span class="ac-tag" style="background:#fef2f2;color:#dc2626;">Yüksek Risk</span>
+                            <span class="ac-tag" style="background:#fff7ed;color:#ea580c;">Diqqət</span>
+                            <span class="ac-tag" style="background:#fef2f2;color:#dc2626;">Yüksək Risk</span>
                         </div>
                     </div>
 
                     <div class="aircraft-card">
                         <div class="ac-header">
                             <div class="ac-ico" style="background:#f0fdf4;color:#16a34a;"><i class="bi bi-airplane-fill"></i></div>
-                            <div><div class="ac-name">A321neo HD</div><div class="ac-type">240 koltuk · High Density</div></div>
+                            <div><div class="ac-name">A321neo HD</div><div class="ac-type">240 oturacaq · High Density</div></div>
                         </div>
                         <div class="ac-metrics">
                             <div class="ac-metric">
-                                <div class="ac-metric-header"><span class="ac-metric-lbl">Operasyon Riski</span><span class="ac-metric-val" style="color:#16a34a;">Çok Düşük</span></div>
+                                <div class="ac-metric-header"><span class="ac-metric-lbl">Əməliyyat Riski</span><span class="ac-metric-val" style="color:#16a34a;">Çox Aşağı</span></div>
                                 <div class="ac-bar-bg"><div class="ac-bar-fill" style="width:22%;background:#16a34a;"></div></div>
                             </div>
                             <div class="ac-metric">
-                                <div class="ac-metric-header"><span class="ac-metric-lbl">No-Show Eğilimi</span><span class="ac-metric-val" style="color:#2563eb;">%3.9</span></div>
+                                <div class="ac-metric-header"><span class="ac-metric-lbl">No-Show Meyli</span><span class="ac-metric-val" style="color:#2563eb;">%3.9</span></div>
                                 <div class="ac-bar-bg"><div class="ac-bar-fill" style="width:39%;background:#2563eb;"></div></div>
                             </div>
                             <div class="ac-metric">
-                                <div class="ac-metric-header"><span class="ac-metric-lbl">Overbooking Uygunluğu</span><span class="ac-metric-val" style="color:#16a34a;">Maksimum</span></div>
+                                <div class="ac-metric-header"><span class="ac-metric-lbl">Overbooking Uyğunluğu</span><span class="ac-metric-val" style="color:#16a34a;">Maksimum</span></div>
                                 <div class="ac-bar-bg"><div class="ac-bar-fill" style="width:95%;background:#16a34a;"></div></div>
                             </div>
                         </div>
                         <div class="ac-tags">
                             <span class="ac-tag" style="background:#ecfeff;color:#0891b2;">High Density</span>
-                            <span class="ac-tag" style="background:#f0fdf4;color:#16a34a;">En Verimli</span>
+                            <span class="ac-tag" style="background:#f0fdf4;color:#16a34a;">Ən Səmərəli</span>
                         </div>
                     </div>
 
                 </div>
             </div>
 
-            @* ═══════ 7 — AI OPERATIONAL INSIGHTS ═══════ *@
             @if (Model.AiInsights != null && Model.AiInsights.Any())
             {
                 <div>
                     <h3 class="ob-sec-title">
                         <i class="bi bi-lightbulb-fill"></i> AI Operational Insights
-                        <span class="ob-sec-sub">@Model.AiInsights.Count öneri üretildi</span>
+                        <span class="ob-sec-sub">@Model.AiInsights.Count tövsiyə yaradıldı</span>
                     </h3>
                     <div class="ins-grid">
                         @{
                             var styles = new[] {
                                         ("bi-exclamation-triangle-fill","#fef2f2","#dc2626","#fef2f2","#dc2626","Kritik"),
-                                        ("bi-airplane-fill",            "#eff6ff","#2563eb","#eff6ff","#2563eb","Öneri"),
-                                        ("bi-graph-up-arrow",           "#fffbeb","#d97706","#fffbeb","#d97706","Strateji"),
-                                        ("bi-shield-check-fill",        "#f0fdf4","#16a34a","#f0fdf4","#16a34a","Pozitif"),
-                                        ("bi-people-fill",              "#f5f3ff","#7c3aed","#f5f3ff","#7c3aed","Planlama"),
-                                        ("bi-currency-dollar",          "#ecfdf5","#059669","#f0fdf4","#16a34a","Fırsat"),
-                                        ("bi-calendar-week",            "#fffbeb","#d97706","#fffbeb","#d97706","Hafta Sonu"),
-                                        ("bi-lightning-charge-fill",    "#fef2f2","#dc2626","#fef2f2","#dc2626","Acil"),
+                                        ("bi-airplane-fill",            "#eff6ff","#2563eb","#eff6ff","#2563eb","Tövsiyə"),
+                                        ("bi-graph-up-arrow",           "#fffbeb","#d97706","#fffbeb","#d97706","Strategiya"),
+                                        ("bi-shield-check-fill",        "#f0fdf4","#16a34a","#f0fdf4","#16a34a","Müsbət"),
+                                        ("bi-people-fill",              "#f5f3ff","#7c3aed","#f5f3ff","#7c3aed","Planlaşdırma"),
+                                        ("bi-currency-dollar",          "#ecfdf5","#059669","#f0fdf4","#16a34a","Fürsət"),
+                                        ("bi-calendar-week",            "#fffbeb","#d97706","#fffbeb","#d97706","Həftə Sonu"),
+                                        ("bi-lightning-charge-fill",    "#fef2f2","#dc2626","#fef2f2","#dc2626","Təcili"),
                                         };
                             int idx = 0;
                         }
@@ -1803,7 +1785,7 @@
                             <div class="ins-card">
                                 <div class="ins-ico" style="background:@s.Item2;color:@s.Item3;"><i class="bi @s.Item1"></i></div>
                                 <div>
-                                    <div class="ins-title">AI Öneri #@idx</div>
+                                    <div class="ins-title">AI Tövsiyə #@idx</div>
                                     <div class="ins-desc">@insight</div>
                                     <span class="ins-tag" style="background:@s.Item4;color:@s.Item5;">
                                         <i class="bi bi-stars"></i> @s.Item6
@@ -1815,11 +1797,10 @@
                 </div>
             }
 
-            @* ═══════ 8 — OPERATIONAL PRESSURE WIDGETS ═══════ *@
             <div>
                 <h3 class="ob-sec-title">
-                    <i class="bi bi-speedometer2"></i> Operasyonel Baskı Göstergeleri
-                    <span class="ob-sec-sub">Model'den türetilen anlık durum</span>
+                    <i class="bi bi-speedometer2"></i> Əməliyyat Təzyiq Göstəriciləri
+                    <span class="ob-sec-sub">Modeldən əldə edilən anlıq vəziyyət</span>
                 </h3>
                 @{
                     double gatePressure = Math.Min(Model.AverageNoShowRate * 10, 100);
@@ -1835,40 +1816,39 @@
                         <div class="pc-top"><span class="pc-lbl">Gate Pressure</span><div class="pc-ico" style="background:#eff6ff;color:#2563eb;"><i class="bi bi-door-open-fill"></i></div></div>
                         <div class="pc-val" style="color:@PressureColor(gatePressure);">%@gatePressure.ToString("0")</div>
                         <div class="pc-bar-bg"><div class="pc-bar-fill" style="width:@gatePressure.ToString("0", System.Globalization.CultureInfo.InvariantCulture)%;background:@PressureColor(gatePressure);"></div></div>
-                        <div class="pc-foot"><i class="bi bi-info-circle"></i> No-show'a bağlı gate baskısı</div>
+                        <div class="pc-foot"><i class="bi bi-info-circle"></i> No-show ilə bağlı gate təzyiqi</div>
                     </div>
                     <div class="pressure-card">
                         <div class="pc-top"><span class="pc-lbl">Boarding Risk</span><div class="pc-ico" style="background:#fff7ed;color:#ea580c;"><i class="bi bi-person-exclamation"></i></div></div>
                         <div class="pc-val" style="color:@PressureColor(boardingRisk);">%@boardingRisk.ToString("0")</div>
                         <div class="pc-bar-bg"><div class="pc-bar-fill" style="width:@boardingRisk.ToString("0", System.Globalization.CultureInfo.InvariantCulture)%;background:@PressureColor(boardingRisk);"></div></div>
-                        <div class="pc-foot"><i class="bi bi-info-circle"></i> Biniş riski endeksi</div>
+                        <div class="pc-foot"><i class="bi bi-info-circle"></i> Minmə riski indeksi</div>
                     </div>
                     <div class="pressure-card">
                         <div class="pc-top"><span class="pc-lbl">Crew Load</span><div class="pc-ico" style="background:#f5f3ff;color:#7c3aed;"><i class="bi bi-people-fill"></i></div></div>
                         <div class="pc-val" style="color:@PressureColor(crewLoad);">%@crewLoad.ToString("0")</div>
                         <div class="pc-bar-bg"><div class="pc-bar-fill" style="width:@crewLoad.ToString("0", System.Globalization.CultureInfo.InvariantCulture)%;background:@PressureColor(crewLoad);"></div></div>
-                        <div class="pc-foot"><i class="bi bi-info-circle"></i> Ekip yoğunluğu</div>
+                        <div class="pc-foot"><i class="bi bi-info-circle"></i> Heyət yükü</div>
                     </div>
                     <div class="pressure-card">
-                        <div class="pc-top"><span class="pc-lbl">Standby İhtiyacı</span><div class="pc-ico" style="background:#fef2f2;color:#dc2626;"><i class="bi bi-person-plus-fill"></i></div></div>
+                        <div class="pc-top"><span class="pc-lbl">Standby Ehtiyacı</span><div class="pc-ico" style="background:#fef2f2;color:#dc2626;"><i class="bi bi-person-plus-fill"></i></div></div>
                         <div class="pc-val" style="color:@PressureColor(standbyReq);">%@standbyReq.ToString("0")</div>
                         <div class="pc-bar-bg"><div class="pc-bar-fill" style="width:@standbyReq.ToString("0", System.Globalization.CultureInfo.InvariantCulture)%;background:@PressureColor(standbyReq);"></div></div>
-                        <div class="pc-foot"><i class="bi bi-info-circle"></i> Yedek personel ihtiyacı</div>
+                        <div class="pc-foot"><i class="bi bi-info-circle"></i> Ehtiyat heyət tələbatı</div>
                     </div>
                     <div class="pressure-card">
                         <div class="pc-top"><span class="pc-lbl">Weekend Volatility</span><div class="pc-ico" style="background:#fffbeb;color:#d97706;"><i class="bi bi-calendar-week"></i></div></div>
                         <div class="pc-val" style="color:#d97706;">%@weekendVolat.ToString("0")</div>
                         <div class="pc-bar-bg"><div class="pc-bar-fill" style="width:@weekendVolat.ToString("0", System.Globalization.CultureInfo.InvariantCulture)%;background:#d97706;"></div></div>
-                        <div class="pc-foot"><i class="bi bi-info-circle"></i> Hafta sonu dalgalanması</div>
+                        <div class="pc-foot"><i class="bi bi-info-circle"></i> Həftə sonu dalğalanması</div>
                     </div>
                 </div>
             </div>
 
-            @* ═══════ 9 — AI RISK TIMELINE ═══════ *@
             <div class="timeline-card">
                 <div class="timeline-head">
-                    <div class="timeline-title"><i class="bi bi-calendar3"></i> AI Risk Timeline — Ocak 2026</div>
-                    <span style="font-size:12px;color:#94a3b8;">Recommendations'dan türetilen günlük risk dağılımı</span>
+                    <div class="timeline-title"><i class="bi bi-calendar3"></i> AI Risk Timeline — Yanvar 2026</div>
+                    <span style="font-size:12px;color:#94a3b8;">Recommendations-dan əldə edilən günlük risk bölgüsü</span>
                 </div>
                 <div class="timeline-body">
                     @{
@@ -1904,16 +1884,16 @@
                         {
                             string risk = dateRiskMap.ContainsKey(d) ? dateRiskMap[d] : defRisks[d - 1];
                             string tlCls = TlClass(risk);
-                            <div class="tl-day @tlCls" title="@d Ocak — @riskLabel(risk)">
+                            <div class="tl-day @tlCls" title="@d Yanvar — @riskLabel(risk)">
                                 <span class="tl-day-num">@d</span>
                                 <span class="tl-day-dot"></span>
                             </div>
                         }
                     </div>
                     <div class="tl-legend">
-                        <div class="tll-item"><div class="tll-box" style="background:#f0fdf4;border:1px solid #bbf7d0;"></div> Düşük Trafik</div>
-                        <div class="tll-item"><div class="tll-box" style="background:#fffbeb;border:1px solid #fde68a;"></div> Orta Yoğunluk</div>
-                        <div class="tll-item"><div class="tll-box" style="background:#fff7ed;border:1px solid #fed7aa;"></div> Yüksek Talep</div>
+                        <div class="tll-item"><div class="tll-box" style="background:#f0fdf4;border:1px solid #bbf7d0;"></div> Aşağı Trafik</div>
+                        <div class="tll-item"><div class="tll-box" style="background:#fffbeb;border:1px solid #fde68a;"></div> Orta Yoğunluq</div>
+                        <div class="tll-item"><div class="tll-box" style="background:#fff7ed;border:1px solid #fed7aa;"></div> Yüksək Tələb</div>
                         <div class="tll-item"><div class="tll-box" style="background:#fef2f2;border:1px solid #fecaca;"></div> Kritik Gün</div>
                     </div>
                 </div>
@@ -1935,7 +1915,7 @@
                 row.style.display = show ? '' : 'none';
                 if (show) vis++;
             });
-            document.getElementById('obRecCount').textContent = vis + ' kayıt';
+            document.getElementById('obRecCount').textContent = vis + ' qeyd';
         }
 
         function obSearch(val) {
@@ -1947,12 +1927,12 @@
                 row.style.display = show ? '' : 'none';
                 if (show) vis++;
             });
-            document.getElementById('obRecCount').textContent = vis + ' kayıt';
+            document.getElementById('obRecCount').textContent = vis + ' qeyd';
         }
 
         function exportCSV() {
             var rows  = document.querySelectorAll('#obTable tbody .ob-row');
-            var lines = ['Tarih,Slot,Gerçek Pax,Tahmin Pax,Kapasite,Bek. No-Show,Önerilen Satış,Ekstra Koltuk,Risk'];
+            var lines = ['Tarix,Slot,Faktiki Pax,Proqnoz Pax,Tutum,Gözlənilən No-Show,Tövsiyə Olunan Satış,Əlavə Oturacaq,Risk'];
             rows.forEach(function(row) {
                 if (row.style.display === 'none') return;
                 var tds = row.querySelectorAll('td');
@@ -1963,7 +1943,7 @@
             var blob = new Blob([lines.join('\n')], { type:'text/csv;charset=utf-8;' });
             var url  = URL.createObjectURL(blob);
             var a    = document.createElement('a');
-            a.href = url; a.download = 'overbooking-rapor.csv'; a.click();
+            a.href = url; a.download = 'overbooking-hesabat.csv'; a.click();
             URL.revokeObjectURL(url);
         }
     </script>
