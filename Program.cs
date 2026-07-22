@@ -18,6 +18,7 @@ builder.Services.AddSingleton<FlightRegressionService>();
 builder.Services.AddSingleton<FlightMlService>();
 builder.Services.AddScoped<NoShowService>();
 builder.Services.AddScoped<MongoFlightDataService>();
+builder.Services.AddScoped<OverbookingRecommendationService>();
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 

@@ -34,7 +34,9 @@ namespace FlightBooking.Areas.Admin.Controllers
                 return Content("ML Data is empty.");
 
             _flightMlService.Train(mlData);
-            
+
+            ViewBag.Message = "Model uğurla öyredildi.";
+
             return View();
         }
 
