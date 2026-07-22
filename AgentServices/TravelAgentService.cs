@@ -1,20 +1,24 @@
 ﻿using FlightBooking.AgentServices.GroqServices;
+using FlightBooking.AgentServices.PromptBuilders;
 using FlightBooking.Dtos.AgentDtos;
 
 namespace FlightBooking.AgentServices
 {
     public class TravelAgentService : ITravelAgentService
     {
-        private readonly IGroqService _geminiService;
+        private readonly IGroqService _groqService;
+        private readonly ITravelPromptBuilder _promptBuilder;
 
-        public TravelAgentService(IGroqService geminiService)
+        public TravelAgentService(IGroqService groqService, ITravelPromptBuilder promptBuilder)
         {
-            _geminiService = geminiService;
+            _groqService = groqService;
+            _promptBuilder = promptBuilder;
         }
 
         public async Task<AgentResponseDto> AskAgentAsync(string prompt)
         {
-            return await _geminiService.GetResponseAsync(prompt);
+            var finalPrompt = _promptBuilder.BuildPrompt(prompt);
+            return await _groqService.GetResponseAsync(finalPrompt);
         }
     }
 }

@@ -1,5 +1,6 @@
 using FlightBooking.AgentServices;
 using FlightBooking.AgentServices.GroqServices;
+using FlightBooking.AgentServices.PromptBuilders;
 using FlightBooking.AgentSettings;
 using FlightBooking.Services;
 using FlightBooking.Services.BookingServices;
@@ -17,7 +18,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IFlightService, FlightService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ICheckInService, CheckInService>();
-
 builder.Services.AddSingleton<FlightRegressionService>();
 builder.Services.AddSingleton<FlightMlService>();
 builder.Services.AddScoped<NoShowService>();
@@ -26,13 +26,10 @@ builder.Services.AddScoped<OverbookingRecommendationService>();
 builder.Services.AddScoped<NoShowPredictionService>();
 builder.Services.AddScoped<ITravelAgentService, TravelAgentService>();
 builder.Services.AddScoped<IGroqService, GroqService>();
-
+builder.Services.AddScoped<ITravelPromptBuilder, TravelPromptBuilder>();
 builder.Services.Configure<GroqSettings>(builder.Configuration.GetSection("Groq"));
-
 builder.Services.AddHttpClient<IGroqService, GroqService>();
-
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettingsKey"));
 builder.Services.AddScoped<IDatabaseSettings>(sp =>
 {
