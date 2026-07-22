@@ -1,3 +1,6 @@
+using FlightBooking.AgentServices;
+using FlightBooking.AgentServices.GroqServices;
+using FlightBooking.AgentSettings;
 using FlightBooking.Services;
 using FlightBooking.Services.BookingServices;
 using FlightBooking.Services.CheckInServices;
@@ -21,6 +24,12 @@ builder.Services.AddScoped<NoShowService>();
 builder.Services.AddScoped<MongoFlightDataService>();
 builder.Services.AddScoped<OverbookingRecommendationService>();
 builder.Services.AddScoped<NoShowPredictionService>();
+builder.Services.AddScoped<ITravelAgentService, TravelAgentService>();
+builder.Services.AddScoped<IGroqService, GroqService>();
+
+builder.Services.Configure<GroqSettings>(builder.Configuration.GetSection("Groq"));
+
+builder.Services.AddHttpClient<IGroqService, GroqService>();
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
