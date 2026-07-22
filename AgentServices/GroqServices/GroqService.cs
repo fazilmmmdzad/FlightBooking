@@ -1,4 +1,5 @@
 ﻿using FlightBooking.AgentSettings;
+using FlightBooking.Dtos.AgentDtos;
 using Microsoft.Extensions.Options;
 using System.Text;
 using System.Text.Json;
@@ -16,7 +17,7 @@ namespace FlightBooking.AgentServices.GroqServices
             _settings = settings.Value;
         }
 
-        public async Task<string> GetResponseAsync(string prompt)
+        public async Task<AgentResponseDto> GetResponseAsync(string prompt)
         {
             var requestBody = new
             {
@@ -26,16 +27,16 @@ namespace FlightBooking.AgentServices.GroqServices
 
                 messages = new object[]
                 {
-                    new
-                    {
-                        role = "system",
-                        content = "Sən bir səyahət və restoran təklifləri üzrə asistansan. Qısa, dəqiq və istifadəçi dostu cavab ver."
-                    },
-                    new
-                    {
-                        role = "user",
-                        content = prompt
-                    }
+            new
+            {
+                role = "system",
+                content = "Sən bir səyahət və restoran təklifləri üzrə asistansan. Qısa, dəqiq və istifadəçi dostu cavab ver."
+            },
+            new
+            {
+                role = "user",
+                content = prompt
+            }
                 },
 
                 temperature = 0.7
@@ -47,30 +48,42 @@ namespace FlightBooking.AgentServices.GroqServices
                 HttpMethod.Post,
                 "https://api.groq.com/openai/v1/chat/completions");
 
-            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
-
             request.Headers.Authorization =
                 new System.Net.Http.Headers.AuthenticationHeaderValue(
                     "Bearer",
                     _settings.ApiKey.Trim());
 
-            var response = await _httpClient.SendAsync(request);
+            request.Content = new StringContent(json, Encoding.UTF8, "application/json");
 
+            var response = await _httpClient.SendAsync(request);
             var responseContent = await response.Content.ReadAsStringAsync();
 
             if (!response.IsSuccessStatusCode)
             {
-                return $"Groq API xətası ({response.StatusCode}): {responseContent}";
+                return new AgentResponseDto
+                {
+                    IsSuccess = false,
+                    Response = $"Groq API xətası ({response.StatusCode}): {responseContent}",
+                    Model = _settings.Model,
+                    ResponseTime = DateTime.Now
+                };
             }
 
             using var document = JsonDocument.Parse(responseContent);
 
-            return document.RootElement
+            var result = document.RootElement
                 .GetProperty("choices")[0]
                 .GetProperty("message")
                 .GetProperty("content")
-                .GetString()
-                ?? "Cavab alına bilmədi.";
+                .GetString();
+
+            return new AgentResponseDto
+            {
+                IsSuccess = true,
+                Response = result ?? "Cavab alına bilmədi.",
+                Model = _settings.Model,
+                ResponseTime = DateTime.Now
+            };
         }
     }
 }

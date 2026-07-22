@@ -1,7 +1,9 @@
-﻿namespace FlightBooking.AgentServices.GroqServices
+﻿using FlightBooking.Dtos.AgentDtos;
+
+namespace FlightBooking.AgentServices.GroqServices
 {
     public interface IGroqService
     {
-        Task<string> GetResponseAsync(string prompt);
+        Task<AgentResponseDto> GetResponseAsync(string prompt);
     }
 }

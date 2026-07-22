@@ -1,4 +1,5 @@
 ﻿using FlightBooking.AgentServices.GroqServices;
+using FlightBooking.Dtos.AgentDtos;
 
 namespace FlightBooking.AgentServices
 {
@@ -11,7 +12,7 @@ namespace FlightBooking.AgentServices
             _geminiService = geminiService;
         }
 
-        public async Task<string> AskAgentAsync(string prompt)
+        public async Task<AgentResponseDto> AskAgentAsync(string prompt)
         {
             return await _geminiService.GetResponseAsync(prompt);
         }
