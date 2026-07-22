@@ -1,5 +1,6 @@
 using FlightBooking.AgentServices;
 using FlightBooking.AgentServices.GroqServices;
+using FlightBooking.AgentServices.IntentDetectors;
 using FlightBooking.AgentServices.PromptBuilders;
 using FlightBooking.AgentSettings;
 using FlightBooking.Services;
@@ -10,6 +11,7 @@ using FlightBooking.Services.MachineLearningServices;
 using FlightBooking.Services.NoShowServices;
 using FlightBooking.Services.OverBookingNoShowServices;
 using FlightBooking.Settings;
+using FlightBooking.Tools.WeatherTool;
 using Microsoft.Extensions.Options;
 using System.Reflection;
 
@@ -27,6 +29,8 @@ builder.Services.AddScoped<NoShowPredictionService>();
 builder.Services.AddScoped<ITravelAgentService, TravelAgentService>();
 builder.Services.AddScoped<IGroqService, GroqService>();
 builder.Services.AddScoped<ITravelPromptBuilder, TravelPromptBuilder>();
+builder.Services.AddScoped<IIntentDetector, TravelIntentDetector>();
+builder.Services.AddScoped<IWeatherTool, WeatherTool>();
 builder.Services.Configure<GroqSettings>(builder.Configuration.GetSection("Groq"));
 builder.Services.AddHttpClient<IGroqService, GroqService>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
