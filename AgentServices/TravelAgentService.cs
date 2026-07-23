@@ -34,7 +34,7 @@ namespace FlightBooking.AgentServices
             switch (intent)
             {
                 case TravelIntent.Weather:
-                    var weatherResult = await _weatherTool.GetWeatherAsync("Amsterdam");
+                    var weatherResult = await _weatherTool.GetWeatherAsync(city);
 
                     intentInstruction =
                         $"İstifadəçi hava haqqında məlumat istəyir. " +

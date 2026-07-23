@@ -35,6 +35,8 @@ builder.Services.AddScoped<IWeatherTool, WeatherTool>();
 builder.Services.Configure<GroqSettings>(builder.Configuration.GetSection("Groq"));
 builder.Services.AddHttpClient<IGroqService, GroqService>();
 builder.Services.AddHttpClient<ICityExtractor, GroqCityExtractor>();
+builder.Services.Configure<RapidApiSettings>(builder.Configuration.GetSection("RapidApi"));
+builder.Services.AddHttpClient<IWeatherTool, WeatherTool>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettingsKey"));
 builder.Services.AddScoped<IDatabaseSettings>(sp =>
