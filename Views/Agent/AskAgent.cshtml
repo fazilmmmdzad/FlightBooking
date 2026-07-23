@@ -1182,6 +1182,122 @@
             animation: fadeIn .35s ease forwards;
         }
 
+        .weather-main {
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--slate-100);
+            margin-bottom: 12px;
+        }
+
+        .weather-city {
+            font-family: var(--font-display);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+
+        .weather-country {
+            font-size: 11px;
+            color: var(--slate-400);
+            margin-bottom: 8px;
+        }
+
+        .weather-temp-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .weather-icon {
+            font-size: 26px;
+            color: var(--indigo);
+        }
+
+        .weather-temp {
+            font-family: var(--font-display);
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--navy);
+        }
+
+        .weather-condition {
+            font-size: 12.5px;
+            color: var(--slate-500);
+            margin-top: 2px;
+        }
+
+        .weather-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .weather-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11.5px;
+        }
+
+            .weather-stat i {
+                color: var(--indigo);
+                font-size: 13px;
+                width: 16px;
+                text-align: center;
+            }
+
+        .weather-stat-label {
+            color: var(--slate-400);
+            font-size: 10.5px;
+        }
+
+        .weather-stat-value {
+            color: var(--navy);
+            font-weight: 600;
+        }
+
+        .weather-forecast {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-top: 12px;
+            border-top: 1px solid var(--slate-100);
+        }
+
+        .weather-forecast-day {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            border-radius: var(--radius-sm);
+            background: var(--slate-100);
+            font-size: 11.5px;
+        }
+
+        .weather-forecast-day-name {
+            flex: 0 0 46px;
+            font-weight: 600;
+            color: var(--navy);
+        }
+
+        .weather-forecast-day-icon {
+            color: var(--indigo);
+            font-size: 14px;
+            width: 18px;
+            text-align: center;
+        }
+
+        .weather-forecast-day-temp {
+            color: var(--slate-600);
+            font-weight: 600;
+        }
+
+        .weather-forecast-day-condition {
+            margin-left: auto;
+            color: var(--slate-400);
+            font-size: 10.5px;
+        }
+
         @@keyframes fadeIn {
             from {
                 opacity: 0;
@@ -1486,7 +1602,7 @@
             </div>
 
             <div class="right-panel">
-                <div class="glass-card slide-up" style="animation-delay:.1s;">
+                <div class="glass-card slide-up" id="weatherCard" style="animation-delay:.1s;">
                     <div class="panel-head">
                         <div class="panel-head-ico" style="background:#ecfeff;color:#0891b2;"><i class="bi bi-cloud-sun-fill"></i></div>
                         <div>
@@ -1494,10 +1610,68 @@
                             <div class="panel-head-sub">Real vaxt məlumat</div>
                         </div>
                     </div>
-                    <div class="panel-body panel-empty-body">
+                    <div class="panel-body panel-empty-body" id="weatherEmptyState">
                         <div class="panel-empty-ico"><i class="bi bi-cloud-sun"></i></div>
                         <div class="panel-empty-title">Hələ şəhər seçilməyib</div>
-                        <div class="panel-empty-desc">Bir təyinat yazdığınızda hava şəraiti burada görünəcək.</div>
+                        <div class="panel-empty-desc">Bir şəhər yazdıqdan sonra hava məlumatı burada göstəriləcək.</div>
+                    </div>
+                    <div class="panel-body" id="weatherContent" style="display:none;">
+                        <div class="weather-main">
+                            <div class="weather-location">
+                                <div class="weather-city" id="weatherCity"></div>
+                                <div class="weather-country" id="weatherCountry"></div>
+                            </div>
+                            <div class="weather-temp-row">
+                                <div class="weather-icon" id="weatherIcon"><i class="bi bi-cloud-sun-fill"></i></div>
+                                <div class="weather-temp" id="weatherTemp"></div>
+                            </div>
+                            <div class="weather-condition" id="weatherCondition"></div>
+                        </div>
+                        <div class="weather-stats">
+                            <div class="weather-stat">
+                                <i class="bi bi-droplet-fill"></i>
+                                <div>
+                                    <div class="weather-stat-label">Rütubət</div>
+                                    <div class="weather-stat-value" id="weatherHumidity"></div>
+                                </div>
+                            </div>
+                            <div class="weather-stat">
+                                <i class="bi bi-wind"></i>
+                                <div>
+                                    <div class="weather-stat-label">Külək</div>
+                                    <div class="weather-stat-value" id="weatherWind"></div>
+                                </div>
+                            </div>
+                            <div class="weather-stat">
+                                <i class="bi bi-eye-fill"></i>
+                                <div>
+                                    <div class="weather-stat-label">Görünüş</div>
+                                    <div class="weather-stat-value" id="weatherVisibility"></div>
+                                </div>
+                            </div>
+                            <div class="weather-stat">
+                                <i class="bi bi-speedometer2"></i>
+                                <div>
+                                    <div class="weather-stat-label">Təzyiq</div>
+                                    <div class="weather-stat-value" id="weatherPressure"></div>
+                                </div>
+                            </div>
+                            <div class="weather-stat">
+                                <i class="bi bi-sunrise-fill"></i>
+                                <div>
+                                    <div class="weather-stat-label">Günəşin doğuşu</div>
+                                    <div class="weather-stat-value" id="weatherSunrise"></div>
+                                </div>
+                            </div>
+                            <div class="weather-stat">
+                                <i class="bi bi-sunset-fill"></i>
+                                <div>
+                                    <div class="weather-stat-label">Günəşin batışı</div>
+                                    <div class="weather-stat-value" id="weatherSunset"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weather-forecast" id="weatherForecast"></div>
                     </div>
                 </div>
 
@@ -1718,6 +1892,75 @@
             return result.join('');
         }
 
+                function updateWeatherPanel(weather) {
+            document.getElementById('weatherEmptyState').style.display = 'none';
+            document.getElementById('weatherContent').style.display = 'block';
+
+            document.getElementById('weatherCity').textContent = weather.city || '';
+            document.getElementById('weatherCountry').textContent = weather.country || '';
+            document.getElementById('weatherTemp').textContent = (weather.temperature ?? '-') + '°C';
+            document.getElementById('weatherCondition').textContent = weather.condition || '';
+            document.getElementById('weatherIcon').innerHTML = `<i class="bi ${getWeatherIcon(weather.condition)}"></i>`;
+
+            document.getElementById('weatherHumidity').textContent = (weather.humidity ?? '-') + '%';
+            document.getElementById('weatherWind').textContent = (weather.windSpeed ?? '-') + ' km/s ' + (weather.windDirection || '');
+            document.getElementById('weatherVisibility').textContent = (weather.visibility ?? '-') + ' km';
+            document.getElementById('weatherPressure').textContent = (weather.pressure ?? '-') + ' hPa';
+            document.getElementById('weatherSunrise').textContent = weather.sunrise || '-';
+            document.getElementById('weatherSunset').textContent = weather.sunset || '-';
+
+            const forecastEl = document.getElementById('weatherForecast');
+            forecastEl.innerHTML = '';
+
+            if (Array.isArray(weather.forecasts)) {
+                weather.forecasts.slice(0, 5).forEach(day => {
+                    const item = document.createElement('div');
+                    item.className = 'weather-forecast-day';
+                    item.innerHTML = `
+                        <span class="weather-forecast-day-name">${day.day}</span>
+                        <i class="bi ${getWeatherIcon(day.condition)} weather-forecast-day-icon"></i>
+                        <span class="weather-forecast-day-temp">${day.low}° / ${day.high}°</span>
+                        <span class="weather-forecast-day-condition">${day.condition}</span>`;
+                    forecastEl.appendChild(item);
+                });
+            }
+        }
+
+                function resetWeatherPanel() {
+            document.getElementById('weatherContent').style.display = 'none';
+            document.getElementById('weatherForecast').innerHTML = '';
+            document.getElementById('weatherEmptyState').style.display = 'flex';
+        }
+
+                function getWeatherIcon(condition) {
+            const key = (condition || '').toLowerCase().trim();
+
+            const iconMap = {
+                'sunny': 'bi-sun-fill',
+                'clear': 'bi-sun-fill',
+                'cloudy': 'bi-cloud-fill',
+                'partly cloudy': 'bi-cloud-sun-fill',
+                'overcast': 'bi-clouds-fill',
+                'rain': 'bi-cloud-rain-fill',
+                'light rain': 'bi-cloud-drizzle-fill',
+                'drizzle': 'bi-cloud-drizzle-fill',
+                'snow': 'bi-cloud-snow-fill',
+                'thunderstorm': 'bi-cloud-lightning-rain-fill',
+                'mist': 'bi-cloud-haze2-fill',
+                'fog': 'bi-cloud-fog2-fill',
+                'smoke': 'bi-cloud-haze-fill',
+                'haze': 'bi-cloud-haze-fill'
+            };
+
+            if (iconMap[key]) return iconMap[key];
+
+            for (const mapKey in iconMap) {
+                if (key.includes(mapKey)) return iconMap[mapKey];
+            }
+
+            return 'bi-cloud-sun-fill';
+        }
+
         function addAIMessage(text, meta) {
             const now = new Date().toLocaleTimeString('az-AZ', { hour:'2-digit', minute:'2-digit' });
             const div = document.createElement('div');
@@ -1735,7 +1978,7 @@
             messagesEl.scrollTop = messagesEl.scrollHeight;
         }
 
-        async function sendMessage() {
+               async function sendMessage() {
             const text = promptInput.value.trim();
             if (!text || isLoading) return;
 
@@ -1772,6 +2015,10 @@
                 if (data.isSuccess && data.response) {
                     completeAgentActivity();
                     addAIMessage(data.response, { model: data.model });
+
+                    if (data.intent === 'Weather' && data.weather) {
+                        updateWeatherPanel(data.weather);
+                    }
                 } else {
                     completeAgentActivity();
                     addAIMessage('Üzr istəyirik, xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.', null);

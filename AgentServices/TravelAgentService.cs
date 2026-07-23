@@ -29,23 +29,62 @@ namespace FlightBooking.AgentServices
 
             string intentInstruction;
 
-            var city = await _cityExtractor.ExtractCityAsync(prompt);
+            string? city = null;
+            WeatherResult? weatherResult = null;
 
             switch (intent)
             {
                 case TravelIntent.Weather:
-                    var weatherResult = await _weatherTool.GetWeatherAsync(city);
+                    {
+                        city = await _cityExtractor.ExtractCityAsync(prompt);
 
-                    intentInstruction =
-                        $"İstifadəçi hava haqqında məlumat istəyir. " +
-                        $"Cari hava məlumatları: " +
-                        $"Şəhər: {weatherResult.City}, " +
-                        $"Temperatur: {weatherResult.Temperature}°C, " +
-                        $"Hava vəziyyəti: {weatherResult.Condition}, " +
-                        $"Rütubət: %{weatherResult.Humidity}, " +
-                        $"Küləyin sürəti: {weatherResult.WindSpeed} km/s. " +
-                        $"Bu məlumatlara əsasən istifadəçiyə səyahət və geyim tövsiyələri ver.";
-                    break;
+                        if (string.IsNullOrWhiteSpace(city))
+                        {
+                            intentInstruction =
+                                "İstifadəçi hava məlumatı soruşur, lakin şəhər qeyd etməyib. " +
+                                "Əvvəlcə hansı şəhərin hava məlumatını öyrənmək istədiyini soruş.";
+
+                            break;
+                        }
+
+                        weatherResult = await _weatherTool.GetWeatherAsync(city);
+
+                        if (weatherResult == null)
+                        {
+                            intentInstruction =
+                                $"'{city}' şəhəri üçün hava məlumatı əldə edilə bilmədi. " +
+                                "İstifadəçidən şəhərin adını yenidən dəqiqləşdirməsini xahiş et.";
+
+                            break;
+                        }
+
+                        var forecastText = string.Join(
+                            "\n",
+                            weatherResult.Forecasts.Select(x =>
+                                $"{x.Day}: Ən aşağı {x.Low}°C, Ən yüksək {x.High}°C, Hava: {x.Condition}")
+                        );
+
+                        intentInstruction =
+                            $"İstifadəçi hava məlumatı soruşur.\n\n" +
+                            $"Weather Tool tərəfindən əldə edilmiş real məlumatlar:\n" +
+                            $"Şəhər: {weatherResult.City}\n" +
+                            $"Ölkə: {weatherResult.Country}\n" +
+                            $"Saat qurşağı: {weatherResult.TimeZoneId}\n" +
+                            $"Temperatur: {weatherResult.Temperature}°C\n" +
+                            $"Hava: {weatherResult.Condition}\n" +
+                            $"Rütubət: %{weatherResult.Humidity}\n" +
+                            $"Külək: {weatherResult.WindSpeed} km/s ({weatherResult.WindDirection})\n" +
+                            $"Görünüş məsafəsi: {weatherResult.Visibility} km\n" +
+                            $"Təzyiq: {weatherResult.Pressure} hPa\n" +
+                            $"Günəşin doğuşu: {weatherResult.Sunrise}\n" +
+                            $"Günəşin batışı: {weatherResult.Sunset}\n" +
+                            $"7 günlük proqnoz:\n{forecastText}\n\n" +
+                            $"Yalnız yuxarıdakı real Weather Tool məlumatlarından istifadə et. " +
+                            $"Heç bir hava proqnozu uydurma. " +
+                            $"Lazım gələrsə geyim, çətir və qısa səyahət tövsiyəsi ver.";
+
+                        break;
+                    }
 
                 case TravelIntent.Restaurant:
                     intentInstruction =
@@ -57,6 +96,26 @@ namespace FlightBooking.AgentServices
                         "İstifadəçi otel tövsiyəsi istəyir.";
                     break;
 
+                case TravelIntent.Transportation:
+                    intentInstruction =
+                        "İstifadəçi nəqliyyat seçimləri haqqında məlumat istəyir.";
+                    break;
+
+                case TravelIntent.Currency:
+                    intentInstruction =
+                        "İstifadəçi valyuta məzənnəsi haqqında məlumat istəyir.";
+                    break;
+
+                case TravelIntent.Itinerary:
+                    intentInstruction =
+                        "İstifadəçi üçün səyahət planı hazırla.";
+                    break;
+
+                case TravelIntent.Attraction:
+                    intentInstruction =
+                        "İstifadəçi gəzməli yerlər haqqında tövsiyə istəyir.";
+                    break;
+
                 default:
                     intentInstruction =
                         "İstifadəçinin səyahətlə bağlı sualına kömək et.";
@@ -64,11 +123,14 @@ namespace FlightBooking.AgentServices
             }
 
             var finalPrompt = _promptBuilder.BuildPrompt(
-                $"{intentInstruction}\n\nİstifadəçinin əsl sualı:\n{prompt}");
+                $"{intentInstruction}\n\nİstifadəçinin sorğusu:\n{prompt}"
+            );
 
             var result = await _groqService.GetResponseAsync(finalPrompt);
 
             result.Intent = intent.ToString();
+            result.City = city;
+            result.Weather = weatherResult;
 
             return result;
         }
