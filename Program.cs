@@ -1,5 +1,6 @@
 using FlightBooking.AgentServices;
 using FlightBooking.AgentServices.CityDetectors;
+using FlightBooking.AgentServices.FoursquareServices;
 using FlightBooking.AgentServices.GroqServices;
 using FlightBooking.AgentServices.IntentDetectors;
 using FlightBooking.AgentServices.PromptBuilders;
@@ -37,6 +38,8 @@ builder.Services.AddHttpClient<IGroqService, GroqService>();
 builder.Services.AddHttpClient<ICityExtractor, GroqCityExtractor>();
 builder.Services.Configure<RapidApiSettings>(builder.Configuration.GetSection("RapidApi"));
 builder.Services.AddHttpClient<IWeatherTool, WeatherTool>();
+builder.Services.Configure<FoursquareSettings>(builder.Configuration.GetSection("Foursquare"));
+builder.Services.AddHttpClient<IFoursquareService, FoursquareService>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettingsKey"));
 builder.Services.AddScoped<IDatabaseSettings>(sp =>
