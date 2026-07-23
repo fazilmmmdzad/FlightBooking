@@ -1,4 +1,5 @@
 using FlightBooking.AgentServices;
+using FlightBooking.AgentServices.CityDetectors;
 using FlightBooking.AgentServices.GroqServices;
 using FlightBooking.AgentServices.IntentDetectors;
 using FlightBooking.AgentServices.PromptBuilders;
@@ -33,6 +34,7 @@ builder.Services.AddScoped<IIntentDetector, TravelIntentDetector>();
 builder.Services.AddScoped<IWeatherTool, WeatherTool>();
 builder.Services.Configure<GroqSettings>(builder.Configuration.GetSection("Groq"));
 builder.Services.AddHttpClient<IGroqService, GroqService>();
+builder.Services.AddHttpClient<ICityExtractor, GroqCityExtractor>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("DatabaseSettingsKey"));
 builder.Services.AddScoped<IDatabaseSettings>(sp =>

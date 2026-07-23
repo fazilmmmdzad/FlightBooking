@@ -1,4 +1,5 @@
-﻿using FlightBooking.AgentServices.GroqServices;
+﻿using FlightBooking.AgentServices.CityDetectors;
+using FlightBooking.AgentServices.GroqServices;
 using FlightBooking.AgentServices.IntentDetectors;
 using FlightBooking.AgentServices.PromptBuilders;
 using FlightBooking.Dtos.AgentDtos;
@@ -12,13 +13,14 @@ namespace FlightBooking.AgentServices
         private readonly ITravelPromptBuilder _promptBuilder;
         private readonly IIntentDetector _intentDetector;
         private readonly IWeatherTool _weatherTool;
-
-        public TravelAgentService(IGroqService groqService, ITravelPromptBuilder promptBuilder, IIntentDetector intentDetector, IWeatherTool weatherTool)
+        private readonly ICityExtractor _cityExtractor;
+        public TravelAgentService(IGroqService groqService, ITravelPromptBuilder promptBuilder, IIntentDetector intentDetector, IWeatherTool weatherTool, ICityExtractor cityExtractor)
         {
             _groqService = groqService;
             _promptBuilder = promptBuilder;
             _intentDetector = intentDetector;
             _weatherTool = weatherTool;
+            _cityExtractor = cityExtractor;
         }
 
         public async Task<AgentResponseDto> AskAgentAsync(string prompt)
@@ -26,6 +28,8 @@ namespace FlightBooking.AgentServices
             var intent = _intentDetector.Detect(prompt);
 
             string intentInstruction;
+
+            var city = await _cityExtractor.ExtractCityAsync(prompt);
 
             switch (intent)
             {
