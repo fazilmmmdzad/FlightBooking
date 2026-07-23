@@ -1,15 +1,15 @@
 ﻿@model FlightBooking.Dtos.AgentDtos.AgentPromptRequestDto
 
 @{
-    ViewData["Title"] = "YZ Seyahat Asistanı";
+    ViewData["Title"] = "AI Səyahət Köməkçisi";
     Layout = null;
 }
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="az">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>YZ Seyahat Asistanı · FlightBooking</title>
+    <title>AI Səyahət Köməkçisi · FlightBooking</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,27 +19,31 @@
 
     <style>
         :root {
-            --navy: #0F172A;
+            --navy: #0B1120;
             --navy-80: #1E293B;
-            --indigo: #4F46E5;
-            --indigo-bg: #EEF2FF;
-            --cyan: #06B6D4;
+            --indigo: #6D5AE6;
+            --indigo-bg: #F1EEFF;
+            --violet: #8B5CF6;
+            --cyan: #22D3EE;
             --cyan-bg: #ECFEFF;
             --amber: #F59E0B;
             --amber-bg: #FFFBEB;
-            --slate-100: #F1F5F9;
-            --slate-200: #E2E8F0;
-            --slate-400: #94A3B8;
-            --slate-500: #64748B;
-            --slate-600: #475569;
+            --slate-100: #F4F5FA;
+            --slate-200: #E4E6F1;
+            --slate-300: #CBD0E3;
+            --slate-400: #9AA1BD;
+            --slate-500: #6B7290;
+            --slate-600: #454B69;
             --font-display: 'Syne', sans-serif;
             --font-body: 'DM Sans', sans-serif;
+            --radius-xl: 26px;
             --radius-lg: 20px;
             --radius-md: 14px;
-            --radius-sm: 9px;
+            --radius-sm: 10px;
             --shadow-sm: 0 1px 4px rgba(15,23,42,.06);
-            --shadow-md: 0 4px 20px rgba(15,23,42,.09);
-            --shadow-lg: 0 12px 48px rgba(15,23,42,.13);
+            --shadow-md: 0 6px 24px rgba(31,25,90,.10);
+            --shadow-lg: 0 16px 56px rgba(31,25,90,.16);
+            --shadow-glow: 0 0 0 4px rgba(109,90,230,.10);
         }
 
         *, *::before, *::after {
@@ -49,25 +53,24 @@
         html, body {
             margin: 0;
             padding: 0;
-            background: #F8FAFC;
+            background: radial-gradient(circle at 12% 0%, #EFEBFF 0%, #F7F8FC 38%, #F7F8FC 100%);
             font-family: var(--font-body);
             color: var(--navy);
             min-height: 100vh;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ─── TOPBAR ─── */
         .topbar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 100;
-            height: 56px;
-            background: rgba(255,255,255,.9);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--slate-200);
+            height: 60px;
+            background: rgba(255,255,255,.78);
+            backdrop-filter: blur(16px) saturate(140%);
+            -webkit-backdrop-filter: blur(16px) saturate(140%);
+            border-bottom: 1px solid rgba(228,230,241,.8);
             display: flex;
             align-items: center;
             padding: 0 24px;
@@ -77,7 +80,7 @@
         .topbar-brand {
             display: flex;
             align-items: center;
-            gap: 9px;
+            gap: 10px;
             font-family: var(--font-display);
             font-size: 15px;
             font-weight: 700;
@@ -86,25 +89,27 @@
         }
 
         .topbar-brand-icon {
-            width: 30px;
-            height: 30px;
-            background: linear-gradient(135deg,var(--indigo),var(--cyan));
-            border-radius: 8px;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg,var(--indigo),var(--violet) 55%,var(--cyan));
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 14px;
+            font-size: 15px;
+            box-shadow: 0 4px 14px rgba(109,90,230,.35);
         }
 
         .topbar-badge {
-            padding: 3px 10px;
+            padding: 3px 11px;
             border-radius: 99px;
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: .3px;
             background: linear-gradient(135deg,var(--indigo-bg),var(--cyan-bg));
             color: var(--indigo);
-            border: 1px solid #c7d2fe;
+            border: 1px solid #DCD5FF;
             margin-left: 4px;
         }
 
@@ -117,11 +122,12 @@
 
         .topbar-link {
             font-size: 13px;
+            font-weight: 500;
             color: var(--slate-600);
             text-decoration: none;
-            padding: 5px 12px;
+            padding: 6px 13px;
             border-radius: var(--radius-sm);
-            transition: background .15s;
+            transition: background .15s, color .15s;
         }
 
             .topbar-link:hover {
@@ -130,9 +136,9 @@
             }
 
         .topbar-btn {
-            padding: 7px 16px;
+            padding: 8px 17px;
             border-radius: var(--radius-sm);
-            background: var(--indigo);
+            background: var(--navy);
             color: white;
             font-size: 13px;
             font-weight: 600;
@@ -145,22 +151,20 @@
         }
 
             .topbar-btn:hover {
-                background: #4338ca;
-                box-shadow: 0 4px 14px rgba(79,70,229,.3);
+                background: #1a2440;
+                box-shadow: 0 4px 14px rgba(11,17,32,.25);
             }
 
-        /* ─── PAGE SHELL ─── */
         .page-shell {
-            padding-top: 56px;
+            padding-top: 60px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        /* ─── HERO ─── */
         .hero {
             position: relative;
-            padding: 56px 24px 44px;
+            padding: 64px 24px 48px;
             text-align: center;
             overflow: hidden;
         }
@@ -172,7 +176,7 @@
             transform: translateX(-50%);
             width: 600px;
             height: 2px;
-            background: linear-gradient(90deg,transparent 0%,var(--indigo) 25%,var(--cyan) 50%,var(--amber) 75%,transparent 100%);
+            background: linear-gradient(90deg,transparent 0%,var(--indigo) 25%,var(--cyan) 50%,var(--violet) 75%,transparent 100%);
             border-radius: 99px;
             animation: horizon-shimmer 4s ease-in-out infinite;
         }
@@ -191,12 +195,12 @@
 
         .hero-glow {
             position: absolute;
-            top: -60px;
+            top: -80px;
             left: 50%;
             transform: translateX(-50%);
-            width: 500px;
-            height: 300px;
-            background: radial-gradient(ellipse at center,rgba(79,70,229,.08) 0%,rgba(6,182,212,.05) 50%,transparent 80%);
+            width: 560px;
+            height: 320px;
+            background: radial-gradient(ellipse at center,rgba(109,90,230,.14) 0%,rgba(34,211,238,.07) 50%,transparent 80%);
             pointer-events: none;
         }
 
@@ -204,7 +208,7 @@
             display: inline-flex;
             align-items: center;
             gap: 7px;
-            padding: 6px 16px;
+            padding: 7px 17px;
             border-radius: 99px;
             background: white;
             border: 1px solid var(--slate-200);
@@ -212,8 +216,13 @@
             font-size: 12px;
             font-weight: 600;
             color: var(--slate-600);
-            margin-bottom: 18px;
+            margin-bottom: 20px;
         }
+
+            .hero-eyebrow i {
+                color: var(--indigo);
+                font-size: 12px;
+            }
 
         .hero-eyebrow-dot {
             width: 7px;
@@ -226,26 +235,26 @@
 
         @@keyframes pulse-glow {
             0%, 100% {
-                box-shadow: 0 0 0 0 rgba(79,70,229,.4);
+                box-shadow: 0 0 0 0 rgba(109,90,230,.4);
             }
 
             50% {
-                box-shadow: 0 0 0 5px rgba(79,70,229,.0);
+                box-shadow: 0 0 0 5px rgba(109,90,230,.0);
             }
         }
 
         .hero-title {
             font-family: var(--font-display);
-            font-size: clamp(28px,5vw,48px);
+            font-size: clamp(30px,5vw,50px);
             font-weight: 800;
             color: var(--navy);
             letter-spacing: -.03em;
             line-height: 1.1;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
         .hero-title-accent {
-            background: linear-gradient(135deg,var(--indigo) 0%,var(--cyan) 100%);
+            background: linear-gradient(135deg,var(--indigo) 0%,var(--violet) 55%,var(--cyan) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -255,25 +264,25 @@
             font-size: 15px;
             line-height: 1.65;
             color: var(--slate-500);
-            font-weight: 300;
+            font-weight: 400;
             max-width: 500px;
-            margin: 0 auto 24px;
+            margin: 0 auto 26px;
         }
 
         .chip-row {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 8px;
-            max-width: 620px;
+            gap: 9px;
+            max-width: 660px;
             margin: 0 auto;
         }
 
         .chip {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 7px 15px;
+            gap: 7px;
+            padding: 8px 16px;
             border-radius: 99px;
             background: white;
             border: 1.5px solid var(--slate-200);
@@ -286,15 +295,19 @@
             user-select: none;
         }
 
+            .chip i {
+                font-size: 13px;
+                color: var(--indigo);
+            }
+
             .chip:hover {
                 border-color: var(--indigo);
                 background: var(--indigo-bg);
                 color: var(--indigo);
                 transform: translateY(-1px);
-                box-shadow: 0 4px 12px rgba(79,70,229,.15);
+                box-shadow: 0 4px 12px rgba(109,90,230,.18);
             }
 
-        /* ─── MAIN LAYOUT ─── */
         .main-content {
             flex: 1;
             max-width: 1200px;
@@ -313,19 +326,18 @@
             gap: 18px;
         }
 
-        /* ─── PROMPT CARD ─── */
         .prompt-card {
             background: white;
             border: 1.5px solid var(--slate-200);
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-xl);
             box-shadow: var(--shadow-md);
-            padding: 20px;
+            padding: 22px;
             transition: border-color .2s,box-shadow .2s;
         }
 
             .prompt-card:focus-within {
                 border-color: var(--indigo);
-                box-shadow: 0 0 0 4px rgba(79,70,229,.08),var(--shadow-md);
+                box-shadow: var(--shadow-glow),var(--shadow-md);
             }
 
         .prompt-card-label {
@@ -364,7 +376,7 @@
 
             .prompt-textarea::placeholder {
                 color: var(--slate-400);
-                font-weight: 300;
+                font-weight: 400;
             }
 
         .prompt-examples {
@@ -392,14 +404,13 @@
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            padding: 4px 11px;
-            border-radius: 6px;
+            padding: 5px 12px;
+            border-radius: 8px;
             background: var(--slate-100);
             font-size: 11.5px;
             color: var(--slate-500);
             cursor: pointer;
             transition: all .13s;
-            font-style: italic;
         }
 
             .prompt-example:hover {
@@ -415,8 +426,8 @@
         }
 
         .prompt-icon-btn {
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: var(--radius-sm);
             border: 1.5px solid var(--slate-200);
             background: white;
@@ -447,9 +458,9 @@
             display: flex;
             align-items: center;
             gap: 7px;
-            padding: 9px 22px;
+            padding: 10px 24px;
             border-radius: var(--radius-sm);
-            background: linear-gradient(135deg,var(--indigo) 0%,#6366f1 100%);
+            background: linear-gradient(135deg,var(--indigo) 0%,var(--violet) 100%);
             color: white;
             border: none;
             cursor: pointer;
@@ -457,13 +468,13 @@
             font-size: 14px;
             font-weight: 600;
             transition: all .15s;
-            box-shadow: 0 4px 14px rgba(79,70,229,.3);
+            box-shadow: 0 6px 18px rgba(109,90,230,.35);
             flex-shrink: 0;
         }
 
             .prompt-send-btn:hover {
-                background: linear-gradient(135deg,#4338ca,#4f46e5);
-                box-shadow: 0 6px 20px rgba(79,70,229,.4);
+                background: linear-gradient(135deg,#5a47d6,#7c4de0);
+                box-shadow: 0 8px 24px rgba(109,90,230,.45);
                 transform: translateY(-1px);
             }
 
@@ -490,7 +501,6 @@
                 display: inline-block;
             }
 
-        /* ─── QUICK CARDS ─── */
         .quick-cards {
             display: grid;
             grid-template-columns: repeat(4,1fr);
@@ -501,7 +511,7 @@
             background: white;
             border: 1.5px solid var(--slate-200);
             border-radius: var(--radius-md);
-            padding: 16px 14px;
+            padding: 17px 15px;
             cursor: pointer;
             transition: all .18s;
             display: flex;
@@ -543,7 +553,7 @@
         }
 
         .qc-hotel::before {
-            background: linear-gradient(90deg,#8b5cf6,var(--indigo));
+            background: linear-gradient(90deg,var(--violet),var(--indigo));
         }
 
         .qc-transport::before {
@@ -567,9 +577,9 @@
         }
 
         .quick-card-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -588,12 +598,12 @@
 
         .qc-hotel .quick-card-icon {
             background: #f5f3ff;
-            color: #8b5cf6;
+            color: var(--violet);
         }
 
         .qc-transport .quick-card-icon {
             background: var(--cyan-bg);
-            color: var(--cyan);
+            color: #0891b2;
         }
 
         .quick-card-title {
@@ -622,7 +632,6 @@
             transform: translateX(3px);
         }
 
-        /* ─── AGENT ACTIVITY ─── */
         .agent-activity {
             background: white;
             border: 1.5px solid var(--slate-200);
@@ -638,18 +647,18 @@
             }
 
         .activity-head {
-            padding: 11px 16px;
+            padding: 12px 16px;
             border-bottom: 1px solid var(--slate-100);
             display: flex;
             align-items: center;
             gap: 8px;
-            background: #fafbfd;
+            background: #FAFAFE;
         }
 
         .activity-head-ico {
-            width: 26px;
-            height: 26px;
-            border-radius: 7px;
+            width: 27px;
+            height: 27px;
+            border-radius: 8px;
             background: linear-gradient(135deg,var(--indigo),var(--cyan));
             display: flex;
             align-items: center;
@@ -666,13 +675,13 @@
 
         .activity-head-badge {
             margin-left: auto;
-            padding: 2px 9px;
+            padding: 3px 10px;
             border-radius: 99px;
             font-size: 10.5px;
             font-weight: 600;
             background: var(--indigo-bg);
             color: var(--indigo);
-            border: 1px solid #c7d2fe;
+            border: 1px solid #DCD5FF;
         }
 
         .activity-steps {
@@ -717,7 +726,7 @@
 
         .activity-step.active .activity-step-ico {
             background: var(--indigo-bg);
-            border-color: #c7d2fe;
+            border-color: #DCD5FF;
             color: var(--indigo);
             animation: spin .8s linear infinite;
         }
@@ -733,11 +742,10 @@
             }
         }
 
-        /* ─── CONVERSATION AREA ─── */
         .convo-area {
             background: white;
             border: 1.5px solid var(--slate-200);
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-xl);
             box-shadow: var(--shadow-sm);
             min-height: 360px;
             display: flex;
@@ -746,20 +754,20 @@
         }
 
         .convo-header {
-            padding: 13px 18px;
+            padding: 14px 19px;
             border-bottom: 1px solid var(--slate-100);
             display: flex;
             align-items: center;
             gap: 10px;
-            background: #fafbfd;
+            background: #FAFAFE;
             flex-shrink: 0;
         }
 
         .convo-header-ico {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
-            background: linear-gradient(135deg,var(--indigo),var(--cyan));
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: linear-gradient(135deg,var(--indigo),var(--violet) 55%,var(--cyan));
             display: flex;
             align-items: center;
             justify-content: center;
@@ -780,7 +788,7 @@
 
         .convo-header-badge {
             margin-left: auto;
-            padding: 3px 9px;
+            padding: 3px 10px;
             border-radius: 99px;
             background: #f0fdf4;
             color: #16a34a;
@@ -812,33 +820,34 @@
             }
         }
 
-        /* Empty state */
         .convo-empty {
             flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 36px 24px;
+            padding: 40px 24px;
             text-align: center;
         }
 
         .convo-empty-globe {
-            width: 76px;
-            height: 76px;
-            border-radius: 50%;
+            width: 78px;
+            height: 78px;
+            border-radius: 24px;
             background: linear-gradient(135deg,var(--indigo-bg) 0%,var(--cyan-bg) 100%);
             border: 2px dashed var(--slate-200);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 34px;
-            margin-bottom: 16px;
+            font-size: 30px;
+            color: var(--indigo);
+            margin-bottom: 18px;
             position: relative;
         }
 
             .convo-empty-globe::after {
-                content: '✈️';
+                content: '\F287';
+                font-family: 'bootstrap-icons';
                 position: absolute;
                 top: -8px;
                 right: -8px;
@@ -850,7 +859,8 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 14px;
+                font-size: 13px;
+                color: var(--cyan);
             }
 
         .convo-empty-title {
@@ -866,7 +876,7 @@
             color: var(--slate-400);
             max-width: 260px;
             line-height: 1.6;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
 
         .convo-empty-prompts {
@@ -878,7 +888,7 @@
         }
 
         .cep {
-            padding: 10px 14px;
+            padding: 11px 15px;
             background: var(--slate-100);
             border-radius: var(--radius-sm);
             font-size: 12.5px;
@@ -900,14 +910,13 @@
 
             .cep:hover {
                 background: var(--indigo-bg);
-                border-color: #c7d2fe;
+                border-color: #DCD5FF;
                 color: var(--indigo);
             }
 
-        /* Messages */
         .convo-messages {
             flex: 1;
-            padding: 16px 18px;
+            padding: 18px 19px;
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -928,7 +937,7 @@
         .msg-avatar {
             width: 32px;
             height: 32px;
-            border-radius: 50%;
+            border-radius: 10px;
             flex-shrink: 0;
             display: flex;
             align-items: center;
@@ -937,37 +946,37 @@
         }
 
         .msg-ai .msg-avatar {
-            background: linear-gradient(135deg,var(--indigo),var(--cyan));
+            background: linear-gradient(135deg,var(--indigo),var(--violet) 55%,var(--cyan));
             color: white;
         }
 
         .msg-user .msg-avatar {
-            background: var(--slate-200);
-            color: var(--slate-600);
+            background: var(--navy);
+            color: white;
         }
 
         .msg-bubble {
             max-width: 82%;
-            padding: 11px 15px;
-            border-radius: 14px;
+            padding: 12px 16px;
+            border-radius: 16px;
             font-size: 13.5px;
             line-height: 1.65;
         }
 
         .msg-user .msg-bubble {
-            background: var(--indigo);
+            background: var(--navy);
             color: white;
-            border-radius: 14px 4px 14px 14px;
+            border-radius: 16px 4px 16px 16px;
         }
 
         .msg-ai .msg-bubble {
-            background: white;
+            background: #FAFAFE;
             color: var(--navy);
             border: 1.5px solid var(--slate-200);
-            border-radius: 4px 14px 14px 14px;
+            border-radius: 4px 16px 16px 16px;
             box-shadow: var(--shadow-sm);
         }
-            /* Markdown render */
+
             .msg-ai .msg-bubble p {
                 margin: 0 0 8px;
             }
@@ -1004,15 +1013,14 @@
             padding-left: 2px;
         }
 
-        /* Typing indicator */
         .msg-typing {
             display: flex;
             align-items: center;
             gap: 5px;
             padding: 12px 15px;
-            background: white;
+            background: #FAFAFE;
             border: 1.5px solid var(--slate-200);
-            border-radius: 4px 14px 14px 14px;
+            border-radius: 4px 16px 16px 16px;
             box-shadow: var(--shadow-sm);
         }
 
@@ -1020,7 +1028,6 @@
             font-size: 12px;
             color: var(--slate-400);
             margin-left: 2px;
-            font-style: italic;
         }
 
         .typing-dot {
@@ -1049,17 +1056,16 @@
             }
         }
 
-        /* ─── RIGHT PANEL ─── */
         .right-panel {
             display: flex;
             flex-direction: column;
             gap: 14px;
             position: sticky;
-            top: 72px;
+            top: 76px;
         }
 
         .glass-card {
-            background: rgba(255,255,255,.88);
+            background: rgba(255,255,255,.9);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1.5px solid rgba(255,255,255,.9);
@@ -1069,18 +1075,18 @@
         }
 
         .panel-head {
-            padding: 12px 16px 10px;
+            padding: 13px 16px 10px;
             border-bottom: 1px solid var(--slate-100);
             display: flex;
             align-items: center;
             gap: 8px;
-            background: rgba(248,250,252,.85);
+            background: rgba(250,250,254,.9);
         }
 
         .panel-head-ico {
-            width: 28px;
-            height: 28px;
-            border-radius: 7px;
+            width: 29px;
+            height: 29px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1108,14 +1114,14 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 20px 16px;
+            padding: 22px 16px;
             min-height: 96px;
         }
 
         .panel-empty-ico {
-            font-size: 30px;
-            margin-bottom: 9px;
-            opacity: .55;
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--slate-300);
         }
 
         .panel-empty-title {
@@ -1131,10 +1137,9 @@
             line-height: 1.5;
         }
 
-        /* ─── FOOTER ─── */
         .page-footer {
             border-top: 1px solid var(--slate-200);
-            padding: 13px 24px;
+            padding: 14px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -1164,16 +1169,15 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 5px 12px;
+            padding: 5px 13px;
             border-radius: 99px;
             background: linear-gradient(135deg,var(--indigo-bg),var(--cyan-bg));
             color: var(--indigo);
             font-size: 11.5px;
             font-weight: 600;
-            border: 1px solid #c7d2fe;
+            border: 1px solid #DCD5FF;
         }
 
-        /* ─── ANIMATIONS ─── */
         .fade-in {
             animation: fadeIn .35s ease forwards;
         }
@@ -1206,7 +1210,6 @@
             }
         }
 
-        /* ─── TOAST ─── */
         .toast-bar {
             position: fixed;
             bottom: 24px;
@@ -1228,7 +1231,6 @@
             gap: 8px;
         }
 
-        /* ─── RESPONSIVE ─── */
         @@media (max-width:1024px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -1274,7 +1276,7 @@
 
             .chip {
                 font-size: 12px;
-                padding: 5px 12px;
+                padding: 6px 13px;
             }
         }
 
@@ -1287,16 +1289,15 @@
 </head>
 <body>
 
-    <!-- TOPBAR -->
     <nav class="topbar">
         <a href="/" class="topbar-brand">
             <div class="topbar-brand-icon"><i class="bi bi-airplane-fill"></i></div>
             FlightBooking
             <span class="topbar-badge"><i class="bi bi-stars me-1"></i>AI</span>
         </a>
-        <a href="/Admin" class="topbar-link"><i class="bi bi-grid me-1"></i>Kontrol Paneli</a>
+        <a href="/Admin" class="topbar-link"><i class="bi bi-grid me-1"></i>İdarəetmə Paneli</a>
         <a href="/Flights" class="topbar-link"><i class="bi bi-airplane me-1"></i>Uçuşlar</a>
-        <a href="/Bookings" class="topbar-link"><i class="bi bi-calendar-check me-1"></i>Rezervasyonlar</a>
+        <a href="/Bookings" class="topbar-link"><i class="bi bi-calendar-check me-1"></i>Rezervasiyalar</a>
         <div class="topbar-right">
             <a href="#" class="topbar-link"><i class="bi bi-bell"></i></a>
             <button class="topbar-btn"><i class="bi bi-person-circle"></i> Hesabım</button>
@@ -1305,71 +1306,67 @@
 
     <div class="page-shell">
 
-        <!-- HERO -->
         <section class="hero">
             <div class="hero-glow"></div>
             <div class="hero-eyebrow">
                 <span class="hero-eyebrow-dot"></span>
-                GPT-4o destekli · Gerçek zamanlı yanıtlar
+                llama-3.1-8b-instant dəstəkli · Real vaxt cavablar
             </div>
             <h1 class="hero-title">
-                <span class="hero-title-accent">Yapay Zeka</span><br>Seyahat Asistanı
+                <span class="hero-title-accent">Süni İntellekt</span><br>Səyahət Köməkçisi
             </h1>
             <p class="hero-sub">
-                Gideceğiniz şehir, restoranlar, gezilecek yerler, ulaşım ve seyahat planlaması hakkında bana istediğiniz soruyu sorabilirsiniz.
+                Gedəcəyiniz şəhər, restoranlar, gəzməli yerlər, nəqliyyat və səyahət planlaması ilə bağlı istədiyiniz sualı mənə verə bilərsiniz.
             </p>
             <div class="chip-row">
-                <span class="chip" onclick="insertChip('Restoran bul:')">🍔 Restoran Bul</span>
-                <span class="chip" onclick="insertChip('Gezilecek yerler:')">🏛️ Gezilecek Yerler</span>
-                <span class="chip" onclick="insertChip('Seyahat planla:')">✈️ Seyahat Planla</span>
-                <span class="chip" onclick="insertChip('Ulaşım seçenekleri:')">🚇 Ulaşım</span>
-                <span class="chip" onclick="insertChip('Yerel kafeler:')">☕ Yerel Kafeler</span>
-                <span class="chip" onclick="insertChip('Aile aktiviteleri:')">👨‍👩‍👧 Aile Aktiviteleri</span>
+                <span class="chip" onclick="insertChip('Restoran tap:')"><i class="bi bi-cup-hot-fill"></i>Restoran Tap</span>
+                <span class="chip" onclick="insertChip('Gəzməli yerlər:')"><i class="bi bi-binoculars-fill"></i>Gəzməli Yerlər</span>
+                <span class="chip" onclick="insertChip('Səyahət planla:')"><i class="bi bi-airplane-fill"></i>Səyahət Planla</span>
+                <span class="chip" onclick="insertChip('Nəqliyyat seçimləri:')"><i class="bi bi-train-front-fill"></i>Nəqliyyat</span>
+                <span class="chip" onclick="insertChip('Yerli kafelər:')"><i class="bi bi-cup-straw"></i>Yerli Kafelər</span>
+                <span class="chip" onclick="insertChip('Ailə aktivlikləri:')"><i class="bi bi-people-fill"></i>Ailə Aktivlikləri</span>
             </div>
             <div class="hero-horizon"></div>
         </section>
 
-        <!-- MAIN -->
         <div class="main-content">
 
-            <!-- Sol kolon -->
             <div class="main-left">
 
-                <!-- Prompt Kartı -->
                 <div class="prompt-card fade-in">
                     <div class="prompt-card-label">
                         <span class="prompt-card-label-dot"></span>
-                        Seyahat sorunuzu sorun
+                        Səyahət sualınızı verin
                     </div>
                     <textarea id="promptInput"
                               asp-for="Prompt"
                               class="prompt-textarea"
                               rows="3"
-                              placeholder="Seyahatiniz hakkında bir soru sorun..."
+                              placeholder="Səyahətiniz haqqında bir sual verin..."
                               onkeydown="handleKeydown(event)"></textarea>
                     <div class="prompt-examples">
-                        <span class="prompt-examples-label">Örnek:</span>
-                        <span class="prompt-example" onclick="setPrompt('Bursa\'da çocuklu aile için en iyi hamburgerci mekanları hangileri?')">
-                            <i class="bi bi-lightning-fill"></i>Bursa'da çocuklu hamburgerci
+                        <span class="prompt-examples-label">Nümunə:</span>
+                        <span class="prompt-example" onclick="setPrompt('Bakıda uşaqlı ailə üçün ən yaxşı hamburgerçi məkanları hansılardır?')">
+                            <i class="bi bi-lightning-fill"></i>Bakıda uşaqlı hamburgerçi
                         </span>
-                        <span class="prompt-example" onclick="setPrompt('Roma\'da 3 günlük gezi planı hazırla, mutlaka görülmesi gereken yerleri ekle')">
-                            <i class="bi bi-lightning-fill"></i>Roma'da 3 günlük plan
+                        <span class="prompt-example" onclick="setPrompt('Romada 3 günlük səyahət planı hazırla, mütləq görülməli yerləri əlavə et')">
+                            <i class="bi bi-lightning-fill"></i>Romada 3 günlük plan
                         </span>
-                        <span class="prompt-example" onclick="setPrompt('İstanbul\'dan Milano\'ya havalimanı ulaşım seçenekleri neler?')">
-                            <i class="bi bi-lightning-fill"></i>İstanbul–Milano ulaşım
+                        <span class="prompt-example" onclick="setPrompt('İstanbuldan Milanoya hava limanı nəqliyyat variantları hansılardır?')">
+                            <i class="bi bi-lightning-fill"></i>İstanbul–Milan nəqliyyatı
                         </span>
                     </div>
                     <div class="prompt-footer">
-                        <button type="button" class="prompt-icon-btn" title="Dosya ekle"
-                                onclick="showToast('Dosya ekleme yakında aktif olacak')">
+                        <button type="button" class="prompt-icon-btn" title="Fayl əlavə et"
+                                onclick="showToast('Fayl əlavə etmə tezliklə aktiv olacaq')">
                             <i class="bi bi-paperclip"></i>
                         </button>
-                        <button type="button" class="prompt-icon-btn" title="Konum ekle"
-                                onclick="showToast('Konum ekleme yakında aktif olacak')">
+                        <button type="button" class="prompt-icon-btn" title="Məkan əlavə et"
+                                onclick="showToast('Məkan əlavə etmə tezliklə aktiv olacaq')">
                             <i class="bi bi-geo-alt-fill"></i>
                         </button>
-                        <button type="button" class="prompt-icon-btn" title="Sesli giriş"
-                                onclick="showToast('Sesli giriş yakında aktif olacak')">
+                        <button type="button" class="prompt-icon-btn" title="Səsli giriş"
+                                onclick="showToast('Səsli giriş tezliklə aktiv olacaq')">
                             <i class="bi bi-mic-fill"></i>
                         </button>
                         <span class="prompt-footer-hint" id="charCount">0 / 500</span>
@@ -1377,136 +1374,130 @@
                             <span class="btn-spinner spinner-border spinner-border-sm" role="status"
                                   style="width:14px;height:14px;border-width:2px;"></span>
                             <i class="bi bi-send-fill"></i>
-                            Sor
+                            Soruş
                         </button>
                     </div>
                 </div>
 
-                <!-- Hızlı Kartlar -->
                 <div class="quick-cards fade-in" style="animation-delay:.08s;">
-                    <div class="quick-card qc-food" onclick="insertChip('Restoran bul:')">
+                    <div class="quick-card qc-food" onclick="insertChip('Restoran tap:')">
                         <div class="quick-card-icon"><i class="bi bi-cup-hot-fill"></i></div>
                         <div>
                             <div class="quick-card-title">Restoranlar</div>
-                            <div class="quick-card-desc">Yerel lezzetlerden fine dining'e her bütçeye</div>
+                            <div class="quick-card-desc">Yerli dadlardan fine dining-ə hər büdcəyə</div>
                         </div>
                         <div class="quick-card-arrow"><i class="bi bi-arrow-right"></i></div>
                     </div>
-                    <div class="quick-card qc-attraction" onclick="insertChip('Gezilecek yerler:')">
+                    <div class="quick-card qc-attraction" onclick="insertChip('Gəzməli yerlər:')">
                         <div class="quick-card-icon"><i class="bi bi-binoculars-fill"></i></div>
                         <div>
-                            <div class="quick-card-title">Gezilecek Yerler</div>
-                            <div class="quick-card-desc">Müzeler, tarihi mekanlar, gizli köşeler</div>
+                            <div class="quick-card-title">Gəzməli Yerlər</div>
+                            <div class="quick-card-desc">Muzeylər, tarixi məkanlar, gizli guşələr</div>
                         </div>
                         <div class="quick-card-arrow"><i class="bi bi-arrow-right"></i></div>
                     </div>
-                    <div class="quick-card qc-hotel" onclick="insertChip('En iyi oteller:')">
+                    <div class="quick-card qc-hotel" onclick="insertChip('Ən yaxşı otellər:')">
                         <div class="quick-card-icon"><i class="bi bi-building-fill"></i></div>
                         <div>
-                            <div class="quick-card-title">Oteller</div>
-                            <div class="quick-card-desc">Her bütçeye uygun konaklama seçenekleri</div>
+                            <div class="quick-card-title">Otellər</div>
+                            <div class="quick-card-desc">Hər büdcəyə uyğun yaşayış variantları</div>
                         </div>
                         <div class="quick-card-arrow"><i class="bi bi-arrow-right"></i></div>
                     </div>
-                    <div class="quick-card qc-transport" onclick="insertChip('Ulaşım seçenekleri:')">
+                    <div class="quick-card qc-transport" onclick="insertChip('Nəqliyyat seçimləri:')">
                         <div class="quick-card-icon"><i class="bi bi-train-front-fill"></i></div>
                         <div>
-                            <div class="quick-card-title">Ulaşım</div>
-                            <div class="quick-card-desc">Metro, otobüs, taksi ve havalimanı bağlantıları</div>
+                            <div class="quick-card-title">Nəqliyyat</div>
+                            <div class="quick-card-desc">Metro, avtobus, taksi və hava limanı bağlantıları</div>
                         </div>
                         <div class="quick-card-arrow"><i class="bi bi-arrow-right"></i></div>
                     </div>
                 </div>
 
-                <!-- Agent Activity -->
                 <div class="agent-activity" id="agentActivity">
                     <div class="activity-head">
                         <div class="activity-head-ico"><i class="bi bi-cpu-fill"></i></div>
                         <div>
-                            <div class="activity-head-title" style="font-size:12px;font-weight:700;color:var(--navy);">Agent Activity</div>
+                            <div class="activity-head-title" style="font-size:12px;font-weight:700;color:var(--navy);">Agent Fəaliyyəti</div>
                         </div>
-                        <div class="activity-head-badge" id="activityBadge">İşleniyor</div>
+                        <div class="activity-head-badge" id="activityBadge">Emal edilir</div>
                     </div>
                     <div class="activity-steps" id="activitySteps">
                         <div class="activity-step" id="step-1">
                             <div class="activity-step-ico"><i class="bi bi-check-lg"></i></div>
-                            <span>Prompt Alındı</span>
+                            <span>Sorğu Qəbul Edildi</span>
                         </div>
                         <div class="activity-step" id="step-2">
                             <div class="activity-step-ico"><i class="bi bi-check-lg"></i></div>
-                            <span>İstek Hazırlanıyor</span>
+                            <span>İstək Hazırlanır</span>
                         </div>
                         <div class="activity-step" id="step-3">
                             <div class="activity-step-ico"><i class="bi bi-check-lg"></i></div>
-                            <span>Llama Bağlanıyor (llama-3.1-8b-instant)</span>
+                            <span>Llama-ya Qoşulur (llama-3.1-8b-instant)</span>
                         </div>
                         <div class="activity-step" id="step-4">
                             <div class="activity-step-ico"><i class="bi bi-check-lg"></i></div>
-                            <span>Yanıt Bekleniyor</span>
+                            <span>Cavab Gözlənilir</span>
                         </div>
                         <div class="activity-step" id="step-5">
                             <div class="activity-step-ico"><i class="bi bi-check-lg"></i></div>
-                            <span>Yanıt Alındı</span>
+                            <span>Cavab Alındı</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Konuşma Alanı -->
                 <div class="convo-area fade-in" id="convoArea" style="animation-delay:.14s;">
                     <div class="convo-header">
                         <div class="convo-header-ico"><i class="bi bi-robot"></i></div>
                         <div>
-                            <div class="convo-header-title">Seyahat Asistanı</div>
-                            <div class="convo-header-sub">Yolculuğunuz için kişiselleştirilmiş</div>
+                            <div class="convo-header-title">Səyahət Köməkçisi</div>
+                            <div class="convo-header-sub">Səyahətiniz üçün fərdiləşdirilmiş</div>
                         </div>
-                        <div class="convo-header-badge">Çevrimiçi</div>
+                        <div class="convo-header-badge">Onlayn</div>
                     </div>
 
-                    <!-- Boş durum -->
                     <div class="convo-empty" id="emptyState">
-                        <div class="convo-empty-globe">🌍</div>
-                        <div class="convo-empty-title">Henüz bir konuşma yok</div>
-                        <div class="convo-empty-sub">İlk seyahat sorunuzu yazarak başlayın.</div>
+                        <div class="convo-empty-globe"><i class="bi bi-globe-americas"></i></div>
+                        <div class="convo-empty-title">Hələ söhbət yoxdur</div>
+                        <div class="convo-empty-sub">İlk səyahət sualınızı yazaraq başlayın.</div>
                         <div class="convo-empty-prompts">
-                            <div class="cep" onclick="setPrompt('Bursa\'da çocuklu aile için en iyi hamburgerci ve yemek mekanları hangileri?')">
+                            <div class="cep" onclick="setPrompt('Bakıda uşaqlı ailə üçün ən yaxşı hamburgerçi və yemək məkanları hansılardır?')">
                                 <i class="bi bi-geo-alt-fill"></i>
-                                Bursa'da çocuklu aile için hamburgerci öner
+                                Bakıda uşaqlı ailə üçün hamburgerçi tövsiyə et
                             </div>
-                            <div class="cep" onclick="setPrompt('Roma\'da 3 günlük gezi planı hazırla, mutlaka görülmesi gereken yerleri ekle')">
+                            <div class="cep" onclick="setPrompt('Romada 3 günlük səyahət planı hazırla, mütləq görülməli yerləri əlavə et')">
                                 <i class="bi bi-calendar3"></i>
-                                Roma'da 3 günlük gezi planı hazırla
+                                Romada 3 günlük səyahət planı hazırla
                             </div>
-                            <div class="cep" onclick="setPrompt('İstanbul\'dan Milano\'ya giden biri için havalimanı ulaşım seçenekleri neler?')">
+                            <div class="cep" onclick="setPrompt('İstanbuldan Milanoya gedən biri üçün hava limanı nəqliyyat variantları hansılardır?')">
                                 <i class="bi bi-train-front-fill"></i>
-                                İstanbul'dan Milano'ya havalimanı ulaşımı öner
+                                İstanbuldan Milanoya hava limanı nəqliyyatı tövsiyə et
                             </div>
-                            <div class="cep" onclick="setPrompt('Kadıköy\'de hafta sonu aileye uygun yemek mekanları ve aktiviteler neler?')">
+                            <div class="cep" onclick="setPrompt('Kadıköydə həftə sonu ailəyə uyğun yemək məkanları və aktivliklər hansılardır?')">
                                 <i class="bi bi-people-fill"></i>
-                                Kadıköy'de hafta sonu aileye uygun mekanlar bul
+                                Kadıköydə həftə sonu ailəyə uyğun məkanlar tap
                             </div>
                         </div>
                     </div>
 
-                    <!-- Mesajlar -->
                     <div class="convo-messages" id="messages" style="display:none;"></div>
                 </div>
 
             </div>
 
-            <!-- Sağ Panel -->
             <div class="right-panel">
                 <div class="glass-card slide-up" style="animation-delay:.1s;">
                     <div class="panel-head">
                         <div class="panel-head-ico" style="background:#ecfeff;color:#0891b2;"><i class="bi bi-cloud-sun-fill"></i></div>
                         <div>
-                            <div class="panel-head-title">Hava Durumu</div>
-                            <div class="panel-head-sub">Gerçek zamanlı bilgi</div>
+                            <div class="panel-head-title">Hava Şəraiti</div>
+                            <div class="panel-head-sub">Real vaxt məlumat</div>
                         </div>
                     </div>
                     <div class="panel-body panel-empty-body">
-                        <div class="panel-empty-ico">🌤️</div>
-                        <div class="panel-empty-title">Henüz bir şehir seçilmedi</div>
-                        <div class="panel-empty-desc">Bir destinasyon yazdığınızda hava durumu burada görünür.</div>
+                        <div class="panel-empty-ico"><i class="bi bi-cloud-sun"></i></div>
+                        <div class="panel-empty-title">Hələ şəhər seçilməyib</div>
+                        <div class="panel-empty-desc">Bir təyinat yazdığınızda hava şəraiti burada görünəcək.</div>
                     </div>
                 </div>
 
@@ -1514,14 +1505,14 @@
                     <div class="panel-head">
                         <div class="panel-head-ico" style="background:var(--indigo-bg);color:var(--indigo);"><i class="bi bi-clock-fill"></i></div>
                         <div>
-                            <div class="panel-head-title">Yerel Saat</div>
-                            <div class="panel-head-sub">Dünya saatleri</div>
+                            <div class="panel-head-title">Yerli Vaxt</div>
+                            <div class="panel-head-sub">Dünya saatları</div>
                         </div>
                     </div>
                     <div class="panel-body panel-empty-body">
-                        <div class="panel-empty-ico">🕐</div>
-                        <div class="panel-empty-title">Şehir bekleniyor</div>
-                        <div class="panel-empty-desc">Destinasyon seçtikten sonra yerel saat bilgisi burada gösterilir.</div>
+                        <div class="panel-empty-ico"><i class="bi bi-clock-history"></i></div>
+                        <div class="panel-empty-title">Şəhər gözlənilir</div>
+                        <div class="panel-empty-desc">Təyinat seçdikdən sonra yerli vaxt məlumatı burada göstəriləcək.</div>
                     </div>
                 </div>
 
@@ -1529,14 +1520,14 @@
                     <div class="panel-head">
                         <div class="panel-head-ico" style="background:#f0fdf4;color:#16a34a;"><i class="bi bi-currency-exchange"></i></div>
                         <div>
-                            <div class="panel-head-title">Döviz</div>
-                            <div class="panel-head-sub">Canlı kur bilgisi</div>
+                            <div class="panel-head-title">Valyuta</div>
+                            <div class="panel-head-sub">Canlı məzənnə məlumatı</div>
                         </div>
                     </div>
                     <div class="panel-body panel-empty-body">
-                        <div class="panel-empty-ico">💱</div>
-                        <div class="panel-empty-title">Destinasyon gerekli</div>
-                        <div class="panel-empty-desc">Para birimi bilgisi için gideceğiniz şehri belirtin.</div>
+                        <div class="panel-empty-ico"><i class="bi bi-cash-coin"></i></div>
+                        <div class="panel-empty-title">Təyinat tələb olunur</div>
+                        <div class="panel-empty-desc">Valyuta məlumatı üçün gedəcəyiniz şəhəri qeyd edin.</div>
                     </div>
                 </div>
 
@@ -1544,47 +1535,42 @@
                     <div class="panel-head">
                         <div class="panel-head-ico" style="background:var(--amber-bg);color:var(--amber);"><i class="bi bi-fire"></i></div>
                         <div>
-                            <div class="panel-head-title">Popüler Yerler</div>
-                            <div class="panel-head-sub">Önerilen destinasyonlar</div>
+                            <div class="panel-head-title">Populyar Yerlər</div>
+                            <div class="panel-head-sub">Tövsiyə olunan təyinatlar</div>
                         </div>
                     </div>
                     <div class="panel-body panel-empty-body">
-                        <div class="panel-empty-ico">🗺️</div>
-                        <div class="panel-empty-title">Öneri yok henüz</div>
-                        <div class="panel-empty-desc">Öneriler için önce bir şehir veya rota belirtin.</div>
+                        <div class="panel-empty-ico"><i class="bi bi-map"></i></div>
+                        <div class="panel-empty-title">Hələ tövsiyə yoxdur</div>
+                        <div class="panel-empty-desc">Tövsiyələr üçün əvvəlcə bir şəhər və ya marşrut qeyd edin.</div>
                     </div>
                 </div>
             </div>
 
         </div>
 
-        <!-- FOOTER -->
         <footer class="page-footer">
             <div class="footer-left">
                 <i class="bi bi-airplane-fill" style="color:var(--indigo);"></i>
-                FlightBooking YZ Seyahat Asistanı
+                FlightBooking AI Səyahət Köməkçisi
                 <span style="color:var(--slate-200);">·</span>
-                <a href="#" class="footer-link">Gizlilik</a>
+                <a href="#" class="footer-link">Məxfilik</a>
                 <span style="color:var(--slate-200);">·</span>
-                <a href="#" class="footer-link">Şartlar</a>
+                <a href="#" class="footer-link">Şərtlər</a>
             </div>
             <div class="footer-powered">
                 <i class="bi bi-stars"></i>
-                Llama llama-3.1-8b-instant destekli
+                Llama-3.1-8b-instant dəstəkli
             </div>
         </footer>
 
-    </div><!-- /page-shell -->
-    <!-- Toast -->
+    </div>
     <div class="toast-bar" id="toast">
         <i class="bi bi-info-circle-fill" style="color:var(--cyan);"></i>
         <span id="toastMsg"></span>
     </div>
 
     <script>
-        /* ════════════════════════════════════════════
-           YARDIMCI FONKSİYONLAR
-        ════════════════════════════════════════════ */
         const promptInput = document.getElementById('promptInput');
         const charCount   = document.getElementById('charCount');
         const sendBtn     = document.getElementById('sendBtn');
@@ -1592,7 +1578,6 @@
         const emptyEl     = document.getElementById('emptyState');
         let isLoading = false;
 
-        /* Karakter sayacı */
         promptInput.addEventListener('input', function () {
             const len = this.value.length;
             charCount.textContent = len + ' / 500';
@@ -1619,7 +1604,6 @@
             }
         }
 
-        /* Toast */
         let toastTimer;
         function showToast(msg) {
             const t = document.getElementById('toast');
@@ -1631,28 +1615,22 @@
             }, 2800);
         }
 
-        /* ════════════════════════════════════════════
-           AGENT ACTIVITY
-        ════════════════════════════════════════════ */
         const steps = ['step-1','step-2','step-3','step-4','step-5'];
         let stepTimers = [];
 
         function showAgentActivity() {
             const panel = document.getElementById('agentActivity');
             panel.classList.add('visible');
-            /* Reset */
             steps.forEach(id => {
                 const el = document.getElementById(id);
                 el.classList.remove('done','active');
             });
-            document.getElementById('activityBadge').textContent = 'İşleniyor';
+            document.getElementById('activityBadge').textContent = 'Emal edilir';
 
-            /* Kademeli ilerleme */
-            const delays = [0, 300, 700, 1200, 0]; /* son adım addAIMessage'da tetiklenir */
+            const delays = [0, 300, 700, 1200, 0];
             steps.forEach((id, i) => {
-                if (i === steps.length - 1) return; /* son adım manuel */
+                if (i === steps.length - 1) return;
                 const t = setTimeout(() => {
-                    /* Öncekini done yap */
                     if (i > 0) document.getElementById(steps[i-1]).classList.replace('active','done');
                     document.getElementById(id).classList.add('active');
                 }, delays[i]);
@@ -1678,13 +1656,10 @@
             const panel = document.getElementById('agentActivity');
             panel.classList.remove('visible');
             const badge = document.getElementById('activityBadge');
-            badge.textContent = 'İşleniyor';
+            badge.textContent = 'Emal edilir';
             badge.style.background = ''; badge.style.color = ''; badge.style.borderColor = '';
         }
 
-        /* ════════════════════════════════════════════
-           KONUŞMA FONKSİYONLARI  (spec isimler)
-        ════════════════════════════════════════════ */
         function addUserMessage(text) {
             const div = document.createElement('div');
             div.className = 'msg-user fade-in';
@@ -1705,7 +1680,7 @@
                     <div class="typing-dot"></div>
                     <div class="typing-dot"></div>
                     <div class="typing-dot"></div>
-                    <span class="typing-text">YZ düşünüyor...</span>
+                    <span class="typing-text">AI düşünür...</span>
                 </div>`;
             messagesEl.appendChild(div);
             messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -1717,27 +1692,18 @@
         }
 
         function renderMarkdown(text) {
-            /* Satır temizliği */
             let html = text
-                /* Başlıklar */
                 .replace(/^### (.+)$/gm, '<h5 style="font-family:var(--font-display);font-size:13px;font-weight:700;margin:10px 0 4px">$1</h5>')
                 .replace(/^## (.+)$/gm,  '<h4 style="font-family:var(--font-display);font-size:14px;font-weight:700;margin:12px 0 5px">$1</h4>')
                 .replace(/^# (.+)$/gm,   '<h3 style="font-family:var(--font-display);font-size:15px;font-weight:800;margin:14px 0 6px">$1</h3>')
-                /* Kalın */
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                /* İtalik */
                 .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                /* Yatay çizgi */
                 .replace(/^---$/gm, '<hr style="border:none;border-top:1px solid var(--slate-200);margin:10px 0;">')
-                /* Bullet list */
                 .replace(/^[•\-\*] (.+)$/gm, '<li>$1</li>')
-                /* Numaralı list */
                 .replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
 
-            /* li'leri ul'e sar */
             html = html.replace(/(<li>.*?<\/li>\n?)+/gs, (match) => `<ul style="padding-left:18px;margin:6px 0;">${match}</ul>`);
 
-            /* Paragraf */
             const lines = html.split('\n');
             const result = [];
             for (let i = 0; i < lines.length; i++) {
@@ -1753,47 +1719,38 @@
         }
 
         function addAIMessage(text, meta) {
-            const now = new Date().toLocaleTimeString('tr-TR', { hour:'2-digit', minute:'2-digit' });
+            const now = new Date().toLocaleTimeString('az-AZ', { hour:'2-digit', minute:'2-digit' });
             const div = document.createElement('div');
             div.className = 'msg-ai fade-in';
-            const modelInfo = meta ? ` · ${meta.model || 'gpt-4o'}` : '';
+            const modelInfo = meta ? ` · ${meta.model || 'llama-3.1-8b-instant'}` : '';
             div.innerHTML = `
                 <div class="msg-avatar"><i class="bi bi-robot"></i></div>
                 <div>
                     <div class="msg-bubble">${renderMarkdown(text)}</div>
                     <div class="msg-ai-meta">
-                        <i class="bi bi-stars me-1"></i>YZ Seyahat Asistanı · ${now}${modelInfo}
+                        <i class="bi bi-stars me-1"></i>AI Səyahət Köməkçisi · ${now}${modelInfo}
                     </div>
                 </div>`;
             messagesEl.appendChild(div);
             messagesEl.scrollTop = messagesEl.scrollHeight;
         }
 
-        /* ════════════════════════════════════════════
-           sendMessage()  —  gerçek API çağrısı
-        ════════════════════════════════════════════ */
         async function sendMessage() {
             const text = promptInput.value.trim();
             if (!text || isLoading) return;
 
-            /* Boş durumu gizle, mesajları göster */
             emptyEl.style.display = 'none';
             messagesEl.style.display = 'flex';
 
-            /* UI kilitle */
             isLoading = true;
             sendBtn.classList.add('loading');
             sendBtn.disabled = true;
 
-            /* Kullanıcı mesajını ekle */
             addUserMessage(text);
             promptInput.value = '';
             promptInput.dispatchEvent(new Event('input'));
 
-            /* Agent activity başlat */
             showAgentActivity();
-
-            /* Typing indicator */
             showTypingIndicator();
 
             try {
@@ -1817,21 +1774,19 @@
                     addAIMessage(data.response, { model: data.model });
                 } else {
                     completeAgentActivity();
-                    addAIMessage('Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.', null);
+                    addAIMessage('Üzr istəyirik, xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.', null);
                 }
 
             } catch (err) {
                 removeTypingIndicator();
                 completeAgentActivity();
-                addAIMessage(`Bağlantı hatası: ${err.message}. Lütfen internet bağlantınızı kontrol edin.`, null);
-                console.error('Agent API hatası:', err);
+                addAIMessage(`Bağlantı xətası: ${err.message}. Zəhmət olmasa internet bağlantınızı yoxlayın.`, null);
+                console.error('Agent API xətası:', err);
             } finally {
-                /* UI aç */
                 isLoading = false;
                 sendBtn.classList.remove('loading');
                 sendBtn.disabled = false;
                 promptInput.focus();
-                /* Activity paneli 3sn sonra gizle */
                 setTimeout(resetAgentActivity, 3000);
             }
         }
