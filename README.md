@@ -142,4 +142,4 @@ Triggers upon critical system events such as successful reservation completion, 
 
 | Admin - Agent (3) |
 |:-------------------:|
-| <img width="460" alt="Admin 21" src="https://github.com/fazilmmmdzad/My-Files/blob/main/AgentPage3.png" /> |
+| <img width="920" alt="Admin 21" src="https://github.com/fazilmmmdzad/My-Files/blob/main/AgentPage3.png" /> |
