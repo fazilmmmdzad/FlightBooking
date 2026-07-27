@@ -15,10 +15,7 @@ namespace FlightBooking.Controllers
 
         public IActionResult Index()
         {
-            return RedirectToAction(
-                "FlightList",
-                "Flights",
-                new { area = "Admin" });
+            return View();
         }
 
         public IActionResult Privacy()

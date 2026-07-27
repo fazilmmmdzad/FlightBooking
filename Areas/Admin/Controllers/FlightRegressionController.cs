@@ -21,8 +21,7 @@ namespace FlightBooking.Areas.Admin.Controllers
         {
             var regressionData = await _mongoService.ConvertToRegressionDataAsync();
             _regressionService.Train(regressionData);
-            ViewBag.Message = "Regression modeli uğurla öyrədildi.";
-            return View();
+            return RedirectToAction("January2027Forecast", "FlightRegression");
         }
         public IActionResult January2027Forecast()
         {

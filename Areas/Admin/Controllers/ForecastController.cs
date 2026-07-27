@@ -35,9 +35,7 @@ namespace FlightBooking.Areas.Admin.Controllers
 
             _flightMlService.Train(mlData);
 
-            ViewBag.Message = "Model uğurla öyredildi.";
-
-            return View();
+            return RedirectToAction("NoShowAnalysis", "Forecast");
         }
 
         public IActionResult Predict()
