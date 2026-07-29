@@ -48,6 +48,18 @@
         </div>
 
         <div class="nav-item-wrap">
+            <div class="nav-link-item" id="overbooking-toggle" onclick="toggleSub(this,'overbooking-sub')">
+                <i class="bi bi-calendar2-x"></i>
+                <span class="label">Over Booking</span>
+                <i class="bi bi-chevron-down chevron open ms-auto" id="overbooking-chev"></i>
+            </div>
+            <div class="sub-menu open" id="overbooking-sub">
+                <a class="sub-menu-link" href="/Admin/OverBooking/Index"><i class="bi bi-dot"></i>Over Booking Riskləri</a>
+                <a class="sub-menu-link" href="/Admin/OverBookingForecast/Index"><i class="bi bi-dot"></i>Over Booking Təxminləri</a>
+            </div>
+        </div>
+
+        <div class="nav-item-wrap">
             <a class="nav-link-item" href="/Agent/AskAgent">
                 <i class="bi bi-robot"></i>
                 <span class="label">Səyahət Köməkçisi Agent</span>
