@@ -7,6 +7,13 @@
 
 @section Styles {
     <style>
+        .card-meal-img {
+            max-height: 80px;
+            width: auto;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+        }
+
         .ci-page {
             display: flex;
             flex-direction: column;
@@ -1625,21 +1632,21 @@
                                     <div class="baggage-cards">
                                         <div class="baggage-card selected" id="cabin-free" onclick="selectBaggage('free',0,'Şəxsi Əşya')">
                                             <div class="bc-check"><i class="bi bi-check-lg"></i></div>
-                                            <div class="bc-icon">🎒</div>
+                                            <div class="bc-icon"><i class="bi bi-backpack-fill"></i></div>
                                             <div class="bc-name">Şəxsi Əşya</div>
                                             <div class="bc-sub">Maks. 40×30×15 sm · 6 kq</div>
                                             <div class="bc-price" style="color:#16a34a;">Pulsuz</div>
                                         </div>
                                         <div class="baggage-card" id="cabin-small" onclick="selectBaggage('small',80,'Kabin Çamadanı (S)')">
                                             <div class="bc-check"><i class="bi bi-check-lg"></i></div>
-                                            <div class="bc-icon">💼</div>
+                                            <div class="bc-icon"><i class="bi bi-briefcase-fill"></i></div>
                                             <div class="bc-name">Kabin Çamadanı (S)</div>
                                             <div class="bc-sub">Maks. 55×40×20 sm · 8 kq</div>
                                             <div class="bc-price">+ 80 @currencySymbol</div>
                                         </div>
                                         <div class="baggage-card" id="cabin-large" onclick="selectBaggage('large',120,'Kabin Çamadanı (L)')">
                                             <div class="bc-check"><i class="bi bi-check-lg"></i></div>
-                                            <div class="bc-icon">🧳</div>
+                                            <div class="bc-icon"><i class="bi bi-luggage-fill"></i></div>
                                             <div class="bc-name">Kabin Çamadanı (L)</div>
                                             <div class="bc-sub">Maks. 55×40×25 sm · 10 kq</div>
                                             <div class="bc-price">+ 120 @currencySymbol</div>
@@ -1683,21 +1690,21 @@
                                     <div class="baggage-cards">
                                         <div class="baggage-card" id="special-sport" onclick="toggleSpecial('sport',150)">
                                             <div class="bc-check"><i class="bi bi-check-lg"></i></div>
-                                            <div class="bc-icon">🎿</div>
+                                            <div class="bc-icon"><i class="fa-regular fa-futbol"></i></div>
                                             <div class="bc-name">İdman Avadanlığı</div>
                                             <div class="bc-sub">Xizək, sörf, velosiped və s.</div>
                                             <div class="bc-price">+ 150 @currencySymbol</div>
                                         </div>
                                         <div class="baggage-card" id="special-golf" onclick="toggleSpecial('golf',120)">
                                             <div class="bc-check"><i class="bi bi-check-lg"></i></div>
-                                            <div class="bc-icon">⛳</div>
+                                            <div class="bc-icon"><i class="fa-solid fa-golf-ball-tee"></i></div>
                                             <div class="bc-name">Qolf Avadanlığı</div>
                                             <div class="bc-sub">Qolf çantası + aksesuarlar</div>
                                             <div class="bc-price">+ 120 @currencySymbol</div>
                                         </div>
                                         <div class="baggage-card" id="special-pet" onclick="toggleSpecial('pet',200)">
                                             <div class="bc-check"><i class="bi bi-check-lg"></i></div>
-                                            <div class="bc-icon">🐾</div>
+                                            <div class="bc-icon"><i class="fa-solid fa-paw"></i></div>
                                             <div class="bc-name">Ev Heyvanı</div>
                                             <div class="bc-sub">Kabin və ya anbar daşınması</div>
                                             <div class="bc-price">+ 200 @currencySymbol</div>
@@ -2013,18 +2020,18 @@
         var HOLD_PRICES = { 0:0, 8:100, 16:180, 24:240, 32:300 };
 
         var meals = [
-            { id:'pasta',   name:'Sobada Bişmiş Makaron', desc:'Pomidor souslu, pendirli sobada bişmiş makaron', emoji:'🍝', tags:['hot','veg'],  price:0,  free:true,  cat:'hot'   },
-            { id:'chicken', name:'Qril Toyuq',            desc:'Tərəvəzli düyü plovu və mövsüm salatı',          emoji:'🍗', tags:['hot','hal'],  price:0,  free:true,  cat:'hot'   },
-            { id:'beef',    name:'Ət Sote',               desc:'Göbələk souslu bifşteks, kartof püresi ilə',     emoji:'🥩', tags:['hot','hal'],  price:30, free:false, cat:'hot'   },
-            { id:'salad',   name:'Aralıq Dənizi Salatı',  desc:'Təzə tərəvəzlər, zeytun yağı, limon',            emoji:'🥗', tags:['cold','veg'], price:0,  free:true,  cat:'cold'  },
-            { id:'wrap',    name:'Toyuqlu Rulet',         desc:'Kahı, pomidor, xüsusi sousla rulet',             emoji:'🌯', tags:['cold','hal'], price:0,  free:true,  cat:'cold'  },
-            { id:'sushi',   name:'Suşi Tabağı',           desc:'8 ədəd suşi, vasabi və soya sousu',              emoji:'🍱', tags:['cold'],       price:50, free:false, cat:'cold'  },
-            { id:'veg',     name:'Vegetarian Kotlet',     desc:'Mərcimək və tərəvəz kotleti, qatıq sousu',       emoji:'🧆', tags:['hot','veg'],  price:0,  free:true,  cat:'veg'   },
-            { id:'fruit',   name:'Meyvə Tabağı',          desc:'Mövsüm meyvələri, bal, qranola',                 emoji:'🍓', tags:['cold','veg'], price:0,  free:true,  cat:'snack' },
-            { id:'sand',    name:'Sendviç Menyusu',       desc:'Pendirli sendviç + çips + içki',                 emoji:'🥪', tags:['cold'],       price:25, free:false, cat:'snack' },
-            { id:'cake',    name:'Şokoladlı Keks',        desc:'Fındıqlı şokolad sousu ilə servis edilir',       emoji:'🍰', tags:['cold'],       price:20, free:false, cat:'snack' },
-            { id:'halal',   name:'Halal Tabaq',           desc:'Halal sertifikatlı ət + plov + salat',           emoji:'🍛', tags:['hot','hal'],  price:0,  free:true,  cat:'hal'   },
-            { id:'kid',     name:'Uşaq Menyusu',          desc:'Nagets, kartof, meyvə suyu',                     emoji:'🍟', tags:['hot'],        price:0,  free:true,  cat:'hot'   },
+                  { id:'pasta',   name:'Sobada Bişmiş Makaron', desc:'Pomidor souslu, pendirli sobada bişmiş makaron', emoji:'<img src="https://png.pngtree.com/png-clipart/20250609/original/pngtree-baked-macaroni-with-cheese-pull-on-white-background-png-image_21149828.png" class="card-meal-img"/>', tags:['hot','veg'],  price:0,  free:true,  cat:'hot'   },
+            { id:'chicken', name:'Qril Toyuq',            desc:'Tərəvəzli düyü plovu və mövsüm salatı',          emoji:'<img src="https://png.pngtree.com/png-vector/20241231/ourmid/pngtree-rice-pilaf-on-transparent-background-png-image_15002772.png" class="card-meal-img"/>', tags:['hot','hal'],  price:0,  free:true,  cat:'hot'   },
+            { id:'beef',    name:'Ət Sote',               desc:'Göbələk souslu bifşteks, kartof püresi ilə',     emoji:'<img src="https://png.pngtree.com/png-vector/20230413/ourmid/pngtree-steak-food-illustration-png-image_6703917.png" class="card-meal-img"/>', tags:['hot','hal'],  price:30, free:false, cat:'hot'   },
+            { id:'salad',   name:'Aralıq Dənizi Salatı',  desc:'Təzə tərəvəzlər, zeytun yağı, limon',            emoji:'<img src="https://png.pngtree.com/png-vector/20260117/ourmid/pngtree-fresh-mediterranean-salad-in-a-white-bowl-png-image_18544609.webp" class="card-meal-img"/>', tags:['cold','veg'], price:0,  free:true,  cat:'cold'  },
+            { id:'wrap',    name:'Toyuqlu Rulet',         desc:'Kahı, pomidor, xüsusi sousla rulet',             emoji:'<img src="https://png.pngtree.com/png-vector/20250205/ourmid/pngtree-tasty-chicken-kebab-in-tortilla-wrap-png-image_15383503.png" class="card-meal-img"/>', tags:['cold','hal'], price:0,  free:true,  cat:'cold'  },
+            { id:'sushi',   name:'Suşi Tabağı',           desc:'8 ədəd suşi, vasabi və soya sousu',              emoji:'<img src="https://static.vecteezy.com/system/resources/previews/056/521/413/non_2x/a-plate-with-sushi-and-other-types-of-food-free-png.png" class="card-meal-img"/>', tags:['cold'],       price:50, free:false, cat:'cold'  },
+            { id:'veg',     name:'Vegetarian Kotlet',     desc:'Mərcimək və tərəvəz kotleti, qatıq sousu',       emoji:'<img src="https://static.vecteezy.com/system/resources/previews/053/205/682/non_2x/vegan-burger-patty-isolated-on-transparent-background-top-view-png.png" class="card-meal-img"/>', tags:['hot','veg'],  price:0,  free:true,  cat:'veg'   },
+            { id:'fruit',   name:'Meyvə Tabağı',          desc:'Mövsüm meyvələri, bal, qranola',                 emoji:'<img src="https://png.pngtree.com/png-clipart/20250107/original/pngtree-fresh-fruit-salad-in-a-bowl-png-image_20111939.png" class="card-meal-img"/>', tags:['cold','veg'], price:0,  free:true,  cat:'snack' },
+            { id:'sand',    name:'Sendviç Menyusu',       desc:'Pendirli sendviç + çips + içki',                 emoji:'<img src="https://static.vecteezy.com/system/resources/previews/054/269/466/non_2x/club-sandwich-with-ham-cheese-tomato-on-transparent-background-free-png.png" class="card-meal-img"/>', tags:['cold'],       price:25, free:false, cat:'snack' },
+            { id:'cake',    name:'Şokoladlı Keks',        desc:'Fındıqlı şokolad sousu ilə servis edilir',       emoji:'<img src="https://png.pngtree.com/png-clipart/20240605/original/pngtree-slice-of-chocolate-cake-on-transparent-background-png-image_15251545.png" class="card-meal-img"/>', tags:['cold'],       price:20, free:false, cat:'snack' },
+            { id:'halal',   name:'Halal Tabaq',           desc:'Halal sertifikatlı ət + plov + salat',           emoji:'<img src="https://static.vecteezy.com/system/resources/previews/059/535/313/non_2x/top-view-beef-steak-in-a-plate-isolated-on-transparent-background-png.png" class="card-meal-img"/>', tags:['hot','hal'],  price:0,  free:true,  cat:'hal'   },
+            { id:'kid',     name:'Uşaq Menyusu',          desc:'Nagets, kartof, meyvə suyu',                     emoji:'<img src="https://static.vecteezy.com/system/resources/previews/052/249/538/non_2x/plate-of-french-fries-and-chicken-nuggets-with-dip-for-snacks-or-parties-on-transparent-background-png.png" class="card-meal-img"/>', tags:['hot'],        price:0,  free:true,  cat:'hot'   },
         ];
 
         var extras = [
