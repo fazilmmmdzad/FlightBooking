@@ -39,14 +39,21 @@ namespace FlightBooking.Areas.Admin.Controllers
             ViewBag.AirlineCode = flight?.AirlineCode ?? "—";
             ViewBag.DepartureAirportCode = flight?.DepartureAirportCode ?? "—";
             ViewBag.ArrivalAirportCode = flight?.ArrivalAirportCode ?? "—";
-            ViewBag.DepartureTime = flight?.DepartureTime;   // DateTime? olarak gider
+            ViewBag.DepartureTime = flight?.DepartureTime;
             ViewBag.ArrivalTime = flight?.ArrivalTime;
             ViewBag.TotalSeats = flight?.TotalSeats ?? 0;
             ViewBag.Status = flight?.Status ?? "—";
 
-            TempData["FlightNumber"] = flight.FlightNumber;
-            TempData["DepartureTime"] = flight.DepartureTime;
-            TempData["ArrivalTime"] = flight.ArrivalTime;
+            TempData["FlightNumber"] = flight?.FlightNumber;
+            TempData["DepartureTime"] = flight?.DepartureTime;
+            TempData["ArrivalTime"] = flight?.ArrivalTime;
+            TempData["DepartureAirportCode"] = flight?.DepartureAirportCode;
+            TempData["ArrivalAirportCode"] = flight?.ArrivalAirportCode;
+            TempData["ArrivalAirportName"] = flight?.ArrivalAirportName;
+            TempData["DepartureAirportName"] = flight?.DepartureAirportName;
+            TempData["AirlineCode"] = flight?.AirlineCode;
+            ViewBag.BasePrice = flight?.BasePrice ?? 0m;
+            TempData["Currency"] = flight?.Currency;
 
             return View(passengers);
         }

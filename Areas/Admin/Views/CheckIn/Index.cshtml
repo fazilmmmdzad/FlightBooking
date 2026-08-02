@@ -1519,7 +1519,7 @@
                         </div>
                         <div class="ci-route-mid">
                             <div class="ci-route-line"><i class="bi bi-airplane-fill"></i></div>
-                            <div class="ci-route-dur" id="bannerDur">— dəq</div>
+                            <div class="ci-route-dur" id="bannerDur">@((int)(((DateTime)TempData["ArrivalTime"] - (DateTime)TempData["DepartureTime"]).TotalMinutes)) dəq</div>
                         </div>
                         <div style="text-align:center;">
                             <div class="ci-apt-code">@ViewBag.ArrivalAirportCode</div>
